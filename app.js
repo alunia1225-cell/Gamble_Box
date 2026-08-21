@@ -42,7 +42,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.19"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.29"});
 });
 
 const KEY="gb3_save";
@@ -779,17 +779,25 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener('DOMContentLoaded',()=>{document.getElementById('tapStart')?.addEventListener('click',start);document.getElementById('profileBtn')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('profileCard')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('friendsBtn')?.addEventListener('click',()=>openSocial('friends'));document.getElementById('lobbyDebugBtn')?.addEventListener('click',toggleDebug);document.getElementById('roomBtn')?.addEventListener('click',()=>openSocial('room'));document.querySelectorAll('.lobbyGrid button').forEach(b=>b.addEventListener('click',()=>{const p=prof();p.games=(p.games||0)+1;saveProf(p);renderProfile();document.getElementById('appLobby').classList.add('hidden');openGame(b.dataset.game)}));document.querySelectorAll('#lobbyTabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#lobbyTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.lobbyGrid button').forEach(g=>g.style.display=b.dataset.cat==='all'||g.dataset.cat===b.dataset.cat?'flex':'none')}));});
 })();
 
-/* 4.7.28 CLEAN BOOT: direct lobby launcher */
+/* 4.7.29 CLEAN LAUNCH — no inline HTML handlers */
 window.GB_DIRECT_GAME=function(game){
   try{
     debugLog("GAME","DIRECT LAUNCH",{game:game});
-    if(typeof openGame!=="function")throw new Error("openGame() unavailable");
     openGame(game);
   }catch(e){
     debugLog("ERROR","DIRECT LAUNCH FAILED",{game:game,error:String(e),stack:e.stack});
-    const m=document.getElementById("modal"),c=document.getElementById("modalContent");
-    if(m)m.classList.remove("hidden");
-    if(c)c.innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`;
+    const modal=document.getElementById("modal");
+    const content=document.getElementById("modalContent");
+    if(modal)modal.classList.remove("hidden");
+    if(content)content.innerHTML="<div class=\"game\"><h2>GAME ERROR</h2><pre class=\"debug-error\">"+String(e.stack||e)+"</pre></div>";
   }
 };
 window.openGame=openGame;
+document.addEventListener("DOMContentLoaded",function(){
+  document.querySelectorAll("#appLobby .lobbyGrid [data-game]").forEach(function(btn){
+    btn.addEventListener("click",function(ev){
+      ev.preventDefault();
+      window.GB_DIRECT_GAME(btn.getAttribute("data-game"));
+    });
+  });
+});
