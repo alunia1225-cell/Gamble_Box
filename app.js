@@ -302,7 +302,7 @@ blackjack(){
   </div>`;
 },
 holdem(){holdemInit()},
-roulette(){$("gameBody").innerHTML=betbox()+`<div class="real-roulette"><div class="real-wheel-wrap"><div class="real-pointer"></div><div id="rouletteWheel" class="real-wheel"><div class="real-pocket green" style="--i:0"><span>0</span></div><div class="real-pocket red" style="--i:1"><span>32</span></div><div class="real-pocket black" style="--i:2"><span>15</span></div><div class="real-pocket red" style="--i:3"><span>19</span></div><div class="real-pocket black" style="--i:4"><span>4</span></div><div class="real-pocket red" style="--i:5"><span>21</span></div><div class="real-pocket black" style="--i:6"><span>2</span></div><div class="real-pocket red" style="--i:7"><span>25</span></div><div class="real-pocket black" style="--i:8"><span>17</span></div><div class="real-pocket red" style="--i:9"><span>34</span></div><div class="real-pocket black" style="--i:10"><span>6</span></div><div class="real-pocket red" style="--i:11"><span>27</span></div><div class="real-pocket black" style="--i:12"><span>13</span></div><div class="real-pocket red" style="--i:13"><span>36</span></div><div class="real-pocket black" style="--i:14"><span>11</span></div><div class="real-pocket red" style="--i:15"><span>30</span></div><div class="real-pocket black" style="--i:16"><span>8</span></div><div class="real-pocket red" style="--i:17"><span>23</span></div><div class="real-pocket black" style="--i:18"><span>10</span></div><div class="real-pocket red" style="--i:19"><span>5</span></div><div class="real-pocket black" style="--i:20"><span>24</span></div><div class="real-pocket red" style="--i:21"><span>16</span></div><div class="real-pocket black" style="--i:22"><span>33</span></div><div class="real-pocket red" style="--i:23"><span>1</span></div><div class="real-pocket black" style="--i:24"><span>20</span></div><div class="real-pocket red" style="--i:25"><span>14</span></div><div class="real-pocket black" style="--i:26"><span>31</span></div><div class="real-pocket red" style="--i:27"><span>9</span></div><div class="real-pocket black" style="--i:28"><span>22</span></div><div class="real-pocket red" style="--i:29"><span>18</span></div><div class="real-pocket black" style="--i:30"><span>29</span></div><div class="real-pocket red" style="--i:31"><span>7</span></div><div class="real-pocket black" style="--i:32"><span>28</span></div><div class="real-pocket red" style="--i:33"><span>12</span></div><div class="real-pocket black" style="--i:34"><span>35</span></div><div class="real-pocket red" style="--i:35"><span>3</span></div><div class="real-pocket black" style="--i:36"><span>26</span></div><div id="rouletteBall" class="real-ball"></div><div class="real-hub">GB</div></div></div><div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">WAITING</small></div><div class="roulette-bets" role="group" aria-label="Roulette bets"><button class="roulette-bet roulette-bet-red" onclick="rouletteSpin('red')"><b>RED</b><span>2× RETURN</span></button><button class="roulette-bet roulette-bet-black" onclick="rouletteSpin('black')"><b>BLACK</b><span>2× RETURN</span></button><button class="roulette-bet roulette-bet-zero" onclick="rouletteSpin('green')"><b>ZERO</b><span>14× RETURN</span></button></div><div id="res" class="result">PLACE YOUR BET</div></div>`},highlow(){
+roulette(){$("gameBody").innerHTML=betbox()+`<div class="real-roulette"><div class="real-wheel-wrap"><div class="real-pointer"></div><div id="rouletteWheel" class="real-wheel"><div class="real-pocket green" style="--i:0"><span>0</span></div><div class="real-pocket red" style="--i:1"><span>32</span></div><div class="real-pocket black" style="--i:2"><span>15</span></div><div class="real-pocket red" style="--i:3"><span>19</span></div><div class="real-pocket black" style="--i:4"><span>4</span></div><div class="real-pocket red" style="--i:5"><span>21</span></div><div class="real-pocket black" style="--i:6"><span>2</span></div><div class="real-pocket red" style="--i:7"><span>25</span></div><div class="real-pocket black" style="--i:8"><span>17</span></div><div class="real-pocket red" style="--i:9"><span>34</span></div><div class="real-pocket black" style="--i:10"><span>6</span></div><div class="real-pocket red" style="--i:11"><span>27</span></div><div class="real-pocket black" style="--i:12"><span>13</span></div><div class="real-pocket red" style="--i:13"><span>36</span></div><div class="real-pocket black" style="--i:14"><span>11</span></div><div class="real-pocket red" style="--i:15"><span>30</span></div><div class="real-pocket black" style="--i:16"><span>8</span></div><div class="real-pocket red" style="--i:17"><span>23</span></div><div class="real-pocket black" style="--i:18"><span>10</span></div><div class="real-pocket red" style="--i:19"><span>5</span></div><div class="real-pocket black" style="--i:20"><span>24</span></div><div class="real-pocket red" style="--i:21"><span>16</span></div><div class="real-pocket black" style="--i:22"><span>33</span></div><div class="real-pocket red" style="--i:23"><span>1</span></div><div class="real-pocket black" style="--i:24"><span>20</span></div><div class="real-pocket red" style="--i:25"><span>14</span></div><div class="real-pocket black" style="--i:26"><span>31</span></div><div class="real-pocket red" style="--i:27"><span>9</span></div><div class="real-pocket black" style="--i:28"><span>22</span></div><div class="real-pocket red" style="--i:29"><span>18</span></div><div class="real-pocket black" style="--i:30"><span>29</span></div><div class="real-pocket red" style="--i:31"><span>7</span></div><div class="real-pocket black" style="--i:32"><span>28</span></div><div class="real-pocket red" style="--i:33"><span>12</span></div><div class="real-pocket black" style="--i:34"><span>35</span></div><div class="real-pocket red" style="--i:35"><span>3</span></div><div class="real-pocket black" style="--i:36"><span>26</span></div><div class="real-hub">GB</div></div><div id="rouletteBall" class="real-ball"></div></div><div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">WAITING</small></div><div class="roulette-bets" role="group" aria-label="Roulette bets"><button class="roulette-bet roulette-bet-red" onclick="rouletteSpin('red')"><b>RED</b><span>2× RETURN</span></button><button class="roulette-bet roulette-bet-black" onclick="rouletteSpin('black')"><b>BLACK</b><span>2× RETURN</span></button><button class="roulette-bet roulette-bet-zero" onclick="rouletteSpin('green')"><b>ZERO</b><span>14× RETURN</span></button></div><div id="res" class="result">PLACE YOUR BET</div></div>`},highlow(){
  $("gameBody").innerHTML=betbox()+`<div class="hl-game">
    <div class="hl-head"><span>HIGH</span><b id="hlValue">—</b><span>LOW</span></div>
    <div class="hl-axis"><span>HIGH ZONE</span><span>LOW ZONE</span></div>
@@ -795,24 +795,30 @@ function rouletteSpin(choice){
  const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
  const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
  const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx],color=n===0?"green":red.includes(n)?"red":"black";
+ const step=360/37;
+ const finalWheel=360*8-idx*step;
+ const ballTurns=12;
  res.textContent="NO MORE BETS";numEl.textContent="—";colEl.textContent="SPINNING";sfx("roulette");
- const start=performance.now(),duration=5200,finalWheel=360*7-idx*(360/37),finalBall=360*11+idx*(360/37);
- let raf;
+ w.style.transition="none";ball.style.transition="none";
+ const start=performance.now(),duration=6200;
  const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
-   const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,3);
-   const wheelAngle=360*7*ease-(360*7+idx*(360/37))*ease; // exact selected pocket alignment, no end snap
-   const ballAngle=360*11*ease+finalBall*ease;
+   const p=Math.min(1,(now-start)/duration);
+   const ease=1-Math.pow(1-p,4);
+   const wheelAngle=finalWheel*ease;
+   const ballAngle=-360*ballTurns*ease;
    w.style.transform=`rotate(${wheelAngle}deg)`;
-   ball.style.transform=`rotate(${ballAngle}deg) translateY(-108px)`;
-   if(p<1){raf=requestAnimationFrame(tick);return}
-   w.style.transform=`rotate(${-idx*(360/37)}deg)`;
-   ball.style.transform=`rotate(${-idx*(360/37)}deg) translateY(-108px)`;
+   ball.style.transform=`rotate(${ballAngle}deg) translateY(calc(-1 * var(--ball-radius)))`;
+   if(p<1){requestAnimationFrame(tick);return}
+   // Exact final state: selected pocket is centered under the pointer,
+   // while the ball is physically sitting at the top of its orbit.
+   w.style.transform=`rotate(${finalWheel}deg)`;
+   ball.style.transform=`rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`;
    numEl.textContent=String(n);colEl.textContent=color.toUpperCase();
    const win=color===choice;res.textContent=`${n} • ${color.toUpperCase()} • ${win?"WIN":"LOSE"}`;
    settle(b,win?b*(choice==="green"?14:2):0,"ROULETTE");sfx(win?"win":"lose");if(win&&choice==="green")puchun();GB_ROULETTE_BUSY=false;
  };
- raf=requestAnimationFrame(tick);
+ requestAnimationFrame(tick);
 }
 function roulette(c){return rouletteSpin(c)}
 

@@ -649,3 +649,119 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     letter-spacing:-.2px!important;
   }
 }
+
+/* 4.7.45 — PHYSICAL ROULETTE SPIN / FINAL POCKET GEOMETRY
+   The ball is a sibling of the wheel so the wheel can rotate independently.
+   Wheel = clockwise, ball = counter-clockwise orbit. */
+.real-wheel-wrap{
+  --wheel-size:300px;
+  --ball-radius:118px;
+  position:relative!important;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:visible!important;
+}
+.real-wheel{
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  flex:none!important;
+  transform-origin:50% 50%!important;
+  overflow:hidden!important;
+  will-change:transform!important;
+}
+.real-pocket{
+  left:50%!important;
+  top:50%!important;
+  width:20px!important;
+  height:120px!important;
+  margin-left:-10px!important;
+  margin-top:-120px!important;
+  transform-origin:10px 120px!important;
+  padding-top:5px!important;
+  box-sizing:border-box!important;
+  clip-path:polygon(14% 0,86% 0,100% 100%,0 100%)!important;
+}
+.real-pocket span{
+  display:block!important;
+  width:20px!important;
+  min-width:20px!important;
+  max-width:20px!important;
+  padding:0!important;
+  margin:0!important;
+  text-align:center!important;
+  font:900 7px/1 Orbitron,sans-serif!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  transform:rotate(calc(var(--i)*-9.72972973deg))!important;
+}
+.real-ball{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:12px!important;
+  height:12px!important;
+  margin:-6px!important;
+  border-radius:50%!important;
+  background:#fff!important;
+  box-shadow:0 0 12px #fff,0 0 22px #fff8!important;
+  transform-origin:50% 50%!important;
+  z-index:50!important;
+  will-change:transform!important;
+  pointer-events:none!important;
+}
+.real-pointer{z-index:60!important}
+.real-hub{z-index:40!important}
+@media(max-width:600px){
+  .real-wheel-wrap{
+    --wheel-size:min(78vw,300px);
+    --ball-radius:calc(min(78vw,300px)*.393);
+    width:var(--wheel-size)!important;
+    height:var(--wheel-size)!important;
+  }
+  .real-wheel{width:var(--wheel-size)!important;height:var(--wheel-size)!important}
+  .real-pocket{
+    width:19px!important;
+    height:calc(var(--wheel-size)*.40)!important;
+    margin-left:-9.5px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.40)!important;
+    transform-origin:9.5px calc(var(--wheel-size)*.40)!important;
+  }
+  .real-pocket span{width:19px!important;min-width:19px!important;max-width:19px!important;font-size:clamp(6px,1.8vw,7px)!important}
+}
+
+/* 4.7.46 — ROULETTE CLEAN WHEEL / NO OVERLAPPING FRAME
+   Use exactly 37 equal pockets. Decorative rings sit behind the pockets,
+   so they never cut through the numbers. */
+.real-wheel{
+  background:
+    repeating-conic-gradient(
+      from -4.864864865deg,
+      #a72e36 0deg 4.864864865deg,
+      #17191a 4.864864865deg 9.72972973deg
+    )!important;
+  border:10px solid #c9aa58!important;
+  box-shadow:0 12px 40px #000,inset 0 0 0 4px #211c11!important;
+}
+.real-wheel:before{
+  inset:18%!important;
+  border:1px solid #7f6936!important;
+  box-shadow:none!important;
+  z-index:1!important;
+}
+.real-wheel:after{
+  inset:6%!important;
+  border:1px solid #7f6936!important;
+  z-index:1!important;
+}
+.real-pocket{
+  z-index:5!important;
+}
+.real-pocket span{
+  position:relative!important;
+  z-index:6!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.real-hub{z-index:12!important}
+.real-pointer{z-index:20!important}
