@@ -378,3 +378,22 @@ html,body{min-height:100%;background:#030405!important;}
 
 /* 4.7.35 POLISHED BLACK GOLD — crisp gameplay */
 #modal,#modalContent,.tabletop,.tabletop *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+
+/* 4.7.36 — GAME MODAL ABOVE LOBBY */
+#modal{
+  z-index:11000!important;
+  position:fixed!important;
+  inset:0!important;
+}
+#modal .tabletop{
+  position:relative;
+  z-index:11001!important;
+}
+
+/* 4.7.37 PERSISTENT DIAGNOSTICS */
+#debugEmergency{position:fixed;right:10px;bottom:10px;z-index:2147483647;background:#111;color:#e0c269;border:1px solid #66562f;border-radius:6px;padding:8px 11px;font:800 8px Orbitron}
+#debugEmergencyPanel{position:fixed;left:8px;right:8px;top:8px;bottom:8px;z-index:2147483648;background:#050607;color:#ddd;border:1px solid #6d5a2d;border-radius:8px;padding:10px;box-shadow:0 20px 80px #000}
+#debugEmergencyPanel.hidden{display:none}
+#debugEmergencyPanel .de-head{display:flex;justify-content:space-between;align-items:center;color:#e0c269;font:800 10px Orbitron}
+#debugEmergencyBody{position:absolute;left:10px;right:10px;top:45px;bottom:75px;overflow:auto;white-space:pre-wrap;font:9px ui-monospace,monospace;line-height:1.45;background:#090a0b;padding:8px}
+#debugEmergencyPanel button{margin-top:calc(100vh - 92px);background:#17191a;color:#e0c269;border:1px solid #66562f;padding:8px 12px;border-radius:4px}

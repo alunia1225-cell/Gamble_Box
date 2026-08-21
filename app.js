@@ -21,19 +21,51 @@ window.__GB_DEBUG_LINES=window.__GB_DEBUG_LINES||[];
 window.__GB_DEBUG_COUNT=window.__GB_DEBUG_COUNT||0;
 function debugLog(level,msg,data){
   try{
-    const time=new Date().toLocaleTimeString();
-    const extra=data===undefined?"":(" "+JSON.stringify(data));
+    const now=new Date();
+    const time=now.toLocaleTimeString();
+    let extra="";
+    try{extra=data===undefined?"":" "+JSON.stringify(data)}catch(e){extra=" {data_serialization_error:"+String(e)+"}";}
     const line=`[${time}] [${level}] ${msg}${extra}`;
+    if(!Array.isArray(window.__GB_DEBUG_LINES))window.__GB_DEBUG_LINES=[];
     window.__GB_DEBUG_LINES.push(line);
-    if(window.__GB_DEBUG_LINES.length>500)window.__GB_DEBUG_LINES.shift();
-    window.__GB_DEBUG_COUNT++;
-    const body=document.getElementById("debugBody");if(body)body.textContent=window.__GB_DEBUG_LINES.join("\n");
-    const count=document.getElementById("debugCount");if(count)count.textContent=window.__GB_DEBUG_COUNT;
-    const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT;
-    const err=document.getElementById("dbgErrors");if(err&&level==="ERROR")err.textContent=Number(err.textContent||0)+1;
-    console.log("[GAMBLE BOX]",line);
-  }catch(e){console.error(e)}
+    if(window.__GB_DEBUG_LINES.length>2000)window.__GB_DEBUG_LINES.splice(0,window.__GB_DEBUG_LINES.length-2000);
+    window.__GB_DEBUG_COUNT=window.__GB_DEBUG_LINES.length;
+    try{localStorage.setItem("GB_DEBUG_LOG",window.__GB_DEBUG_LINES.join("\n"));}catch(e){}
+    try{
+      const body=document.getElementById("debugBody");if(body)body.textContent=window.__GB_DEBUG_LINES.join("\n");
+      const count=document.getElementById("debugCount");if(count)count.textContent=window.__GB_DEBUG_COUNT;
+      const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT;
+      const err=document.getElementById("dbgErrors");if(err&&level==="ERROR")err.textContent=Number(err.textContent||0)+1;
+    }catch(uiErr){try{console.error("[GAMBLE BOX][DEBUG UI ERROR]",uiErr)}catch(e){}}
+    try{console.log("[GAMBLE BOX]",line)}catch(e){}
+  }catch(e){try{console.error("[GAMBLE BOX][LOGGER FAILURE]",e)}catch(x){}}
 }
+
+/* 4.7.37 PERSISTENT DIAGNOSTICS — capture failures before game code can swallow them */
+window.addEventListener("error",function(ev){
+  debugLog("ERROR","UNCAUGHT ERROR",{
+    message:ev.message||"unknown",
+    source:ev.filename||"",
+    line:ev.lineno||0,
+    col:ev.colno||0,
+    stack:ev.error&&ev.error.stack?ev.error.stack:""
+  });
+});
+window.addEventListener("unhandledrejection",function(ev){
+  const reason=ev.reason;
+  debugLog("ERROR","UNHANDLED PROMISE REJECTION",{
+    message:reason&&reason.message?reason.message:String(reason),
+    stack:reason&&reason.stack?reason.stack:""
+  });
+});
+window.addEventListener("beforeunload",function(){
+  try{localStorage.setItem("GB_DEBUG_LOG",window.__GB_DEBUG_LINES.join("\n"));}catch(e){}
+});
+try{
+  const old=localStorage.getItem("GB_DEBUG_LOG");
+  if(old)window.__GB_DEBUG_LINES=old.split("\n").filter(Boolean);
+}catch(e){}
+
 function toggleDebug(){const p=document.getElementById("debugPanel");if(p)p.classList.toggle("hidden")}
 function clearDebug(){window.__GB_DEBUG_LINES=[];window.__GB_DEBUG_COUNT=0;const b=document.getElementById("debugBody");if(b)b.textContent="";const n=document.getElementById("debugCount");if(n)n.textContent="0"}
 async function copyDebug(){const text=(window.__GB_DEBUG_LINES||[]).join("\n")||"NO DEBUG LOGS";try{await navigator.clipboard.writeText(text);debugLog("SYSTEM","DEBUG COPIED")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();}}
@@ -42,7 +74,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.35"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.37"});
 });
 
 const KEY="gb3_save";
@@ -770,4 +802,16 @@ document.addEventListener("DOMContentLoaded",()=>{
   else if(type==='friends'){p.innerHTML='<h2>FRIENDS</h2><p style="color:#777;font-size:10px">Friend system is ready for the online backend.</p><label>ADD FRIEND NAME</label><input id="friendName" maxlength="16" placeholder="PLAYER"><div class="socialActions"><button class="primary" onclick="this.textContent=\'ADDED\'">ADD</button><button id="closeF">CLOSE</button></div>';document.getElementById('closeF').onclick=()=>o.classList.add('hidden')}
   else{const code=Math.random().toString(36).slice(2,8).toUpperCase(),url=location.origin+location.pathname+'#room='+code;p.innerHTML='<h2>PRIVATE ROOM</h2><p style="color:#777;font-size:10px">Share this URL when the online server is connected.</p><div class="roomCode"><small>ROOM CODE</small><strong>'+code+'</strong></div><div class="socialActions"><button class="primary" id="copyRoom">COPY URL</button><button id="closeR">CLOSE</button></div>';document.getElementById('copyRoom').onclick=()=>navigator.clipboard?.writeText(url);document.getElementById('closeR').onclick=()=>o.classList.add('hidden')}}
   document.addEventListener('DOMContentLoaded',()=>{document.getElementById('tapStart')?.addEventListener('click',start);document.getElementById('profileBtn')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('profileCard')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('friendsBtn')?.addEventListener('click',()=>openSocial('friends'));document.getElementById('lobbyDebugBtn')?.addEventListener('click',toggleDebug);document.getElementById('roomBtn')?.addEventListener('click',()=>openSocial('room'));document.querySelectorAll('.lobbyGrid button').forEach(b=>b.addEventListener('click',()=>{const p=prof();p.games=(p.games||0)+1;saveProf(p);renderProfile();document.getElementById('appLobby').classList.add('hidden');openGame(b.dataset.game)}));document.querySelectorAll('#lobbyTabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#lobbyTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.lobbyGrid button').forEach(g=>g.style.display=b.dataset.cat==='all'||g.dataset.cat===b.dataset.cat?'flex':'none')}));});
+})();
+
+(function(){
+  function syncEmergency(){
+    var body=document.getElementById("debugEmergencyBody");
+    if(body)body.textContent=(window.__GB_DEBUG_LINES||[]).join("\n");
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    var b=document.getElementById("debugEmergency");
+    var p=document.getElementById("debugEmergencyPanel");
+    if(b)b.addEventListener("click",function(){syncEmergency();if(p)p.classList.remove("hidden");});
+  });
 })();
