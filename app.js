@@ -74,7 +74,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.39"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.40"});
 });
 
 const KEY="gb3_save";
@@ -130,26 +130,23 @@ function crashStart(){
  const b=wager($("bet")?.value);if(!b)return;
  const token=GB_GAME_TOKEN,path=$("crashLine"),area=$("crashArea"),dot=$("crashDot"),xEl=$("crashX"),res=$("res"),chart=$("crashChart");
  if(!path||!area||!dot||!xEl||!res||!chart){debugLog("ERROR","CRASH DOM MISSING",{path:!!path,area:!!area,dot:!!dot,x:!!xEl});return;}
- CRASH={running:true,x:1,bet:b,t:0,raf:null,token,crashPoint:crashPickPoint(),points:[]};
+ CRASH={running:true,x:1,bet:b,t:0,raf:null,token,crashPoint:crashPickPoint(),points:[],seed:Math.random()*1000};
  path.setAttribute("d","");area.setAttribute("d","");xEl.textContent="1.00x";res.textContent="FLYING…";chart.classList.remove("crash-hit","crash-cashed");sfx("click");
- // The visible curve is driven by time, not by the hidden crash point. This prevents the curve shape from revealing the outcome.
- const start=performance.now(),curveSpeed=.82;
+ const start=performance.now(),curveSpeed=.82,shape=Math.random()*.75+.72;
  const draw=now=>{
    if(!CRASH.running||!gbAlive(token)||CRASH.token!==token)return;
    const elapsed=(now-start)/1000;CRASH.t=elapsed;
-   const visibleX=1+Math.pow(Math.E,curveSpeed*elapsed)-1;
-   CRASH.x=Math.min(CRASH.crashPoint,visibleX);
-   xEl.textContent=CRASH.x.toFixed(2)+"x";
+   const visibleX=1+Math.exp(curveSpeed*elapsed)-1;
+   CRASH.x=Math.min(CRASH.crashPoint,visibleX);xEl.textContent=CRASH.x.toFixed(2)+"x";
    const W=620,H=300,L=18,R=12,T=18,B=22,uw=W-L-R,uh=H-T-B;
-   // Always originate exactly at the lower-left corner and rise monotonically.
    const px=L+uw*Math.min(.995,elapsed/8.5);
-   const ratio=Math.max(0,(CRASH.x-1)/Math.max(.01,CRASH.crashPoint-1));
-   const py=H-B-uh*Math.min(.96,Math.pow(ratio,.86));
+   const progress=1-Math.exp(-shape*elapsed/4.5);
+   const noise=Math.sin(CRASH.seed+elapsed*2.1)*5+Math.sin(CRASH.seed*.43+elapsed*3.7)*3;
+   const py=Math.max(T,H-B-uh*Math.min(.94,progress*.94)+noise);
    CRASH.points.push([px,py]);
    let d=`M ${CRASH.points[0][0].toFixed(1)} ${CRASH.points[0][1].toFixed(1)}`;
    for(let i=1;i<CRASH.points.length;i++)d+=` L ${CRASH.points[i][0].toFixed(1)} ${CRASH.points[i][1].toFixed(1)}`;
-   path.setAttribute("d",d);area.setAttribute("d",d+` L ${px.toFixed(1)} ${H-B} L ${L} ${H-B} Z`);
-   dot.setAttribute("cx",px);dot.setAttribute("cy",py);
+   path.setAttribute("d",d);area.setAttribute("d",d+` L ${px.toFixed(1)} ${H-B} L ${L} ${H-B} Z`);dot.setAttribute("cx",px);dot.setAttribute("cy",py);
    if(CRASH.x>=CRASH.crashPoint-.0001){
      CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");settle(b,0,"CRASH");sfx("crash");return;
    }
@@ -266,7 +263,31 @@ function buy(name,cost){
 }
 const games={
 slot(){
- $("gameBody").innerHTML=betbox()+`<div class="anim-game slot-game"><div class="anim-title">GOLDEN REEL</div><div class="slot-machine"><div class="slot-top">★ JACKPOT ★</div><div class="slot-body"><div class="reels" id="slotReels"><div class="reel-window"><div id="reel1" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell cherry">●●</div></div></div><div class="reel-window"><div id="reel2" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell diamond">◆</div><div class="slot-cell bell">BELL</div></div></div><div class="reel-window"><div id="reel3" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell lemon">LEMON</div></div></div><div class="payline horizontal"></div><div class="payline diagonal down"></div><div class="payline diagonal up"></div></div><div class="slot-lever-wrap"><button id="slotLever" class="slot-lever" onclick="spinSlot()"><span class="lever-knob"></span><span class="lever-shaft"></span></button><small>PULL</small></div></div><button id="slotSpinBtn" class="slot-spin" onclick="spinSlot()">PULL LEVER</button></div><div id="res" class="result">PLACE YOUR BET</div></div>`;
+ $("gameBody").innerHTML=betbox()+`<div class="anim-game slot-game">
+  <div class="anim-title">GOLDEN REEL</div>
+  <div class="slot-machine">
+   <div class="slot-top">★ JACKPOT ★</div>
+   <div class="slot-body">
+    <div class="reels" id="slotReels">
+     <div class="reel-window"><div id="reel1" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell cherry">●●</div></div></div>
+     <div class="reel-window"><div id="reel2" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell diamond">◆</div><div class="slot-cell bell">◉</div></div></div>
+     <div class="reel-window"><div id="reel3" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell lemon">●</div></div></div>
+     <div class="payline horizontal"></div><div class="payline diagonal down"></div><div class="payline diagonal up"></div>
+    </div>
+    <div class="slot-lever-wrap"><button id="slotLever" class="slot-lever" onclick="spinSlot()"><span class="lever-knob"></span><span class="lever-shaft"></span></button><small>PULL</small></div>
+   </div>
+   <button id="slotSpinBtn" class="slot-spin" onclick="spinSlot()">PULL LEVER</button>
+  </div>
+  <div class="slot-paytable">
+   <div class="slot-paytitle">PAYOUT TABLE</div>
+   <div class="slot-paygrid">
+    <div><b>7</b><span>×50</span></div><div><b>BAR</b><span>×12</span></div>
+    <div><b>◆</b><span>×8</span></div><div><b>◉</b><span>×5</span></div>
+    <div><b>●●</b><span>×5</span></div><div><b>●</b><span>×5</span></div>
+   </div>
+  </div>
+  <div id="res" class="result">PLACE YOUR BET</div>
+ </div>`;
 },
 dice(){$("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
 blackjack(){
@@ -331,8 +352,8 @@ const SLOT_SYMBOLS=[
  {id:"bar",html:'<span class="slot-cell bar">BAR</span>'},
  {id:"cherry",html:'<span class="slot-cell cherry">●●</span>'},
  {id:"diamond",html:'<span class="slot-cell diamond">◆</span>'},
- {id:"bell",html:'<span class="slot-cell bell">BELL</span>'},
- {id:"lemon",html:'<span class="slot-cell lemon">LEMON</span>'}
+ {id:"bell",html:'<span class="slot-cell bell">◉</span>'},
+ {id:"lemon",html:'<span class="slot-cell lemon">●</span>'}
 ];
 function slotSetReel(el,rows){if(!el)return;el.innerHTML=rows.map(x=>SLOT_SYMBOLS.find(s=>s.id===x)?.html||SLOT_SYMBOLS[0].html).join("")}
 function slotPick(){return SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)].id}
@@ -408,34 +429,32 @@ function hl(choice){
  HL_BUSY=true;const token=GB_GAME_TOKEN;
  const line=$("hlLine"),area=$("hlArea"),dot=$("hlDot"),vEl=$("hlValue"),res=$("res"),chart=$("hlChart");
  if(!line||!area||!dot||!vEl||!res||!chart){HL_BUSY=false;return}
- // Outcome is locked on the initial tap, but the path is deliberately noisy and unpredictable.
- const finalHigh=Math.random()<.5,start=performance.now(),duration=6000,seed=Math.random()*1000;
- let points=[[12,214]],lastY=214,nextShock=0;
+ const finalHigh=Math.random()<.5,start=performance.now(),duration=10000,seed=Math.random()*1000;
+ let points=[[12,214]],lastY=214,nextShock=start+1600;
  res.textContent="LIVE…";vEl.textContent="1.00";chart.classList.remove("hl-high","hl-low","hl-wild");sfx("click");
  const tick=now=>{
    if(!gbAlive(token)){HL_BUSY=false;return}
    const p=Math.min(1,(now-start)/duration),x=12+596*p;
-   // Random walk + occasional direction changes. Only the final phase converges to the committed result.
-   const wave=Math.sin(seed+p*18)*8+Math.sin(seed*.37+p*43)*5;
-   const volatility=26*(1-p*.25);
-   let target=lastY+(Math.random()-.5)*volatility+wave*.15;
-   if(p>0.12 && p<0.88 && now>=nextShock){
-     nextShock=now+450+Math.random()*850;
-     if(Math.random()<.72)target += (Math.random()<.5?-1:1)*(28+Math.random()*65);
-     chart.classList.add("hl-wild");setTimeout(()=>chart.classList.remove("hl-wild"),180);
+   const wave=Math.sin(seed+p*10)*2.3+Math.sin(seed*.31+p*18)*1.5;
+   const volatility=9*(1-p*.20);
+   let y=lastY+(Math.random()-.5)*volatility+wave;
+   if(p>.18&&p<.86&&now>=nextShock){
+     nextShock=now+1400+Math.random()*1300;
+     if(Math.random()<.45)y+=(Math.random()<.5?-1:1)*(14+Math.random()*28);
    }
-   const finalStart=.80,blend=p>finalStart?Math.min(1,(p-finalStart)/(1-finalStart)):0;
+   const finalStart=.83,blend=p>finalStart?Math.min(1,(p-finalStart)/(1-finalStart)):0;
    const targetY=finalHigh?34:220;
-   let y=target*(1-blend)+targetY*blend;
-   y=Math.max(24,Math.min(224,y));
-   lastY=y;points.push([x,y]);dot.setAttribute("cx",x);dot.setAttribute("cy",y);
-   vEl.textContent=(finalHigh?(1.05+p*8.8):(8.8-p*8.3)).toFixed(2);
+   y=y*(1-blend)+targetY*blend;
+   y=Math.max(24,Math.min(224,y));lastY=y;
+   points.push([x,y]);dot.setAttribute("cx",x);dot.setAttribute("cy",y);
+   const liveVal=finalHigh?(1.05+p*8.8):(8.8-p*8.3);vEl.textContent=liveVal.toFixed(2);
    let d=`M ${points[0][0]} ${points[0][1]}`;for(let i=1;i<points.length;i++)d+=` L ${points[i][0].toFixed(1)} ${points[i][1].toFixed(1)}`;
    line.setAttribute("d",d);area.setAttribute("d",d+` L ${x.toFixed(1)} 125 L 12 125 Z`);
    if(p>=1){
      HL_BUSY=false;chart.classList.remove("hl-wild");chart.classList.add(finalHigh?"hl-high":"hl-low");
      const win=(choice==="high")===finalHigh;vEl.textContent=finalHigh?"9.80":"0.45";
-     res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");sfx(win?"win":"lose");return;
+     res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;
+     settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");sfx(win?"win":"lose");return;
    }
    requestAnimationFrame(tick);
  };

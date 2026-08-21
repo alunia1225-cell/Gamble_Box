@@ -451,3 +451,67 @@ body{overscroll-behavior-x:none;}
 .real-pocket span{display:block;line-height:1;text-shadow:0 1px 2px #000;}
 .real-wheel:before{content:"";position:absolute;inset:18%;border:2px solid #d8bb65;border-radius:50%;box-shadow:inset 0 0 0 5px #4a3510;pointer-events:none;z-index:3;}
 .real-wheel:after{content:"";position:absolute;inset:7%;border:1px solid #d2b35b;border-radius:50%;pointer-events:none;z-index:3;}
+
+/* 4.7.40 — SINGLE DEBUG CONTROL */
+#debugEmergency{display:none!important}
+#debugToggle{right:12px!important;bottom:12px!important;z-index:2147483647!important}
+.debug-panel{right:12px!important;bottom:64px!important;z-index:2147483646!important}
+
+/* 4.7.40 — iPhone stable game viewport */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.modal{padding:0!important;align-items:stretch!important;justify-content:center!important;max-height:100svh!important;height:100svh!important;overflow:hidden!important}
+.modal .tabletop{width:100%!important;max-width:430px!important;height:100svh!important;max-height:100svh!important;min-height:100svh!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;padding:24px 10px max(12px,env(safe-area-inset-bottom))!important;margin:0 auto!important}
+.modal .game{width:100%!important;min-height:100%!important;box-sizing:border-box!important}
+.modal .game #gameBody{width:100%!important;box-sizing:border-box!important}
+@media(max-width:600px){
+ .modal .tabletop{padding-top:max(18px,env(safe-area-inset-top))!important}
+ .modal .game h2{font-size:23px!important;margin:6px 0 8px!important}
+ .modal .result{font-size:29px!important;margin:14px 0!important}
+ .modal .choices{gap:6px!important}
+ .modal .choices button{min-height:46px!important}
+}
+
+/* roulette: cleaner, thinner rings and compact mobile scaling */
+.real-wheel{width:286px!important;height:286px!important;border-width:10px!important;box-shadow:0 10px 30px #000,inset 0 0 0 4px #211c11!important}
+.real-pocket{width:26px!important;height:132px!important;margin-left:-13px!important;margin-top:-132px!important;transform-origin:13px 132px!important}
+.real-pocket span{font-size:8px!important;padding-top:6px!important}
+.real-wheel:before{inset:20%!important;border:1px solid #8f7539!important;box-shadow:none!important}
+.real-wheel:after{inset:6%!important;border:1px solid #8f7539!important}
+.real-hub{width:68px!important;height:68px!important;border-width:4px!important}
+.real-pointer{top:-1px!important;border-left-width:10px!important;border-right-width:10px!important;border-top-width:23px!important}
+.real-ball{transform-origin:0 116px!important}
+@media(max-width:600px){
+ .real-wheel{width:min(74vw,286px)!important;height:min(74vw,286px)!important}
+ .real-wheel-wrap{height:min(82vw,320px)!important}
+ .real-pocket{height:calc(min(74vw,286px)*.46)!important;margin-top:calc(-1 * min(74vw,286px)*.46)!important;transform-origin:13px calc(min(74vw,286px)*.46)!important}
+ .real-ball{transform-origin:0 calc(min(74vw,286px)*.405)!important}
+}
+
+/* slot: cleaner symbols, subtle paylines, visible payout table */
+.slot-machine{max-width:390px!important}
+.slot-machine .reel-window{height:132px!important}
+.slot-machine .slot-cell.bell{font-size:38px!important;color:#b69243!important}
+.slot-machine .slot-cell.lemon{font-size:38px!important;color:#d1ad40!important}
+.slot-machine .payline{opacity:.12!important;height:2px!important;box-shadow:none!important}
+.slot-machine .payline.hit{opacity:1!important;height:3px!important;box-shadow:0 0 8px #d9b85e!important}
+.slot-machine .payline.diagonal{opacity:.05!important}
+.slot-machine .payline.diagonal.hit{opacity:.85!important}
+.slot-paytable{margin:12px auto 0;max-width:390px;padding:10px 10px 4px;border:1px solid #4f4328;border-radius:8px;background:linear-gradient(145deg,#131415,#0a0b0c)}
+.slot-paytitle{text-align:center;color:#d9bb62;font:900 9px Orbitron;letter-spacing:2px;margin-bottom:8px}
+.slot-paygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.slot-paygrid div{display:flex;justify-content:space-between;align-items:center;padding:7px 8px;border:1px solid #28271f;border-radius:5px;background:#0e0f10}
+.slot-paygrid b{font:900 12px Orbitron;color:#f0d67a}
+.slot-paygrid span{font:900 10px Orbitron;color:#8f9698}
+@media(max-width:600px){
+ .slot-machine{max-width:350px!important}
+ .slot-machine .slot-body{gap:8px!important}
+ .slot-machine .reels{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
+ .slot-machine .reel-window{height:114px!important}
+ .slot-machine .slot-cell{height:38px!important}
+ .slot-machine .slot-cell.seven{font-size:43px!important}
+ .slot-machine .slot-cell.bar{font-size:18px!important}
+ .slot-machine .slot-cell.cherry{font-size:28px!important}
+ .slot-machine .slot-cell.diamond{font-size:32px!important}
+ .slot-machine .slot-cell.bell,.slot-machine .slot-cell.lemon{font-size:30px!important}
+ .slot-paytable{max-width:350px!important}
+}
