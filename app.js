@@ -42,7 +42,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.34"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.35"});
 });
 
 const KEY="gb3_save";
