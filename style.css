@@ -571,3 +571,81 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .real-pocket span{width:19px!important;font-size:clamp(6px,1.8vw,7px)!important;letter-spacing:-.3px!important}
   .real-ball{transform-origin:0 calc(min(78vw,300px)*.405)!important}
 }
+
+
+/* 4.7.44 — FINAL ROULETTE GEOMETRY
+   One authoritative geometry layer. The previous versions had multiple
+   conflicting .real-pocket/.real-ball overrides, which caused 0/26 and
+   other neighboring labels to crowd and the ball to use the wrong orbit. */
+.real-wheel{
+  width:300px!important;
+  height:300px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.real-pocket{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:16px!important;
+  height:132px!important;
+  margin-left:-8px!important;
+  margin-top:-132px!important;
+  transform-origin:8px 132px!important;
+  padding-top:5px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:flex-start!important;
+  clip-path:polygon(20% 0,80% 0,100% 100%,0 100%)!important;
+  z-index:2!important;
+}
+.real-pocket span{
+  width:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:7px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.15px!important;
+  white-space:nowrap!important;
+  transform:rotate(calc(var(--i)*-9.72972973deg))!important;
+}
+.real-ball{
+  left:50%!important;
+  top:50%!important;
+  margin:-6px!important;
+  width:12px!important;
+  height:12px!important;
+  transform-origin:center center!important;
+  z-index:10!important;
+  will-change:transform!important;
+}
+@media(max-width:600px){
+  .real-wheel{
+    width:min(78vw,300px)!important;
+    height:min(78vw,300px)!important;
+  }
+  .real-wheel-wrap{
+    height:min(86vw,322px)!important;
+  }
+  .real-pocket{
+    width:15px!important;
+    height:calc(min(78vw,300px)*.44)!important;
+    margin-left:-7.5px!important;
+    margin-top:calc(-1 * min(78vw,300px)*.44)!important;
+    transform-origin:7.5px calc(min(78vw,300px)*.44)!important;
+    padding-top:5px!important;
+  }
+  .real-pocket span{
+    width:15px!important;
+    min-width:15px!important;
+    max-width:15px!important;
+    font-size:clamp(6px,1.65vw,7px)!important;
+    letter-spacing:-.2px!important;
+  }
+}

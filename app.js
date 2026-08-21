@@ -801,13 +801,13 @@ function rouletteSpin(choice){
  const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
    const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,3);
-   const wheelAngle=360*7*ease-finalWheel*(ease); // starts at 0, ends at exact pocket alignment
+   const wheelAngle=360*7*ease-(360*7+idx*(360/37))*ease; // exact selected pocket alignment, no end snap
    const ballAngle=360*11*ease+finalBall*ease;
    w.style.transform=`rotate(${wheelAngle}deg)`;
    ball.style.transform=`rotate(${ballAngle}deg) translateY(-108px)`;
    if(p<1){raf=requestAnimationFrame(tick);return}
    w.style.transform=`rotate(${-idx*(360/37)}deg)`;
-   ball.style.transform=`rotate(${idx*(360/37)}deg) translateY(-108px)`;
+   ball.style.transform=`rotate(${-idx*(360/37)}deg) translateY(-108px)`;
    numEl.textContent=String(n);colEl.textContent=color.toUpperCase();
    const win=color===choice;res.textContent=`${n} • ${color.toUpperCase()} • ${win?"WIN":"LOSE"}`;
    settle(b,win?b*(choice==="green"?14:2):0,"ROULETTE");sfx(win?"win":"lose");if(win&&choice==="green")puchun();GB_ROULETTE_BUSY=false;
