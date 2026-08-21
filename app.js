@@ -786,6 +786,7 @@ function handRank(cs){
  return{score:kick.reduce((s,v,j)=>s+v*Math.pow(15,4-j),0),name:"HIGH CARD"};
 }
 let GB_ROULETTE_BUSY=false;
+/* 4.7.49 roulette: wheel sectors and labels share the same 37-step coordinate system. */
 function rouletteSpin(choice){
  if(GB_ROULETTE_BUSY)return;
  const b=wager($("bet")?.value);if(!b)return;

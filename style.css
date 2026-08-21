@@ -824,3 +824,194 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     letter-spacing:-.3px!important;
   }
 }
+
+
+/* 4.7.48 — ROULETTE VISUAL HARD RESET
+   Final override. No decorative circular frame is allowed inside the
+   numbered pockets. The only frame is the outer gold rim and the center hub. */
+#modal .real-wheel{
+  position:relative!important;
+  background:#17191a!important;
+  border:10px solid #c9aa58!important;
+  box-shadow:0 10px 30px #000,inset 0 0 0 3px #211c11!important;
+  overflow:hidden!important;
+}
+#modal .real-wheel::before,
+#modal .real-wheel::after{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:none!important;
+}
+#modal .real-pocket{
+  width:14px!important;
+  height:calc(var(--wheel-size)*.405)!important;
+  margin-left:-7px!important;
+  margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+  transform-origin:7px calc(var(--wheel-size)*.405)!important;
+  padding-top:5px!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  clip-path:polygon(12% 0,88% 0,100% 100%,0 100%)!important;
+  z-index:5!important;
+}
+#modal .real-pocket span{
+  width:14px!important;
+  min-width:14px!important;
+  max-width:14px!important;
+  font:900 clamp(6px,1.55vw,7px)/1 Orbitron,sans-serif!important;
+  letter-spacing:-.45px!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px #000!important;
+}
+#modal .real-pocket.red{background:#a72e36!important}
+#modal .real-pocket.black{background:#17191a!important}
+#modal .real-pocket.green{background:#087b43!important}
+#modal .real-hub{z-index:20!important}
+#modal .real-ball{z-index:50!important}
+#modal .real-pointer{z-index:60!important}
+@media(max-width:600px){
+  #modal .real-pocket{
+    width:13px!important;
+    height:calc(var(--wheel-size)*.405)!important;
+    margin-left:-6.5px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+    transform-origin:6.5px calc(var(--wheel-size)*.405)!important;
+    padding-top:4px!important;
+  }
+  #modal .real-pocket span{
+    width:13px!important;
+    min-width:13px!important;
+    max-width:13px!important;
+    font-size:clamp(5.5px,1.5vw,6.5px)!important;
+    letter-spacing:-.5px!important;
+  }
+}
+
+/* 4.7.49 — ROULETTE ROOT GEOMETRY REBUILD
+   One coordinate system only: 37 equal sectors, labels on the same radius,
+   no sector-shaped DOM backgrounds. */
+#modal .real-wheel{
+  --wheel-size:min(78vw,300px);
+  --sector:9.7297297297deg;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  position:relative!important;
+  border:10px solid #c9aa58!important;
+  border-radius:50%!important;
+  overflow:hidden!important;
+  background:
+    conic-gradient(
+      from -4.86486486485deg,
+      #087b43 0deg 9.7297297297deg,
+      #a72e36 9.7297297297deg 19.4594594594deg,
+      #17191a 19.4594594594deg 29.1891891891deg,
+      #a72e36 29.1891891891deg 38.9189189188deg,
+      #17191a 38.9189189188deg 48.6486486485deg,
+      #a72e36 48.6486486485deg 58.3783783782deg,
+      #17191a 58.3783783782deg 68.1081081079deg,
+      #a72e36 68.1081081079deg 77.8378378376deg,
+      #17191a 77.8378378376deg 87.5675675673deg,
+      #a72e36 87.5675675673deg 97.2972972970deg,
+      #17191a 97.2972972970deg 107.0270270267deg,
+      #a72e36 107.0270270267deg 116.7567567564deg,
+      #17191a 116.7567567564deg 126.4864864861deg,
+      #a72e36 126.4864864861deg 136.2162162158deg,
+      #17191a 136.2162162158deg 145.9459459455deg,
+      #a72e36 145.9459459455deg 155.6756756752deg,
+      #17191a 155.6756756752deg 165.4054054049deg,
+      #a72e36 165.4054054049deg 175.1351351346deg,
+      #17191a 175.1351351346deg 184.8648648643deg,
+      #a72e36 184.8648648643deg 194.5945945940deg,
+      #17191a 194.5945945940deg 204.3243243237deg,
+      #a72e36 204.3243243237deg 214.0540540534deg,
+      #17191a 214.0540540534deg 223.7837837831deg,
+      #a72e36 223.7837837831deg 233.5135135128deg,
+      #17191a 233.5135135128deg 243.2432432425deg,
+      #a72e36 243.2432432425deg 252.9729729722deg,
+      #17191a 252.9729729722deg 262.7027027019deg,
+      #a72e36 262.7027027019deg 272.4324324316deg,
+      #17191a 272.4324324316deg 282.1621621613deg,
+      #a72e36 282.1621621613deg 291.8918918910deg,
+      #17191a 291.8918918910deg 301.6216216207deg,
+      #a72e36 301.6216216207deg 311.3513513504deg,
+      #17191a 311.3513513504deg 321.0810810801deg,
+      #a72e36 321.0810810801deg 330.8108108098deg,
+      #17191a 330.8108108098deg 340.5405405395deg,
+      #a72e36 340.5405405395deg 350.2702702692deg,
+      #17191a 350.2702702692deg 360deg
+    )!important;
+  box-shadow:0 12px 40px #000,inset 0 0 0 4px #211c11!important;
+}
+#modal .real-wheel::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:17%!important;
+  border-radius:50%!important;
+  background:#17191a!important;
+  border:4px solid #c9aa58!important;
+  box-shadow:inset 0 0 0 2px #3a2c16!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+#modal .real-wheel::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:5%!important;
+  border-radius:50%!important;
+  border:1px solid rgba(201,170,88,.55)!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+#modal .real-pocket{
+  left:50%!important;
+  top:50%!important;
+  width:22px!important;
+  height:42%!important;
+  margin:calc(-1 * 42%) 0 0 -11px!important;
+  transform-origin:11px 100%!important;
+  background:transparent!important;
+  clip-path:none!important;
+  border:0!important;
+  padding:0!important;
+  display:block!important;
+  z-index:6!important;
+}
+#modal .real-pocket.red,
+#modal .real-pocket.black,
+#modal .real-pocket.green{background:transparent!important}
+#modal .real-pocket span{
+  display:block!important;
+  width:22px!important;
+  min-width:22px!important;
+  max-width:22px!important;
+  height:18px!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  color:#f7e9bc!important;
+  font:900 clamp(7px,1.75vw,8px)/18px Orbitron,sans-serif!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  transform:rotate(calc(var(--i) * -9.7297297297deg))!important;
+  text-shadow:0 1px 2px #000!important;
+}
+#modal .real-pocket.green span{color:#72f0a0!important}
+#modal .real-hub{
+  left:50%!important;top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  z-index:20!important;
+}
+#modal .real-ball{z-index:50!important}
+#modal .real-pointer{z-index:60!important}
+@media(max-width:600px){
+  #modal .real-wheel{width:min(78vw,300px)!important;height:min(78vw,300px)!important}
+  #modal .real-pocket{width:20px!important;margin-left:-10px!important}
+  #modal .real-pocket span{width:20px!important;min-width:20px!important;max-width:20px!important;font-size:clamp(6.5px,1.75vw,8px)!important}
+}
