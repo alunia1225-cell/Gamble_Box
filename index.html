@@ -28,4 +28,17 @@
 <section class="lower"><div class="panel"><div class="panelhead"><h2>🏆 LIVE LEADERBOARD</h2><span>REALTIME</span></div><div id="ranking"></div></div><div class="panel"><div class="panelhead"><h2>📜 HISTORY</h2><span>LOCAL</span></div><div id="history"></div></div></section>
 </main><footer>GAMBLE BOX 3.0 • VIRTUAL COINS ONLY • NO REAL MONEY</footer>
 <div id="modal" class="modal hidden"><div class="tabletop"><button class="close" onclick="closeGame()">×</button><div id="modalContent"></div></div></div>
-<script src="app.js"></script></body></html>
+<script src="app.js"></script>
+<button id="debugToggle" onclick="toggleDebug()">🐞 DEBUG</button>
+<div id="debugPanel" class="debug-panel hidden">
+  <div class="debug-head">
+    <div><b>DEBUG CONSOLE</b><small id="debugStatus">LIVE</small></div>
+    <div class="debug-actions">
+      <button onclick="copyDebug()">COPY LOG</button>
+      <button onclick="clearDebug()">CLEAR</button>
+      <button onclick="toggleDebug()">×</button>
+    </div>
+  </div>
+  <pre id="debugBody">[BOOT] Debug console ready.</pre>
+</div>
+</body></html>

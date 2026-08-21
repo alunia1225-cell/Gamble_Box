@@ -6,39 +6,33 @@ function save(){localStorage.setItem(KEY,JSON.stringify(S));render()}
 function fmt(n){return Math.floor(n).toLocaleString()}
 function audio(){if(!S.sound)return null; try{return audioCtx||(audioCtx=new (window.AudioContext||window.webkitAudioContext)())}catch(e){return null}}
 function tone(freq,d=.08,type="sine",vol=.035,delay=0){let a=audio();if(!a)return;let o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0.0001,a.currentTime+delay);g.gain.exponentialRampToValueAtTime(vol,a.currentTime+delay+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+delay+d);o.connect(g);g.connect(a.destination);o.start(a.currentTime+delay);o.stop(a.currentTime+delay+d+.02)}
-
-function audioFile(name){
-  if(!S.sound) return;
-  try{ const a=new Audio(name); a.volume=0.7; a.preload="auto"; a.play().catch(()=>{}); }catch(e){}
-}
-
-function sfx(name){if(!S.sound)return; const fileMap={click:"click.wav",chip:"chip.wav",card:"card.wav",win:"win.wav",lose:"lose.wav",spin:"spin.wav",dice:"dice.wav",roulette:"roulette.wav",crash:"crash.wav",jackpot:"jackpot.wav",flip:"flip.wav",deal:"card.wav"}; if(fileMap[name]) audioFile(fileMap[name]);
+\nfunction audioFile(name){\n  if(!S.sound) return;\n  try{ const a=new Audio(name); a.volume=0.7; a.preload="auto"; a.play().catch(()=>{}); }catch(e){}\n}\n\nfunction sfx(name){if(!S.sound)return; const fileMap={click:"click.wav",chip:"chip.wav",card:"card.wav",win:"win.wav",lose:"lose.wav",spin:"spin.wav",dice:"dice.wav",roulette:"roulette.wav",crash:"crash.wav",jackpot:"jackpot.wav",flip:"flip.wav",deal:"card.wav"}; if(fileMap[name]) audioFile(fileMap[name]);
  const sets={click:[[180,.05]],chip:[[450,.05,"square"]],card:[[850,.045,"triangle"]],win:[[523,.08],[659,.08],[784,.16]],lose:[[180,.15],[120,.18]],spin:[[180,.05],[220,.05],[280,.05]],dice:[[220,.05],[330,.05],[180,.07]],roulette:[[260,.04],[320,.04],[390,.04],[460,.05]],crash:[[180,.15,"sawtooth"],[80,.35,"sawtooth"]],jackpot:[[392,.1],[523,.1],[659,.1],[1046,.3]],flip:[[600,.08],[400,.08]],deal:[[700,.05],[900,.05]]};
  (sets[name]||sets.click).forEach((x,i)=>tone(x[0],x[1],x[2]||"sine",.035,i*.06));
 }
 function wager(v){v=Number(v);if(!Number.isFinite(v)||v<1||v>S.coins)return 0;S.coins-=v;S.wagered+=v;lastBet=v;sfx("chip");return v}
 function settle(b,p,g){let net=p-b;S.coins+=p;S.profit+=net;if(p>b){S.wins++;S.maxwin=Math.max(S.maxwin,net)}S.history.unshift({g,net,t:new Date().toLocaleTimeString()});S.history=S.history.slice(0,20);save();return net}
-function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join("\n"):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("\n")}
+function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join(""):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("")}
 function puchun(){if(!S.sound){ } else {if(audioCtx)audioCtx.suspend().catch(()=>{});tone(55,.16,"sawtooth",.05);setTimeout(()=>audioCtx&&audioCtx.resume().catch(()=>{}),300)}let e=$("blackout");e.style.display="flex";setTimeout(()=>e.style.display="none",2200)}
-function openGame(g){debugLog("GAME","OPEN requested",{game:g});let title={slot:"ULTIMATE SLOTS",dice:"HIGH DICE",blackjack:"BLACKJACK",holdem:"TEXAS HOLD'EM",roulette:"ROULETTE",highlow:"HIGH & LOW",chohan:"丁半",coin:"COIN FLIP",lottery:"LOTTERY",multiplier:"CRASH ×",daily:"DAILY VAULT",shop:"CHIP SHOP"}[g];$("modalContent").innerHTML=`<div class="game"><div class="jackpot">GAMBLE BOX / ${title}</div><h2>${title}</h2><div id="gameBody"></div></div>`;$("modal").classList.remove("hidden");sfx("click");try{if(!games[g])throw new Error("Unknown game: "+g);games[g]();debugLog("GAME","OPEN success",{game:g});}catch(e){debugLog("ERROR","Game launch failed",{game:g,error:String(e),stack:e.stack});$("modalContent").innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`;}}
-function closeGame(){debugLog("GAME","CLOSE");clearInterval(timer);$("modal").classList.add("hidden");sfx("click")}
+function openGame(g){let title={slot:"ULTIMATE SLOTS",dice:"HIGH DICE",blackjack:"BLACKJACK",holdem:"TEXAS HOLD'EM",roulette:"ROULETTE",highlow:"HIGH & LOW",chohan:"丁半",coin:"COIN FLIP",lottery:"LOTTERY",multiplier:"CRASH ×",daily:"DAILY VAULT",shop:"CHIP SHOP"}[g];$("modalContent").innerHTML=`<div class="game"><div class="jackpot">GAMBLE BOX / ${title}</div><h2>${title}</h2><div id="gameBody"></div></div>`;$("modal").classList.remove("hidden");sfx("click");games[g]()}
+function closeGame(){clearInterval(timer);$("modal").classList.add("hidden");sfx("click")}
 function betbox(n=100){return `<div class="betrow"><input id="bet" type="number" min="1" value="${n}"><button class="primary" onclick="sfx('click')">BET SET</button></div>`}
 function scrollToGames(){$("games").scrollIntoView()}
 function toggleSound(){S.sound=!S.sound;$("sound").textContent=S.sound?"🔊":"🔇";if(S.sound)sfx("win");save()}
 
 const games={
-slot(){document.getElementById("gameBody").innerHTML=betbox()+`<div class="reels"><div class="reel" id="r1">7️⃣</div><div class="reel" id="r2">7️⃣</div><div class="reel" id="r3">7️⃣</div></div><button onclick="slotSpin()">SPIN</button><div id="res" class="result"></div>`},
-dice(){document.getElementById("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
-blackjack(){document.getElementById("gameBody").innerHTML=betbox(100)+`<div class="felt"><div class="street">BLACKJACK TABLE</div><div>DEALER</div><div id="dealer" class="holdem-row"></div><div class="pot">BET <span id="bjbet">0</span></div><div>PLAYER</div><div id="player" class="holdem-row"></div><div class="actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button><button id="bjsplit" onclick="BJ.split?bjSplitAction():bjSplit()" disabled>SPLIT</button></div><div id="bjres" class="result"></div></div>`},
+slot(){gameBody.innerHTML=betbox()+`<div class="reels"><div class="reel" id="r1">7️⃣</div><div class="reel" id="r2">7️⃣</div><div class="reel" id="r3">7️⃣</div></div><button onclick="slotSpin()">SPIN</button><div id="res" class="result"></div>`},
+dice(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
+blackjack(){gameBody.innerHTML=betbox(100)+`<div class="felt"><div class="street">BLACKJACK TABLE</div><div>DEALER</div><div id="dealer" class="holdem-row"></div><div class="pot">BET <span id="bjbet">0</span></div><div>PLAYER</div><div id="player" class="holdem-row"></div><div class="actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button><button id="bjsplit" onclick="BJ.split?bjSplitAction():bjSplit()" disabled>SPLIT</button></div><div id="bjres" class="result"></div></div>`},
 holdem(){holdemInit()},
-roulette(){document.getElementById("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="roulette('red')">🔴 RED ×2</button><button onclick="roulette('black')">⚫ BLACK ×2</button><button onclick="roulette('green')">🟢 ZERO ×14</button></div><div id="res" class="result">0 — 36</div>`},
-highlow(){document.getElementById("gameBody").innerHTML=betbox()+`<div id="card" class="result">7</div><div class="choices"><button onclick="hl('high')">HIGH</button><button onclick="hl('low')">LOW</button></div>`},
-chohan(){document.getElementById("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="ch('丁')">丁</button><button onclick="ch('半')">半</button></div><div id="res" class="result">🎯</div>`},
-coin(){document.getElementById("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="coin('表')">表</button><button onclick="coin('裏')">裏</button></div><div id="res" class="result">🪙</div>`},
-lottery(){document.getElementById("gameBody").innerHTML=`<p>ONE DRAW / 100 COIN</p><p>JACKPOT 100,000　•　1 / 500</p><p>GOLD 10,000　•　1 / 50</p><p>SILVER 500　•　約1 / 8</p><button onclick="lottery()">DRAW LOTTERY</button><div id="res" class="result">?</div>`},
-multiplier(){document.getElementById("gameBody").innerHTML=betbox()+`<div id="mult" class="result">1.00×</div><div class="meter"><i id="meter"></i></div><button onclick="crashStart()">START</button><div id="res"></div>`},
-daily(){let ok=Date.now()-S.lastDaily>86400000;document.getElementById("gameBody").innerHTML=`<p>${ok?"VAULT READY":"VAULT LOCKED"}</p><button ${ok?"":"disabled"} onclick="daily()">CLAIM 1,000</button><div id="res" class="result"></div>`},
-shop(){document.getElementById("gameBody").innerHTML=`<div class="shop-item">🎩 LUCKY HAT <button onclick="buy('Lucky Hat',3000)">3,000</button></div><div class="shop-item">💎 GOLD CHIP <button onclick="buy('Gold Chip',10000)">10,000</button></div><div class="shop-item">👑 JACKPOT CROWN <button onclick="buy('Crown',50000)">50,000</button></div><div id="res" class="result"></div>`}
+roulette(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="roulette('red')">🔴 RED ×2</button><button onclick="roulette('black')">⚫ BLACK ×2</button><button onclick="roulette('green')">🟢 ZERO ×14</button></div><div id="res" class="result">0 — 36</div>`},
+highlow(){gameBody.innerHTML=betbox()+`<div id="card" class="result">7</div><div class="choices"><button onclick="hl('high')">HIGH</button><button onclick="hl('low')">LOW</button></div>`},
+chohan(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="ch('丁')">丁</button><button onclick="ch('半')">半</button></div><div id="res" class="result">🎯</div>`},
+coin(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="coin('表')">表</button><button onclick="coin('裏')">裏</button></div><div id="res" class="result">🪙</div>`},
+lottery(){gameBody.innerHTML=`<p>ONE DRAW / 100 COIN</p><p>JACKPOT 100,000　•　1 / 500</p><p>GOLD 10,000　•　1 / 50</p><p>SILVER 500　•　約1 / 8</p><button onclick="lottery()">DRAW LOTTERY</button><div id="res" class="result">?</div>`},
+multiplier(){gameBody.innerHTML=betbox()+`<div id="mult" class="result">1.00×</div><div class="meter"><i id="meter"></i></div><button onclick="crashStart()">START</button><div id="res"></div>`},
+daily(){let ok=Date.now()-S.lastDaily>86400000;gameBody.innerHTML=`<p>${ok?"VAULT READY":"VAULT LOCKED"}</p><button ${ok?"":"disabled"} onclick="daily()">CLAIM 1,000</button><div id="res" class="result"></div>`},
+shop(){gameBody.innerHTML=`<div class="shop-item">🎩 LUCKY HAT <button onclick="buy('Lucky Hat',3000)">3,000</button></div><div class="shop-item">💎 GOLD CHIP <button onclick="buy('Gold Chip',10000)">10,000</button></div><div class="shop-item">👑 JACKPOT CROWN <button onclick="buy('Crown',50000)">50,000</button></div><div id="res" class="result"></div>`}
 };
 
 function slotSpin(){let b=wager($("bet").value);if(!b)return;sfx("spin");let a=["🍒","🍋","🔔","💎","7️⃣"];for(let i=1;i<4;i++){setTimeout(()=>{$("r"+i).textContent=a[Math.floor(Math.random()*a.length)];sfx("spin")},i*260)}setTimeout(()=>{let r=[1,2,3].map(i=>$("r"+i).textContent),m=r[0]===r[1]&&r[1]===r[2]?(r[0]==="7️⃣"?50:15):r[0]===r[1]?3:0;$("res").textContent=m?`BIG WIN ×${m}`:"LOSE";settle(b,b*m,"ULTIMATE SLOTS");m?sfx(m>=15?"jackpot":"win"):sfx("lose");if(m>=15)puchun()},900)}
@@ -51,8 +45,8 @@ function cardEl(c, hidden=false){
   return `<div class="card ${c.s==="♥"||c.s==="♦"?"red":""} dealt">${c.r}${c.s}</div>`;
 }
 function bjRender(){
-  $("player").innerHTML=BJ.p.map(c=>cardEl(c)).join("\n");
-  $("dealer").innerHTML=BJ.d.map((c,i)=>cardEl(c, i===1&&!BJ.reveal)).join("\n");
+  $("player").innerHTML=BJ.p.map(c=>cardEl(c)).join("");
+  $("dealer").innerHTML=BJ.d.map((c,i)=>cardEl(c, i===1&&!BJ.reveal)).join("");
   $("bjbet").textContent=fmt(BJ.bet);
 }
 function bjSetActions(active){
@@ -155,16 +149,16 @@ function bjSplitAction(){
       labels.push(label);
     });
     BJ.over=true; BJ.p=BJ.hands[1]; bjRender();
-    $("bjres").textContent=labels.join("\n");
+    $("bjres").textContent=labels.join("　");
     settle(BJ.originalBet*2,totalPayout,"BLACKJACK SPLIT");
     sfx(totalPayout> BJ.originalBet*2?"win":totalPayout===BJ.originalBet*2?"click":"lose");
     bjSetActions(false); $("bjdeal").disabled=false;
   }
 }
 let H={};
-function holdemInit(){H={deck:deck(),hero:[],villain:[],board:[],pot:0,currentBet:0,heroPaid:0,villainPaid:0,street:0,fold:false,over:false,ante:100};document.getElementById("gameBody").innerHTML=`<div class="felt"><div class="street" id="hstreet">PRE-FLOP</div><div>VILLAIN</div><div id="villain" class="holdem-row"></div><div class="pot">POT <span id="hpot">0</span></div><div>BOARD</div><div id="board" class="holdem-row"></div><div>YOU</div><div id="hero" class="holdem-row"></div><div id="hstatus" class="result"></div><div class="actions"><button onclick="hCheck()">CHECK / CALL</button><button onclick="hBet(100)">BET 100</button><button onclick="hBet(500)">BET 500</button><button onclick="hBet(1000)">BET 1000</button><button onclick="hRaise()">RAISE</button><button onclick="hFold()">FOLD</button></div><div class="raisebox"><input id="hraise" type="number" min="1" value="100"><button onclick="hRaiseCustom()">RAISE CUSTOM</button></div></div><p class="hint">※ CPU 1人対戦。BET/RAISE額は自分で決定できます。</p>`;hStart()}
+function holdemInit(){H={deck:deck(),hero:[],villain:[],board:[],pot:0,currentBet:0,heroPaid:0,villainPaid:0,street:0,fold:false,over:false,ante:100};gameBody.innerHTML=`<div class="felt"><div class="street" id="hstreet">PRE-FLOP</div><div>VILLAIN</div><div id="villain" class="holdem-row"></div><div class="pot">POT <span id="hpot">0</span></div><div>BOARD</div><div id="board" class="holdem-row"></div><div>YOU</div><div id="hero" class="holdem-row"></div><div id="hstatus" class="result"></div><div class="actions"><button onclick="hCheck()">CHECK / CALL</button><button onclick="hBet(100)">BET 100</button><button onclick="hBet(500)">BET 500</button><button onclick="hBet(1000)">BET 1000</button><button onclick="hRaise()">RAISE</button><button onclick="hFold()">FOLD</button></div><div class="raisebox"><input id="hraise" type="number" min="1" value="100"><button onclick="hRaiseCustom()">RAISE CUSTOM</button></div></div><p class="hint">※ CPU 1人対戦。BET/RAISE額は自分で決定できます。</p>`;hStart()}
 function hStart(){let b=100;if(S.coins<b*2){$("hstatus").textContent="100 COIN以上必要";return}S.coins-=b;S.wagered+=b;H.hero=[H.deck.pop(),H.deck.pop()];H.villain=[H.deck.pop(),H.deck.pop()];H.pot=b*2;H.heroPaid=b;H.villainPaid=b;hRender();sfx("deal")}
-function hRender(){let names=["PRE-FLOP","FLOP","TURN","RIVER","SHOWDOWN"];$("hstreet").textContent=names[H.street];$("hpot").textContent=fmt(H.pot);$("hero").innerHTML=H.hero.map(cardEl).join("\n");$("villain").innerHTML=H.over?H.villain.map(cardEl).join("\n"):'<div class="card back">?</div><div class="card back">?</div>';$("board").innerHTML=H.board.map(cardEl).join("\n");}
+function hRender(){let names=["PRE-FLOP","FLOP","TURN","RIVER","SHOWDOWN"];$("hstreet").textContent=names[H.street];$("hpot").textContent=fmt(H.pot);$("hero").innerHTML=H.hero.map(cardEl).join("");$("villain").innerHTML=H.over?H.villain.map(cardEl).join(""):'<div class="card back">?</div><div class="card back">?</div>';$("board").innerHTML=H.board.map(cardEl).join("");}
 function hNeedCall(){return Math.max(0,H.villainPaid-H.heroPaid)}
 function hCheck(){if(H.over)return;let call=hNeedCall();if(call>0){if(S.coins<call){$("hstatus").textContent="COIN不足";return}S.coins-=call;S.wagered+=call;H.heroPaid+=call;H.pot+=call;sfx("chip")}else sfx("click");hCpu()}
 function hBet(amount){if(H.over)return;let call=hNeedCall(),need=call+amount;if(S.coins<need){$("hstatus").textContent="COIN不足";return}S.coins-=need;S.wagered+=need;H.heroPaid+=need;H.currentBet=amount;H.pot+=need;sfx("chip");hCpu(true)}
@@ -190,27 +184,3 @@ function buy(n,p){if(S.coins<p){$("res").textContent="INSUFFICIENT COINS";sfx("l
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("active"));b.classList.add("active");let f=b.dataset.filter;document.querySelectorAll(".gamecard").forEach(c=>c.style.display=f==="all"||c.dataset.cat===f?"":"none");sfx("click")});
 document.addEventListener("pointerdown",()=>{let a=audio();if(a&&a.state==="suspended")a.resume()},{once:true});
 render();
-
-/* ===== DEBUG CONSOLE ===== */
-const DEBUG_LOG=[];
-function debugLog(type,message,data){
-  const item={time:new Date().toLocaleTimeString("ja-JP",{hour12:false}),type,message,data:data??null};
-  DEBUG_LOG.push(item); if(DEBUG_LOG.length>300)DEBUG_LOG.shift();
-  const box=document.getElementById("debugBody");
-  if(box){
-    box.textContent=DEBUG_LOG.map(x=>`[${x.time}] [${x.type}] ${x.message}${x.data!==null?"\\n  "+JSON.stringify(x.data):""}`).join("\n");
-    box.scrollTop=box.scrollHeight;
-  }
-}
-window.addEventListener("error",e=>debugLog("ERROR",e.message,{file:e.filename,line:e.lineno,col:e.colno}));
-window.addEventListener("unhandledrejection",e=>debugLog("PROMISE",String(e.reason)));
-const _oldOpenGame=window.openGame;
-
-function toggleDebug(){const p=document.getElementById("debugPanel");p.classList.toggle("hidden");debugLog("DEBUG","Panel "+(p.classList.contains("hidden")?"closed":"opened"))}
-async function copyDebug(){
-  const text=DEBUG_LOG.map(x=>`[${x.time}] [${x.type}] ${x.message}${x.data!==null?"\\n  "+JSON.stringify(x.data):""}`).join("\n");
-  try{await navigator.clipboard.writeText(text);debugLog("DEBUG","Log copied to clipboard",{entries:DEBUG_LOG.length});}
-  catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();debugLog("DEBUG","Log copied using fallback",{entries:DEBUG_LOG.length});}
-}
-function clearDebug(){DEBUG_LOG.length=0;document.getElementById("debugBody").textContent="";debugLog("DEBUG","Log cleared")}
-debugLog("BOOT","Gamble Box debug console ready",{version:"3.4",audioRoot:true});
