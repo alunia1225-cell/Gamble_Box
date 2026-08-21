@@ -887,3 +887,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
   window.GB_BIND_LOBBY=gbBindLobby;
 })();
+
+window.openGame=openGame;
+window.closeGame=closeGame;

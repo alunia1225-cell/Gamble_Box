@@ -70,7 +70,7 @@
   });
 })();
 </script>
-<script src="app.js?v=4.7.26"></script>
+<script src="app.js?v=4.7.27"></script>
 <script>
 (function(){
   function tick(){var e=document.getElementById("debugClock");if(e)e.textContent=new Date().toLocaleTimeString();requestAnimationFrame(tick)}
@@ -93,18 +93,43 @@
   <section class="welcome"><div><small>WELCOME BACK</small><h2>CHOOSE YOUR<br><em>TABLE.</em></h2><p>Touch-first casino experience.</p></div><div class="avatar"><span id="avatarText">GB</span><b id="playerName">PLAYER</b><small>READY</small></div></section>
   <nav id="lobbyTabs"><button class="active" data-cat="all">ALL</button><button data-cat="casino">CASINO</button><button data-cat="table">TABLE</button><button data-cat="classic">CLASSIC</button><button data-cat="reward">REWARDS</button></nav>
   <section class="lobbyGrid">
-   <button data-game="holdem" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('holdem')" data-cat="table"><i class="gameEmoji">🃏</i><b>TEXAS HOLD'EM</b><small>4 PLAYER • AI TABLE</small><em>PLAY →</em></button>
-   <button data-game="blackjack" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('blackjack')" data-cat="table"><i class="gameEmoji">🂡</i><b>BLACKJACK</b><small>HIT • STAND • DOUBLE</small><em>PLAY →</em></button>
-   <button data-game="slot" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('slot')" data-cat="casino"><i class="gameEmoji">🎰</i><b>ULTIMATE SLOTS</b><small>3 REELS • PAYLINES</small><em>PLAY →</em></button>
-   <button data-game="roulette" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('roulette')" data-cat="casino"><i class="gameEmoji">🎡</i><b>ROULETTE</b><small>RED • BLACK • ZERO</small><em>PLAY →</em></button>
-   <button data-game="multiplier" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('multiplier')" data-cat="casino"><i class="gameEmoji">🚀</i><b>CRASH</b><small>RIDE THE CURVE</small><em>PLAY →</em></button>
-   <button data-game="highlow" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('highlow')" data-cat="classic"><i class="gameEmoji">📈</i><b>HIGH & LOW</b><small>LIVE MARKET PATH</small><em>PLAY →</em></button>
-   <button data-game="chohan" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('chohan')" data-cat="classic"><i class="gameEmoji">🎲</i><b>CHO-HAN</b><small>ODD / EVEN • DICE TABLE</small><em>PLAY →</em></button>
-   <button data-game="coin" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('coin')" data-cat="classic"><i class="gameEmoji">🪙</i><b>COIN FLIP</b><small>HEADS • TAILS</small><em>PLAY →</em></button>
-   <button data-game="dice" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('dice')" data-cat="table"><i class="gameEmoji">🎲</i><b>HIGH DICE</b><small>HIGH • LOW • EXACT</small><em>PLAY →</em></button>
-   <button data-game="lottery" onclick="window.GB_HARD_LAUNCH&&window.GB_HARD_LAUNCH('lottery')" data-cat="reward"><i class="gameEmoji">🎟️</i><b>LOTTERY</b><small>JACKPOT</small><em>PLAY →</em></button>
+   <button data-game="holdem" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'holdem\')" data-cat="table"><i class="gameEmoji">🃏</i><b>TEXAS HOLD'EM</b><small>4 PLAYER • AI TABLE</small><em>PLAY →</em></button>
+   <button data-game="blackjack" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'blackjack\')" data-cat="table"><i class="gameEmoji">🂡</i><b>BLACKJACK</b><small>HIT • STAND • DOUBLE</small><em>PLAY →</em></button>
+   <button data-game="slot" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'slot\')" data-cat="casino"><i class="gameEmoji">🎰</i><b>ULTIMATE SLOTS</b><small>3 REELS • PAYLINES</small><em>PLAY →</em></button>
+   <button data-game="roulette" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'roulette\')" data-cat="casino"><i class="gameEmoji">🎡</i><b>ROULETTE</b><small>RED • BLACK • ZERO</small><em>PLAY →</em></button>
+   <button data-game="multiplier" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'multiplier\')" data-cat="casino"><i class="gameEmoji">🚀</i><b>CRASH</b><small>RIDE THE CURVE</small><em>PLAY →</em></button>
+   <button data-game="highlow" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'highlow\')" data-cat="classic"><i class="gameEmoji">📈</i><b>HIGH & LOW</b><small>LIVE MARKET PATH</small><em>PLAY →</em></button>
+   <button data-game="chohan" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'chohan\')" data-cat="classic"><i class="gameEmoji">🎲</i><b>CHO-HAN</b><small>ODD / EVEN • DICE TABLE</small><em>PLAY →</em></button>
+   <button data-game="coin" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'coin\')" data-cat="classic"><i class="gameEmoji">🪙</i><b>COIN FLIP</b><small>HEADS • TAILS</small><em>PLAY →</em></button>
+   <button data-game="dice" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'dice\')" data-cat="table"><i class="gameEmoji">🎲</i><b>HIGH DICE</b><small>HIGH • LOW • EXACT</small><em>PLAY →</em></button>
+   <button data-game="lottery" onclick="return window.GB_OPEN_GAME&&window.GB_OPEN_GAME(\'lottery\')" data-cat="reward"><i class="gameEmoji">🎟️</i><b>LOTTERY</b><small>JACKPOT</small><em>PLAY →</em></button>
   </section>
   <section class="lobbyTools"><button id="roomBtn"><small>PRIVATE ROOM</small><b>PLAY WITH FRIENDS</b><span id="roomCode">CREATE INVITE →</span></button><button id="profileCard"><small>PROFILE</small><b id="profileMeta">PLAYER • LV.1</b><span>EDIT PROFILE →</span></button></section>
 </div>
 <div id="socialOverlay" class="socialOverlay hidden"><div id="socialPanel"></div></div>
+
+<script>
+(function(){
+  window.GB_OPEN_GAME=function(game){
+    try{
+      if(typeof debugLog==="function") debugLog("GAME","DIRECT LAUNCH REQUEST",{game:game});
+      if(typeof openGame!=="function"){
+        var m=document.getElementById("modal");
+        if(m)m.classList.remove("hidden");
+        var c=document.getElementById("modalContent");
+        if(c)c.innerHTML='<div class="game"><h2>GAME RUNTIME ERROR</h2><p>openGame() is not available.</p><button onclick="location.reload()">RELOAD</button></div>';
+        return false;
+      }
+      openGame(game);
+      return true;
+    }catch(e){
+      if(typeof debugLog==="function")debugLog("ERROR","DIRECT LAUNCH FAILED",{game:game,error:String(e),stack:e.stack});
+      var m=document.getElementById("modal");if(m)m.classList.remove("hidden");
+      var c=document.getElementById("modalContent");
+      if(c)c.innerHTML='<div class="game"><h2>GAME ERROR</h2><pre>'+String(e.stack||e).replace(/[&<>]/g,function(s){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[s]})+'</pre></div>';
+      return false;
+    }
+  };
+})();
+</script>
 </body></html>
