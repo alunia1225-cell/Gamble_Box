@@ -809,3 +809,79 @@ document.addEventListener("DOMContentLoaded",()=>{
   else{const code=Math.random().toString(36).slice(2,8).toUpperCase(),url=location.origin+location.pathname+'#room='+code;p.innerHTML='<h2>PRIVATE ROOM</h2><p style="color:#777;font-size:10px">Share this URL when the online server is connected.</p><div class="roomCode"><small>ROOM CODE</small><strong>'+code+'</strong></div><div class="socialActions"><button class="primary" id="copyRoom">COPY URL</button><button id="closeR">CLOSE</button></div>';document.getElementById('copyRoom').onclick=()=>navigator.clipboard?.writeText(url);document.getElementById('closeR').onclick=()=>o.classList.add('hidden')}}
   document.addEventListener('DOMContentLoaded',()=>{document.getElementById('tapStart')?.addEventListener('click',start);document.getElementById('profileBtn')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('profileCard')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('friendsBtn')?.addEventListener('click',()=>openSocial('friends'));document.getElementById('lobbyDebugBtn')?.addEventListener('click',toggleDebug);document.getElementById('roomBtn')?.addEventListener('click',()=>openSocial('room'));document.querySelectorAll('.lobbyGrid button').forEach(b=>b.addEventListener('click',()=>{const p=prof();p.games=(p.games||0)+1;saveProf(p);renderProfile();document.getElementById('appLobby').classList.add('hidden');openGame(b.dataset.game)}));document.querySelectorAll('#lobbyTabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#lobbyTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.lobbyGrid button').forEach(g=>g.style.display=b.dataset.cat==='all'||g.dataset.cat===b.dataset.cat?'flex':'none')}));});
 })();
+
+/* ===== 4.7.24 GAME LAUNCH FIX ===== */
+(function(){
+  function gbLobbyOpen(game){
+    try{
+      if(typeof openGame!=="function") throw new Error("openGame is unavailable");
+      debugLog("GAME","LOBBY LAUNCH REQUEST",{game:game});
+      openGame(game);
+    }catch(e){
+      try{debugLog("ERROR","LOBBY LAUNCH FAILED",{game:game,error:String(e),stack:e.stack})}catch(_){}
+      const m=document.getElementById("modalContent");
+      if(m)m.innerHTML='<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">'+String(e.stack||e).replace(/[&<>]/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[s]))+'</pre></div>';
+      const modal=document.getElementById("modal");
+      if(modal)modal.classList.remove("hidden");
+    }
+  }
+  function gbBindLobby(){
+    document.querySelectorAll("#appLobby [data-game]").forEach(function(btn){
+      if(btn.__gbLaunchBound)return;
+      btn.__gbLaunchBound=true;
+      const game=btn.getAttribute("data-game");
+      const handler=function(e){e.preventDefault();gbLobbyOpen(game)};
+      btn.addEventListener("click",handler);
+      btn.addEventListener("touchend",handler,{passive:false});
+    });
+
+    document.querySelectorAll("#lobbyTabs [data-cat]").forEach(function(btn){
+      if(btn.__gbCatBound)return;
+      btn.__gbCatBound=true;
+      btn.addEventListener("click",function(){
+        const cat=btn.getAttribute("data-cat");
+        document.querySelectorAll("#lobbyTabs [data-cat]").forEach(b=>b.classList.toggle("active",b===btn));
+        document.querySelectorAll("#appLobby .lobbyGrid [data-game]").forEach(card=>{
+          card.style.display=(cat==="all"||card.getAttribute("data-cat")===cat)?"flex":"none";
+        });
+      });
+    });
+
+    const room=document.getElementById("roomBtn");
+    if(room&&!room.__gbBound){
+      room.__gbBound=true;
+      room.addEventListener("click",function(){
+        const code=Math.random().toString(36).slice(2,8).toUpperCase();
+        const url=location.href.split("#")[0]+"#room="+code;
+        if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
+        const out=document.getElementById("roomCode");if(out)out.textContent=code+" • INVITE COPIED";
+        try{debugLog("ROOM","PRIVATE ROOM CREATED",{room:code,url:url})}catch(_){}
+      });
+    }
+
+    const pbtn=document.getElementById("profileBtn"),pcard=document.getElementById("profileCard");
+    if(pbtn&&!pbtn.__gbBound){pbtn.__gbBound=true;pbtn.addEventListener("click",gbSimpleProfile)}
+    if(pcard&&!pcard.__gbBound){pcard.__gbBound=true;pcard.addEventListener("click",gbSimpleProfile)}
+    const fbtn=document.getElementById("friendsBtn");
+    if(fbtn&&!fbtn.__gbBound){fbtn.__gbBound=true;fbtn.addEventListener("click",gbSimpleFriends)}
+  }
+  function gbSimpleProfile(){
+    const ov=document.getElementById("socialOverlay"),p=document.getElementById("socialPanel");if(!ov||!p)return;
+    p.innerHTML='<h2>PROFILE</h2><label>PLAYER NAME</label><input id="gbProfileName" value="PLAYER" maxlength="16"><div class="social-actions"><button id="gbProfileSave">SAVE</button><button id="gbSocialClose">CLOSE</button></div>';
+    ov.classList.remove("hidden");
+    document.getElementById("gbSocialClose").onclick=()=>ov.classList.add("hidden");
+    document.getElementById("gbProfileSave").onclick=()=>{const n=(document.getElementById("gbProfileName").value||"PLAYER").trim()||"PLAYER";const e=document.getElementById("playerName");if(e)e.textContent=n;ov.classList.add("hidden")};
+  }
+  function gbSimpleFriends(){
+    const ov=document.getElementById("socialOverlay"),p=document.getElementById("socialPanel");if(!ov||!p)return;
+    p.innerHTML='<h2>FRIENDS</h2><p>FRIEND SYSTEM READY</p><small>PRIVATE ROOM INVITES CAN BE SHARED FROM THE LOBBY.</small><div class="social-actions"><button id="gbFriendsClose">CLOSE</button></div>';
+    ov.classList.remove("hidden");
+    document.getElementById("gbFriendsClose").onclick=()=>ov.classList.add("hidden");
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    gbBindLobby();
+    setTimeout(gbBindLobby,300);
+    setTimeout(gbBindLobby,1000);
+  });
+  window.GB_BIND_LOBBY=gbBindLobby;
+})();
