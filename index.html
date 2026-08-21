@@ -1,75 +1,31 @@
 <!doctype html>
 <html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GAMBLE BOX</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GAMBLE BOX 3.0</title><link rel="stylesheet" href="style.css"></head>
 <body>
-<div id="blackout"><div class="puchun">プチュン</div><div class="puchun-sub">―――― 暗転 ――――</div></div>
-
-<header>
-  <div class="brand">GAMBLE<span>BOX</span></div>
-  <div class="wallet">💎 <b id="coins">10000</b> COIN</div>
-</header>
-
+<div id="boot"><div class="boot-logo">GAMBLE<br><span>BOX</span></div><div class="loader"><i></i></div><small>VIRTUAL CASINO SYSTEM</small></div>
+<div id="blackout"><div class="pu">プチュン</div><div class="pu2">NO SIGNAL</div></div>
+<header><div class="logo">GAMBLE<span>BOX</span><small>3.0</small></div><div class="topstats"><span>● ONLINE</span><b>💎 <em id="coins">10000</em></b><button onclick="toggleSound()" id="sound">🔊</button></div></header>
+<div class="ticker"><span>LIVE</span><div>JACKPOT LIVE　•••　VIRTUAL COINS ONLY　•••　GOOD LUCK　•••　BIG WIN CHANCE　•••</div></div>
 <main>
-  <section class="hero">
-    <div>
-      <small>VIRTUAL CASINO</small>
-      <h1>運命を、回せ。</h1>
-      <p>すべて仮想コイン。ログイン不要・ブラウザ保存型。</p>
-    </div>
-    <div class="profile">👤 PLAYER<br><small>LEVEL <b id="level">1</b></small></div>
-  </section>
-
-  <nav id="tabs">
-    <button class="active" data-filter="all">ALL</button>
-    <button data-filter="casino">CASINO</button>
-    <button data-filter="table">TABLE</button>
-    <button data-filter="classic">CLASSIC</button>
-    <button data-filter="reward">REWARD</button>
-  </nav>
-
-  <section class="stats">
-    <div><span>総ベット</span><b id="wagered">0</b></div>
-    <div><span>収支</span><b id="profit">0</b></div>
-    <div><span>勝利数</span><b id="wins">0</b></div>
-    <div><span>最大勝利</span><b id="maxwin">0</b></div>
-  </section>
-
-  <section id="games" class="grid">
-    <article class="card" data-cat="casino" data-game="slot"><div class="icon">🎰</div><h2>スロット</h2><p>3リール・高倍率ジャックポット</p><button onclick="openGame('slot')">PLAY</button></article>
-    <article class="card" data-cat="table" data-game="dice"><div class="icon">🎲</div><h2>サイコロ</h2><p>HIGH / LOW / EXACT</p><button onclick="openGame('dice')">PLAY</button></article>
-    <article class="card" data-cat="table" data-game="blackjack"><div class="icon">🃏</div><h2>ブラックジャック</h2><p>21を狙え</p><button onclick="openGame('blackjack')">PLAY</button></article>
-    <article class="card" data-cat="table" data-game="poker"><div class="icon">♠️</div><h2>ポーカー</h2><p>5枚ドロー・役判定</p><button onclick="openGame('poker')">PLAY</button></article>
-    <article class="card" data-cat="casino" data-game="roulette"><div class="icon">🎡</div><h2>ルーレット</h2><p>RED / BLACK / NUMBER</p><button onclick="openGame('roulette')">PLAY</button></article>
-    <article class="card" data-cat="classic" data-game="highlow"><div class="icon">📈</div><h2>ハイ＆ロー</h2><p>次のカードは上か下か</p><button onclick="openGame('highlow')">PLAY</button></article>
-    <article class="card" data-cat="classic" data-game="chohan"><div class="icon">🎯</div><h2>丁半</h2><p>丁か半か</p><button onclick="openGame('chohan')">PLAY</button></article>
-    <article class="card" data-cat="classic" data-game="coin"><div class="icon">🪙</div><h2>コイントス</h2><p>表か裏か</p><button onclick="openGame('coin')">PLAY</button></article>
-    <article class="card" data-cat="reward" data-game="lottery"><div class="icon">🎟️</div><h2>宝くじ・抽選</h2><p>一発逆転の超低確率賞</p><button onclick="openGame('lottery')">PLAY</button></article>
-    <article class="card" data-cat="casino" data-game="multiplier"><div class="icon">🚀</div><h2>倍率ゲーム</h2><p>倍率が落ちる前にCASH OUT</p><button onclick="openGame('multiplier')">PLAY</button></article>
-    <article class="card" data-cat="reward" data-game="daily"><div class="icon">🎁</div><h2>デイリーボーナス</h2><p>24時間ごとにコイン獲得</p><button onclick="openGame('daily')">CLAIM</button></article>
-    <article class="card" data-cat="reward" data-game="shop"><div class="icon">🛒</div><h2>景品ショップ</h2><p>仮想アイテムを交換</p><button onclick="openGame('shop')">OPEN</button></article>
-  </section>
-
-  <section class="panel">
-    <h2>🏆 ランキング</h2>
-    <div id="ranking"></div>
-  </section>
-  <section class="panel">
-    <h2>📜 プレイ履歴</h2>
-    <div id="history"></div>
-  </section>
-</main>
-
-<div id="modal" class="modal hidden">
- <div class="modal-box">
-   <button class="close" onclick="closeGame()">×</button>
-   <div id="modalContent"></div>
- </div>
-</div>
-<script src="app.js"></script>
-</body>
-</html>
+<section class="hero"><div><div class="eyebrow">WELCOME TO THE HOUSE</div><h1>運命を、<strong>回せ。</strong></h1><p>ゲーム・演出・SE・ベットシステムまで盛り込んだブラウザカジノ。</p><div class="heroBtns"><button class="gold" onclick="openGame('slot')">🎰 PLAY NOW</button><button onclick="scrollToGames()">GAME FLOOR ↓</button></div></div><div class="heroOrb"><div class="orb">777</div><span>JACKPOT</span></div></section>
+<section class="dash"><div><small>BALANCE</small><b>💎 <span id="coins2">10000</span></b></div><div><small>NET PROFIT</small><b id="profit">+0</b></div><div><small>WAGERED</small><b id="wagered">0</b></div><div><small>LEVEL</small><b id="level">1</b></div></section>
+<nav id="tabs"><button class="active" data-filter="all">ALL GAMES</button><button data-filter="casino">CASINO</button><button data-filter="table">TABLE</button><button data-filter="classic">CLASSIC</button><button data-filter="reward">REWARDS</button></nav>
+<section id="games" class="grid">
+<article class="gamecard featured" data-cat="casino"><div class="tag">HOT</div><div class="gi">🎰</div><h2>ULTIMATE SLOTS</h2><p>3リール / 777 / BIG WIN</p><div class="odds">MAX <b>×50</b></div><button onclick="openGame('slot')">ENTER TABLE</button></article>
+<article class="gamecard" data-cat="table"><div class="gi">🎲</div><h2>HIGH DICE</h2><p>HIGH / LOW / EXACT</p><div class="odds">MAX <b>×5</b></div><button onclick="openGame('dice')">PLAY</button></article>
+<article class="gamecard" data-cat="table"><div class="gi">🃏</div><h2>BLACKJACK</h2><p>HIT / STAND / DOUBLE / SPLIT</p><div class="odds">BJ <b>×2.5</b></div><button onclick="openGame('blackjack')">PLAY</button></article>
+<article class="gamecard featured" data-cat="table"><div class="tag">POKER</div><div class="gi">♠️</div><h2>TEXAS HOLD'EM</h2><p>2 HOLE CARDS / 5 COMMUNITY / BET & RAISE</p><div class="odds">ROYAL <b>×50</b></div><button onclick="openGame('holdem')">SIT DOWN</button></article>
+<article class="gamecard" data-cat="casino"><div class="gi">🎡</div><h2>ROULETTE</h2><p>RED / BLACK / ZERO</p><div class="odds">ZERO <b>×14</b></div><button onclick="openGame('roulette')">PLAY</button></article>
+<article class="gamecard" data-cat="classic"><div class="gi">📈</div><h2>HIGH & LOW</h2><p>次のカードを予想。</p><div class="odds">WIN <b>×1.8</b></div><button onclick="openGame('highlow')">PLAY</button></article>
+<article class="gamecard" data-cat="classic"><div class="gi">🎯</div><h2>丁半</h2><p>2つのダイス。</p><div class="odds">PAYOUT <b>×2</b></div><button onclick="openGame('chohan')">PLAY</button></article>
+<article class="gamecard" data-cat="classic"><div class="gi">🪙</div><h2>COIN FLIP</h2><p>表か裏か。</p><div class="odds">PAYOUT <b>×2</b></div><button onclick="openGame('coin')">PLAY</button></article>
+<article class="gamecard" data-cat="reward"><div class="gi">🎟️</div><h2>LOTTERY</h2><p>一撃100,000 COIN。</p><div class="odds">JACKPOT <b>100K</b></div><button onclick="openGame('lottery')">DRAW</button></article>
+<article class="gamecard featured" data-cat="casino"><div class="tag">LIVE</div><div class="gi">🚀</div><h2>CRASH ×</h2><p>倍率が落ちる前にCASH OUT。</p><div class="odds">RISK <b>∞</b></div><button onclick="openGame('multiplier')">ENTER</button></article>
+<article class="gamecard" data-cat="reward"><div class="gi">🎁</div><h2>DAILY VAULT</h2><p>24時間ごとの無料コイン。</p><div class="odds">BONUS <b>1,000</b></div><button onclick="openGame('daily')">CLAIM</button></article>
+<article class="gamecard" data-cat="reward"><div class="gi">🛒</div><h2>CHIP SHOP</h2><p>限定コレクション。</p><div class="odds">ITEMS <b>∞</b></div><button onclick="openGame('shop')">OPEN</button></article>
+</section>
+<section class="lower"><div class="panel"><div class="panelhead"><h2>🏆 LIVE LEADERBOARD</h2><span>REALTIME</span></div><div id="ranking"></div></div><div class="panel"><div class="panelhead"><h2>📜 HISTORY</h2><span>LOCAL</span></div><div id="history"></div></div></section>
+</main><footer>GAMBLE BOX 3.0 • VIRTUAL COINS ONLY • NO REAL MONEY</footer>
+<div id="modal" class="modal hidden"><div class="tabletop"><button class="close" onclick="closeGame()">×</button><div id="modalContent"></div></div></div>
+<script src="app.js"></script></body></html>
