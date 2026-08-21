@@ -1,0 +1,21 @@
+Gamble Box 4.7.14 — Game Check
+
+Static/runtime-oriented checks performed:
+- app.js Node syntax check: PASS
+- onclick handler reference scan: PASS
+- duplicate function declaration scan: PASS
+- audio asset reference scan: PASS
+
+Definite issues found and fixed from 4.7.13:
+1. Daily Vault button had no global daily() handler.
+2. Chip Shop buttons had no global buy() handler.
+3. Blackjack Ace value display did not produce the requested dual total (e.g. A+8 -> 19 or 9).
+4. Blackjack Split UI existed despite having no real implementation; removed the dead Split button.
+5. Hold'em could incorrectly end when all live players were all-in, and could enter an infinite turn search with no active players.
+6. Hold'em uses the 4-player table consistently; duplicate 6-player holdemNames declaration removed.
+7. Explicit DOM lookup is used for gameBody instead of relying on implicit window globals.
+8. Roulette keeps a single active spin path and each pocket has its own color class.
+9. Game runtime calls use explicit window lifecycle functions for safer game switching.
+10. Chohan / Coin / Dice rapid repeated inputs are gated during a round.
+
+Note: a full interactive iPhone/Safari run is not available in this container; the checks above are source-level plus deterministic JS-environment checks.

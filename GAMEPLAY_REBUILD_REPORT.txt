@@ -1,0 +1,25 @@
+Gamble Box 4.7.15 — Gameplay / AI Rebuild
+
+Base:
+- 4.7.14 FULL_GAME_CHECK used as base.
+
+Gameplay changes:
+- Texas Hold'em CPU personalities: TAG / LAG / TRICKSTER / CALLING.
+- Preflop hand-strength model plus postflop Monte Carlo equity estimate.
+- Bluff frequency adapts to personality, board texture, pressure, and hero aggression.
+- Value betting and re-raising are separated from bluff raises.
+- No arbitrary raise-count cap (No-Limit behavior); minimum re-raise size uses last raise size.
+- CPU thinking delay: ~1.8–3.2 seconds.
+- High/Low is graph-only: outcome is locked at the player's choice, the path starts low, can reverse sharply, and converges to the locked HIGH/LOW result.
+- Generic win/loss result burst added for stronger feedback.
+
+Validation:
+- node app.js syntax check: PASS
+- key function duplicate checks: PASS
+- 4-player Hold'em marker: PASS
+- bluff/equity AI markers: PASS
+- High/Low result-lock marker: PASS
+- runtime token marker: PASS
+
+Browser note:
+- Full iPhone/Safari interaction cannot be reproduced in this container. Static source checks are supplemented by browser-oriented structure checks; direct real-device testing remains the final verification step.
