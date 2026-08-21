@@ -801,6 +801,8 @@ function rouletteSpin(choice){
  const ballTurns=12;
  res.textContent="NO MORE BETS";numEl.textContent="—";colEl.textContent="SPINNING";sfx("roulette");
  w.style.transition="none";ball.style.transition="none";
+ // Ball starts on the roulette track, directly under the pointer.
+ ball.style.transform=`rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`;
  const start=performance.now(),duration=6200;
  const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}

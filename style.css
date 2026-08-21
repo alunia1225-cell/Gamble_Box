@@ -1015,3 +1015,66 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #modal .real-pocket{width:20px!important;margin-left:-10px!important}
   #modal .real-pocket span{width:20px!important;min-width:20px!important;max-width:20px!important;font-size:clamp(6.5px,1.75vw,8px)!important}
 }
+
+
+/* 4.7.50 — ROULETTE ORBIT + IPHONE CENTERING
+   Keep the wheel and ball on the same physical coordinate system. */
+#modal .real-wheel-wrap{
+  --wheel-size:268px!important;
+  --ball-radius:106px!important;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  min-height:0!important;
+  margin:8px auto 2px!important;
+  display:grid!important;
+  place-items:center!important;
+  position:relative!important;
+  overflow:visible!important;
+}
+#modal .real-wheel{
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  margin:0!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:50% 50%!important;
+}
+#modal .real-pocket{
+  height:calc(var(--wheel-size)*.405)!important;
+  margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+  transform-origin:10px calc(var(--wheel-size)*.405)!important;
+}
+#modal .real-ball{
+  left:50%!important;
+  top:50%!important;
+  margin:-6px!important;
+  width:12px!important;
+  height:12px!important;
+  transform-origin:50% 50%!important;
+  transform:rotate(0deg) translateY(calc(-1 * var(--ball-radius)))!important;
+}
+#modal .real-pointer{
+  top:-9px!important;
+}
+@media(max-width:600px){
+  #modal .real-wheel-wrap{
+    --wheel-size:min(70vw,268px)!important;
+    --ball-radius:calc(var(--wheel-size)*.395)!important;
+    width:var(--wheel-size)!important;
+    height:var(--wheel-size)!important;
+    margin:8px auto 2px!important;
+  }
+  #modal .real-wheel{
+    width:var(--wheel-size)!important;
+    height:var(--wheel-size)!important;
+  }
+  #modal .real-pocket{
+    width:14px!important;
+    height:calc(var(--wheel-size)*.405)!important;
+    margin-left:-7px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+    transform-origin:7px calc(var(--wheel-size)*.405)!important;
+  }
+}
