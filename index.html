@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>GAMBLE BOX 3.0</title><link rel="stylesheet" href="style.css"></head>
+<title>GAMBLE BOX 3.8</title><link rel="stylesheet" href="style.css"></head>
 <body>
 <div id="boot"><div class="boot-logo">GAMBLE<br><span>BOX</span></div><div class="loader"><i></i></div><small>VIRTUAL CASINO SYSTEM</small></div>
 <div id="blackout"><div class="pu">プチュン</div><div class="pu2">NO SIGNAL</div></div>
@@ -26,30 +26,56 @@
 <article class="gamecard" data-cat="reward"><div class="gi">🛒</div><h2>CHIP SHOP</h2><p>限定コレクション。</p><div class="odds">ITEMS <b>∞</b></div><button onclick="openGame('shop')">OPEN</button></article>
 </section>
 <section class="lower"><div class="panel"><div class="panelhead"><h2>🏆 LIVE LEADERBOARD</h2><span>REALTIME</span></div><div id="ranking"></div></div><div class="panel"><div class="panelhead"><h2>📜 HISTORY</h2><span>LOCAL</span></div><div id="history"></div></div></section>
-</main><footer>GAMBLE BOX 3.0 • VIRTUAL COINS ONLY • NO REAL MONEY</footer>
+</main><footer>GAMBLE BOX 3.8 • VIRTUAL COINS ONLY • NO REAL MONEY</footer>
 <div id="modal" class="modal hidden"><div class="tabletop"><button class="close" onclick="closeGame()">×</button><div id="modalContent"></div></div></div>
-<script src="app.js"></script>
-<button id="debugToggle" onclick="toggleDebug()">🐞 DEBUG</button>
-<div id="debugPanel" class="debug-panel hidden">
-  <div class="debug-head">
-    <div><b>DEBUG CONSOLE</b><small id="debugStatus">LIVE</small></div>
-    <div class="debug-actions">
-      <button onclick="copyDebug()">COPY LOG</button>
-      <button onclick="clearDebug()">CLEAR</button>
-      <button onclick="toggleDebug()">×</button>
-    </div>
-  </div>
-  <pre id="debugBody">[BOOT] Debug console ready.</pre>
-</div>
 
-<div id="debugToggle" aria-label="Debug console"><span class="dbg-dot"></span><span>DEBUG</span><b id="debugCount">0</b></div>
-<div id="debugPanel" class="debug-panel hidden">
-  <div class="debug-top">
-    <div class="debug-title"><span class="dbg-dot"></span><div><b>SYSTEM DIAGNOSTICS</b><small>GAMBLE BOX / LIVE CONSOLE</small></div></div>
-    <div class="debug-actions"><button id="debugCopy">COPY LOG</button><button id="debugClear">CLEAR</button><button id="debugClose">×</button></div>
-  </div>
-  <div class="debug-stats"><span><i id="dbgEvents">0</i> EVENTS</span><span><i id="dbgErrors">0</i> ERRORS</span><span><i id="dbgGames">0</i> GAME OPS</span><span id="dbgState">● ONLINE</span></div>
-  <div id="debugBody" class="debug-body"></div>
-  <div class="debug-foot"><span>iPhone / Web Runtime</span><span id="debugTime">--:--:--</span></div>
-</div>
-</body></html>
+<!-- DEBUG HUD: intentionally inline so it still works if app.js fails -->
+<style>
+#gbDebugBtn{position:fixed;right:14px;bottom:14px;z-index:99999;display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid #6b5a32;border-radius:7px;background:rgba(10,11,12,.94);color:#dfc36f;box-shadow:0 8px 30px #000b;backdrop-filter:blur(12px);font:800 9px Orbitron,system-ui;letter-spacing:1px;cursor:pointer}
+#gbDebugBtn .dot{width:7px;height:7px;border-radius:50%;background:#69e49c;box-shadow:0 0 9px #69e49c}
+#gbDebugBtn .count{min-width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:#252116;color:#fff;font-size:8px}
+#gbDebugPanel{position:fixed;right:14px;bottom:60px;z-index:99998;width:min(760px,calc(100vw - 28px));height:min(540px,70vh);display:none;flex-direction:column;background:rgba(5,7,8,.97);border:1px solid #66562f;border-radius:10px;box-shadow:0 30px 100px #000;backdrop-filter:blur(18px);overflow:hidden}
+#gbDebugPanel.open{display:flex}
+.gbdbg-head{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;background:linear-gradient(90deg,#121416,#08090a);border-bottom:1px solid #282a2c}
+.gbdbg-title{display:flex;align-items:center;gap:10px}.gbdbg-title .dot{width:8px;height:8px;border-radius:50%;background:#69e49c;box-shadow:0 0 12px #69e49c}.gbdbg-title b{display:block;font:800 11px Orbitron;color:#e1c36d}.gbdbg-title small{display:block;margin-top:3px;color:#666d72;font:7px Orbitron;letter-spacing:1.5px}
+.gbdbg-actions{display:flex;gap:5px}.gbdbg-actions button{background:#161819;color:#ddd;border:1px solid #373a3d;border-radius:4px;padding:8px 10px;font:8px Orbitron;cursor:pointer}
+.gbdbg-stats{height:38px;display:flex;align-items:center;gap:18px;padding:0 15px;background:#080a0b;border-bottom:1px solid #202224;color:#697075;font:8px Orbitron}.gbdbg-stats b{color:#d9bb66;font-weight:400}.gbdbg-stats .online{margin-left:auto;color:#69e49c}
+#gbDebugBody{flex:1;overflow:auto;padding:12px;color:#aeb5b8;font:10px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+.gbdbg-line{padding:8px 10px;margin-bottom:5px;border-left:2px solid #3b4246;background:#0d0f10;border-radius:0 4px 4px 0;white-space:pre-wrap;word-break:break-word}.gbdbg-line.err{border-left-color:#e15f6e;background:#180d0f}.gbdbg-line.game{border-left-color:#63a7d7}.gbdbg-line.audio{border-left-color:#9b7be0}.gbdbg-time{color:#60686d}.gbdbg-type{color:#dfbd69;font-weight:800}
+.gbdbg-foot{height:27px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #202224;color:#444a4f;font:7px Orbitron;letter-spacing:1px}
+@media(max-width:600px){#gbDebugBtn{right:10px;bottom:10px}#gbDebugPanel{right:7px;bottom:55px;width:calc(100vw - 14px);height:72vh}.gbdbg-stats{gap:9px;font-size:7px}}
+</style>
+<button id="gbDebugBtn" type="button"><span class="dot"></span><span>DEBUG</span><span class="count" id="gbDebugCount">0</span></button>
+<section id="gbDebugPanel" aria-label="Debug console">
+ <div class="gbdbg-head">
+  <div class="gbdbg-title"><span class="dot"></span><div><b>SYSTEM DIAGNOSTICS</b><small>GAMBLE BOX / LIVE RUNTIME CONSOLE</small></div></div>
+  <div class="gbdbg-actions"><button type="button" id="gbCopy">COPY LOG</button><button type="button" id="gbClear">CLEAR</button><button type="button" id="gbClose">×</button></div>
+ </div>
+ <div class="gbdbg-stats"><span>EVENTS <b id="gbEvents">0</b></span><span>ERRORS <b id="gbErrors">0</b></span><span>GAME OPS <b id="gbGames">0</b></span><span class="online" id="gbOnline">● ONLINE</span></div>
+ <div id="gbDebugBody"></div>
+ <div class="gbdbg-foot"><span>iPhone / GitHub Pages</span><span id="gbDebugClock">--:--:--</span></div>
+</section>
+<script>
+(function(){
+ const L=[];let E=0,G=0;
+ const q=id=>document.getElementById(id);
+ function safe(v){try{return JSON.stringify(v)}catch(e){return String(v)}}
+ function paint(){
+  const b=q("gbDebugBody");if(!b)return;
+  b.innerHTML=L.map(x=>'<div class="gbdbg-line '+(x.type==="ERROR"||x.type==="PROMISE"?"err":x.type==="GAME"?"game":x.type==="AUDIO"?"audio":"")+'"><span class="gbdbg-time">['+x.time+']</span> <span class="gbdbg-type">['+x.type+']</span> '+x.msg+(x.data!==null?'<br><span style="color:#6a7277">↳ '+safe(x.data)+'</span>':'')+'</div>').join("");
+  b.scrollTop=b.scrollHeight;
+  q("gbDebugCount").textContent=L.length;q("gbEvents").textContent=L.length;q("gbErrors").textContent=E;q("gbGames").textContent=G;q("gbDebugClock").textContent=new Date().toLocaleTimeString("ja-JP",{hour12:false});
+ }
+ window.debugLog=function(type,msg,data=null){if(type==="ERROR"||type==="PROMISE")E++;if(type==="GAME")G++;L.push({time:new Date().toLocaleTimeString("ja-JP",{hour12:false}),type,msg,data});if(L.length>300)L.shift();paint()};
+ function open(){q("gbDebugPanel").classList.add("open");debugLog("DEBUG","Console opened")}
+ function close(){q("gbDebugPanel").classList.remove("open")}
+ q("gbDebugBtn").addEventListener("click",open);q("gbClose").addEventListener("click",close);
+ q("gbClear").addEventListener("click",function(){L.length=0;E=0;G=0;paint();debugLog("DEBUG","Log cleared")});
+ q("gbCopy").addEventListener("click",async function(){const t=L.map(x=>'['+x.time+'] ['+x.type+'] '+x.msg+(x.data!==null?"\n  "+safe(x.data):"")).join("\n\n");try{await navigator.clipboard.writeText(t);debugLog("DEBUG","Log copied",{entries:L.length})}catch(e){const a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();debugLog("DEBUG","Log copied (fallback)",{entries:L.length})}});
+ window.addEventListener("error",e=>debugLog("ERROR",e.message,{file:e.filename,line:e.lineno,column:e.colno}));
+ window.addEventListener("unhandledrejection",e=>debugLog("PROMISE",String(e.reason)));
+ debugLog("BOOT","Inline debug console ready",{version:"3.8"});
+})();
+</script>
+
+<script src="app.js?v=3.8"></script></body></html>
