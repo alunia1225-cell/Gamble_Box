@@ -108,7 +108,44 @@ function puchun(){
   debugLog&&debugLog("AUDIO","PUCHUN",{file:"puchun_notice.mp3",blackout:true});
 }
 
-let CRASH={running:false,x:1,bet:0,t:0,raf:null,token:0};
+let CRASH={running:false,x:1,bet:0,t:0,raf:null,token:0,points:[]};
+function crashStart(){
+ if(CRASH.running)return;
+ const b=wager($("bet")?.value);if(!b)return;
+ const token=GB_GAME_TOKEN,path=$("crashLine"),area=$("crashArea"),dot=$("crashDot"),xEl=$("crashX"),res=$("res"),chart=$("crashChart");
+ if(!path||!area||!dot||!xEl||!res||!chart)return;
+ CRASH={running:true,x:1,bet:b,t:0,raf:null,token,points:[]};
+ path.setAttribute("d","");area.setAttribute("d","");xEl.textContent="1.00x";res.textContent="FLYING…";
+ chart.classList.remove("crash-hit","crash-cashed");sfx("click");
+ let last=performance.now();
+ const draw=now=>{
+  if(!CRASH.running||!gbAlive(token)||CRASH.token!==token)return;
+  const dt=Math.min(50,now-last);last=now;CRASH.t+=dt/1000;
+  CRASH.x=Math.exp(CRASH.t*.72);xEl.textContent=CRASH.x.toFixed(2)+"x";
+  const W=620,H=300,L=18,R=12,B=22,uw=W-L-R,uh=H-18-B;
+  const progress=Math.min(1,CRASH.t/12),px=L+uw*progress;
+  const norm=Math.min(1,Math.log(CRASH.x)/Math.log(120)),py=H-B-uh*(.08+.84*norm);
+  CRASH.points.push([px,py]);if(CRASH.points.length>240)CRASH.points.shift();
+  let d="";
+  CRASH.points.forEach((p,i)=>{if(i===0)d=`M ${p[0]} ${p[1]}`;else{const q=CRASH.points[i-1],cx=(q[0]+p[0])/2;d+=` Q ${cx} ${q[1]}, ${p[0]} ${p[1]}`}});
+  path.setAttribute("d",d);area.setAttribute("d",d+` L ${px} ${H-B} L ${L} ${H-B} Z`);
+  dot.setAttribute("cx",px);dot.setAttribute("cy",py);
+  if(CRASH.x>=50||Math.random()<.0007){
+   CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");
+   settle(b,0,"CRASH");sfx("crash");return;
+  }
+  CRASH.raf=requestAnimationFrame(draw);
+ };
+ CRASH.raf=requestAnimationFrame(draw);
+}
+function crashCashout(){
+ if(!CRASH.running)return;
+ CRASH.running=false;cancelAnimationFrame(CRASH.raf);
+ const payout=Math.floor(CRASH.bet*CRASH.x),res=$("res"),chart=$("crashChart");
+ if(res)res.textContent=`CASH OUT @ ${CRASH.x.toFixed(2)}x  +${fmt(payout)}`;
+ if(chart)chart.classList.add("crash-cashed");
+ settle(CRASH.bet,payout,"CRASH");sfx("win");
+}
 function crashStart(){if(CRASH.running)return;const b=wager($("bet").value);if(!b)return;const token=GB_GAME_TOKEN,path=$("crashLine"),dot=$("crashDot"),xEl=$("crashX"),res=$("res");if(!path||!dot||!xEl||!res)return;CRASH={running:true,x:1,bet:b,t:0,raf:null,token};res.textContent="CLIMBING…";sfx("click");let last=performance.now();const loop=now=>{if(!CRASH.running||!gbAlive(token)||CRASH.token!==token)return;const dt=Math.min(50,now-last);last=now;CRASH.t+=dt/1000;CRASH.x=1+Math.pow(CRASH.t,1.38)*.72;const px=Math.min(580,25+CRASH.t*110),py=Math.max(20,280-(CRASH.x-1)*40);if(!document.body.contains(path)){CRASH.running=false;return}path.setAttribute("d",`M0 280 C${px*.2} ${280-py*.15},${px*.5} ${280-py*.72},${px} ${py}`);dot.setAttribute("cx",px);dot.setAttribute("cy",py);xEl.textContent=CRASH.x.toFixed(2)+"x";if(CRASH.x>30||Math.random()<.0018){CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;settle(b,0,"CRASH");sfx("crash");return}CRASH.raf=requestAnimationFrame(loop)};CRASH.raf=requestAnimationFrame(loop)}
 function crashCashout(){if(!CRASH.running)return;CRASH.running=false;const payout=Math.floor(CRASH.bet*CRASH.x),res=$("res");if(res)res.textContent=`CASH OUT ${CRASH.x.toFixed(2)}x +${fmt(payout)}`;settle(CRASH.bet,payout,"CRASH");sfx("win")}
 function choHan(pick){
@@ -211,7 +248,24 @@ coin(){
   <div class="choices"><button onclick="coinFlip('heads')">HEADS</button><button onclick="coinFlip('tails')">TAILS</button></div><div id="res" class="result">CHOOSE YOUR SIDE</div></div>`;
 },
 lottery(){gameBody.innerHTML=`<div class="lottery-game"><div class="lottery-hero">ONE DRAW <b>100 COIN</b></div><div class="lottery-prizes"><div><b>100,000</b><small>JACKPOT</small></div><div><b>10,000</b><small>GOLD</small></div><div><b>500</b><small>SILVER</small></div></div><div class="lottery-ball">?</div><button class="lottery-draw" onclick="lottery()">DRAW LOTTERY</button><div id="res" class="result">READY</div></div>`},
-multiplier(){gameBody.innerHTML=betbox()+`<div id="mult" class="result">1.00×</div><div class="meter"><i id="meter"></i></div><button onclick="crashStart()">START</button><div id="res"></div>`},
+multiplier(){
+ gameBody.innerHTML=betbox()+`<div class="crash-wrap">
+ <div class="crash-history">
+  <span>7020890 <b>6.21x</b></span><span>7020891 <b>9.98x</b></span>
+  <span>7020892 <b>1.36x</b></span><span>7020893 <b>63.97x</b></span><span>7020894 <b>2.90x</b></span>
+ </div>
+ <div id="crashChart" class="crash-chart">
+  <div class="crash-grid"></div><div id="crashX" class="crash-big">1.00x</div>
+  <svg viewBox="0 0 620 300" preserveAspectRatio="none">
+   <path id="crashArea" class="crash-area"></path><path id="crashLine" class="crash-line"></path>
+   <circle id="crashDot" class="crash-dot" cx="18" cy="278" r="6"></circle>
+  </svg>
+  <div class="crash-axis-x">TIME</div><div class="crash-axis-y">MULTIPLIER</div>
+ </div>
+ <div id="res" class="result">READY</div>
+ <div class="crash-controls"><button onclick="crashStart()">START</button><button onclick="crashCashout()">CASH OUT</button></div>
+ </div>`;
+},
 daily(){let ok=Date.now()-S.lastDaily>86400000;gameBody.innerHTML=`<p>${ok?"VAULT READY":"VAULT LOCKED"}</p><button ${ok?"":"disabled"} onclick="daily()">CLAIM 1,000</button><div id="res" class="result"></div>`},
 shop(){gameBody.innerHTML=`<div class="shop-item">🎩 LUCKY HAT <button onclick="buy('Lucky Hat',3000)">3,000</button></div><div class="shop-item">💎 GOLD CHIP <button onclick="buy('Gold Chip',10000)">10,000</button></div><div class="shop-item">👑 JACKPOT CROWN <button onclick="buy('Crown',50000)">50,000</button></div><div id="res" class="result"></div>`}
 };
