@@ -885,3 +885,48 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
   window.GB_BIND_LOBBY=gbBindLobby;
 })();
+
+/* ===== 4.7.25 HARD GAME LAUNCH — delegated mobile-safe handler ===== */
+(function(){
+  let lastLaunch=0;
+  function launch(game,ev){
+    const now=Date.now();
+    if(now-lastLaunch<450)return;
+    lastLaunch=now;
+    if(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();
+    }
+    const lobby=document.getElementById("appLobby");
+    const modal=document.getElementById("modal");
+    if(lobby)lobby.classList.add("hidden");
+    try{
+      debugLog("GAME","HARD LAUNCH",{game});
+      if(typeof window.openGame!=="function"){
+        throw new Error("openGame is not exposed");
+      }
+      window.openGame(game);
+      if(modal)modal.classList.remove("hidden");
+      debugLog("GAME","HARD LAUNCH SUCCESS",{game});
+    }catch(e){
+      debugLog("ERROR","HARD LAUNCH FAILED",{game,error:String(e),stack:e.stack});
+      if(modal){
+        modal.classList.remove("hidden");
+        const mc=document.getElementById("modalContent");
+        if(mc)mc.innerHTML='<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">'+String(e.stack||e).replace(/[&<>]/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[s]))+'</pre></div>';
+      }
+    }
+  }
+  // Make the game launcher explicitly global for mobile/WebView environments.
+  try{window.openGame=openGame}catch(e){}
+  document.addEventListener("pointerup",function(ev){
+    const b=ev.target.closest("#appLobby [data-game]");
+    if(b)launch(b.getAttribute("data-game"),ev);
+  },true);
+  document.addEventListener("click",function(ev){
+    const b=ev.target.closest("#appLobby [data-game]");
+    if(b)launch(b.getAttribute("data-game"),ev);
+  },true);
+  window.GB_HARD_LAUNCH=launch;
+})();
