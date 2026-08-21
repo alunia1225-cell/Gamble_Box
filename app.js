@@ -788,9 +788,14 @@ function handRank(cs){
 let GB_ROULETTE_BUSY=false;
 /* 4.7.49 roulette: wheel sectors and labels share the same 37-step coordinate system. */
 function rouletteSpin(choice){
- if(GB_ROULETTE_BUSY)return;
- const b=wager($("bet")?.value);if(!b)return;
- GB_ROULETTE_BUSY=true;
+ try{
+  if(GB_ROULETTE_BUSY){debugLog("ROULETTE","SPIN IGNORED",{reason:"BUSY"});return;}
+  const betEl=$("bet");
+  const rawBet=betEl ? Number(betEl.value) : Number(lastBet||100);
+  const b=wager(rawBet);
+  if(!b){debugLog("ROULETTE","SPIN BLOCKED",{reason:"INVALID_BET",rawBet,coins:S.coins});return;}
+  GB_ROULETTE_BUSY=true;
+  debugLog("ROULETTE","SPIN START",{choice,bet:b,coins:S.coins});
  const token=GB_GAME_TOKEN,w=$("rouletteWheel"),ball=$("rouletteBall"),res=$("res"),numEl=$("rouletteNumber"),colEl=$("rouletteColor");
  if(!w||!ball||!res){GB_ROULETTE_BUSY=false;debugLog("ERROR","ROULETTE DOM MISSING");return}
  const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
@@ -802,7 +807,7 @@ function rouletteSpin(choice){
  res.textContent="NO MORE BETS";numEl.textContent="—";colEl.textContent="SPINNING";sfx("roulette");
  w.style.transition="none";ball.style.transition="none";
  // Ball starts on the roulette track, directly under the pointer.
- ball.style.transform=`rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`;
+ ball.style.setProperty("transform", `rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`, "important");
  const start=performance.now(),duration=6200;
  const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
@@ -810,18 +815,23 @@ function rouletteSpin(choice){
    const ease=1-Math.pow(1-p,4);
    const wheelAngle=finalWheel*ease;
    const ballAngle=-360*ballTurns*ease;
-   w.style.transform=`rotate(${wheelAngle}deg)`;
-   ball.style.transform=`rotate(${ballAngle}deg) translateY(calc(-1 * var(--ball-radius)))`;
+   w.style.setProperty("transform", `translate(-50%,-50%) rotate(${wheelAngle}deg)`, "important");
+   ball.style.setProperty("transform", `rotate(${ballAngle}deg) translateY(calc(-1 * var(--ball-radius)))`, "important");
    if(p<1){requestAnimationFrame(tick);return}
    // Exact final state: selected pocket is centered under the pointer,
    // while the ball is physically sitting at the top of its orbit.
-   w.style.transform=`rotate(${finalWheel}deg)`;
-   ball.style.transform=`rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`;
+   w.style.setProperty("transform", `translate(-50%,-50%) rotate(${finalWheel}deg)`, "important");
+   ball.style.setProperty("transform", `rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`, "important");
    numEl.textContent=String(n);colEl.textContent=color.toUpperCase();
    const win=color===choice;res.textContent=`${n} • ${color.toUpperCase()} • ${win?"WIN":"LOSE"}`;
    settle(b,win?b*(choice==="green"?14:2):0,"ROULETTE");sfx(win?"win":"lose");if(win&&choice==="green")puchun();GB_ROULETTE_BUSY=false;
  };
  requestAnimationFrame(tick);
+ }catch(err){
+   GB_ROULETTE_BUSY=false;
+   debugLog("ERROR","ROULETTE SPIN FAILED",{error:String(err),stack:err&&err.stack});
+   const r=$("res"); if(r)r.textContent="SPIN ERROR";
+ }
 }
 function roulette(c){return rouletteSpin(c)}
 

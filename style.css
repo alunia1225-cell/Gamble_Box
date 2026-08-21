@@ -1078,3 +1078,104 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     transform-origin:7px calc(var(--wheel-size)*.405)!important;
   }
 }
+
+
+/* 4.7.52 — ROULETTE SIZE/CENTER/ORBIT HARD FIX
+   This is the single final geometry layer.  Do not use transform !important here:
+   rouletteSpin() owns the wheel/ball rotation at runtime. */
+#modal .real-wheel-wrap{
+  --wheel-size:230px;
+  --ball-radius:96px;
+  width:230px!important;
+  height:230px!important;
+  min-height:230px!important;
+  margin:10px auto 14px!important;
+  padding:0!important;
+  position:relative!important;
+  display:block!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#modal .real-wheel{
+  width:230px!important;
+  height:230px!important;
+  box-sizing:border-box!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  transform:translate(-50%,-50%);
+  transform-origin:50% 50%!important;
+}
+#modal .real-pocket{
+  width:18px!important;
+  height:93px!important;
+  margin-left:-9px!important;
+  margin-top:-93px!important;
+  transform-origin:9px 93px!important;
+  padding-top:5px!important;
+  box-sizing:border-box!important;
+}
+#modal .real-pocket span{
+  width:18px!important;
+  min-width:18px!important;
+  max-width:18px!important;
+  font-size:7px!important;
+  line-height:1!important;
+  letter-spacing:-.35px!important;
+}
+#modal .real-wheel::before,
+#modal .real-wheel::after{
+  pointer-events:none!important;
+}
+#modal .real-ball{
+  left:50%!important;
+  top:50%!important;
+  width:12px!important;
+  height:12px!important;
+  margin:-6px!important;
+  transform-origin:50% 50%!important;
+  /* transform is intentionally NOT important; JS controls the orbit */
+}
+#modal .real-pointer{
+  left:50%!important;
+  top:-12px!important;
+  transform:translateX(-50%)!important;
+  z-index:60!important;
+}
+@media(max-width:600px){
+  #modal .real-wheel-wrap{
+    --wheel-size:min(58vw,230px);
+    --ball-radius:calc(var(--wheel-size)*.4174);
+    width:min(58vw,230px)!important;
+    height:min(58vw,230px)!important;
+    min-height:min(58vw,230px)!important;
+    margin:10px auto 14px!important;
+  }
+  #modal .real-wheel{
+    width:min(58vw,230px)!important;
+    height:min(58vw,230px)!important;
+  }
+  #modal .real-pocket{
+    width:17px!important;
+    height:calc(min(58vw,230px)*.40435)!important;
+    margin-left:-8.5px!important;
+    margin-top:calc(-1 * min(58vw,230px)*.40435)!important;
+    transform-origin:8.5px calc(min(58vw,230px)*.40435)!important;
+  }
+  #modal .real-pocket span{
+    width:17px!important;
+    min-width:17px!important;
+    max-width:17px!important;
+    font-size:clamp(6px,1.7vw,7px)!important;
+  }
+}
+
+/* 4.7.52 — roulette final mobile size/orbit layer */
+#modal .real-wheel-wrap{--wheel-size:205px;--ball-radius:84px;width:205px!important;height:205px!important;min-height:205px!important;margin:8px auto 12px!important;position:relative!important;display:block!important;box-sizing:border-box!important}
+#modal .real-wheel{width:205px!important;height:205px!important;position:absolute!important;left:50%!important;top:50%!important;margin:0!important;transform:translate(-50%,-50%)}
+#modal .real-pocket{width:16px!important;height:82px!important;margin-left:-8px!important;margin-top:-82px!important;transform-origin:8px 82px!important}
+#modal .real-pocket span{width:16px!important;font-size:6.5px!important;letter-spacing:-.3px!important}
+#modal .real-ball{left:50%!important;top:50%!important;width:11px!important;height:11px!important;margin:-5.5px!important}
+#modal .real-pointer{left:50%!important;top:-11px!important;transform:translateX(-50%)!important}
+@media(max-width:600px){#modal .real-wheel-wrap{--wheel-size:min(52vw,205px);--ball-radius:calc(var(--wheel-size)*.410);width:min(52vw,205px)!important;height:min(52vw,205px)!important;min-height:min(52vw,205px)!important}#modal .real-wheel{width:min(52vw,205px)!important;height:min(52vw,205px)!important}}
