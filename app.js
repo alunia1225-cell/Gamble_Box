@@ -1,3 +1,34 @@
+/* ===== SAFE RUNTIME / DEBUG BOOT ===== */
+const TEST_MODE=true;
+const TEST_COINS=9999;
+window.__GB_DEBUG_LINES=window.__GB_DEBUG_LINES||[];
+window.__GB_DEBUG_COUNT=window.__GB_DEBUG_COUNT||0;
+function debugLog(level,msg,data){
+  try{
+    const time=new Date().toLocaleTimeString();
+    const extra=data===undefined?"":(" "+JSON.stringify(data));
+    const line=`[${time}] [${level}] ${msg}${extra}`;
+    window.__GB_DEBUG_LINES.push(line);
+    if(window.__GB_DEBUG_LINES.length>500)window.__GB_DEBUG_LINES.shift();
+    window.__GB_DEBUG_COUNT++;
+    const body=document.getElementById("debugBody");if(body)body.textContent=window.__GB_DEBUG_LINES.join("\n");
+    const count=document.getElementById("debugCount");if(count)count.textContent=window.__GB_DEBUG_COUNT;
+    const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT;
+    const err=document.getElementById("dbgErrors");if(err&&level==="ERROR")err.textContent=Number(err.textContent||0)+1;
+    console.log("[GAMBLE BOX]",line);
+  }catch(e){console.error(e)}
+}
+function toggleDebug(){const p=document.getElementById("debugPanel");if(p)p.classList.toggle("hidden")}
+function clearDebug(){window.__GB_DEBUG_LINES=[];window.__GB_DEBUG_COUNT=0;const b=document.getElementById("debugBody");if(b)b.textContent="";const n=document.getElementById("debugCount");if(n)n.textContent="0"}
+async function copyDebug(){const text=(window.__GB_DEBUG_LINES||[]).join("\n")||"NO DEBUG LOGS";try{await navigator.clipboard.writeText(text);debugLog("SYSTEM","DEBUG COPIED")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();}}
+window.addEventListener("error",e=>debugLog("ERROR","UNCAUGHT ERROR",{message:e.message,source:e.filename,line:e.lineno,col:e.colno,stack:e.error&&e.error.stack}));
+window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROMISE",{reason:String(e.reason),stack:e.reason&&e.reason.stack}));
+window.addEventListener("DOMContentLoaded",()=>{
+  const t=document.getElementById("debugToggle");
+  if(t)t.addEventListener("click",toggleDebug);
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.2"});
+});
+
 const KEY="gb3_save";
 const S=JSON.parse(localStorage.getItem(KEY)||'{"coins":10000,"wagered":0,"profit":0,"wins":0,"maxwin":0,"history":[],"lastDaily":0,"items":[],"sound":true}');
 const $=id=>document.getElementById(id); let audioCtx=null,lastBet=0,timer=null,multi=1;
@@ -353,20 +384,10 @@ function heFinishText(text){heRender();heRenderMyHand();$("hstatus").textContent
 function heEnd(text){H.over=true;cancelAnimationFrame(H.timerId);H.players.filter(p=>!p.folded).forEach(p=>p.stack+=H.pot);heFinishText(text)}
 
 function roulette(c){const b=wager($("bet").value);if(!b)return;const w=$("rouletteWheel"),ball=$("rouletteBall"),res=$("res");const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];const n=pockets[Math.floor(Math.random()*pockets.length)];const color=n===0?"green":red.includes(n)?"red":"black";res.textContent="NO MORE BETS";w.classList.remove("spin-wheel");ball.classList.remove("spin-ball");void w.offsetWidth;void ball.offsetWidth;w.classList.add("spin-wheel");ball.classList.add("spin-ball");sfx("roulette");setTimeout(()=>{const win=color===c;res.textContent=`${n} • ${color.toUpperCase()} • ${win?"WIN":"LOSE"}`;settle(b,win?b*(c==="green"?14:2):0,"ROULETTE");sfx(win?"win":"lose");if(win&&c==="green")puchun()},4200)}
-const _saveOriginal=save;
-save=function(){if(TEST_MODE)S.coins=TEST_COINS;return _saveOriginal.apply(this,arguments)};
 
-(function(){
-  if(!TEST_MODE)return;
-  const oldSetInterval=window.setInterval;
-  oldSetInterval(()=>{try{S.coins=TEST_COINS; if(typeof save==="function")save()}catch(e){}},1000);
-  document.addEventListener("DOMContentLoaded",()=>debugLog("TEST","INFINITE COINS ENABLED",{balance:TEST_COINS}));
-})();
-
-(function(){
-  document.addEventListener("DOMContentLoaded",()=>{
-    const t=document.getElementById("debugToggle");
-    if(t&&!t.dataset.wired){t.dataset.wired="1";t.addEventListener("click",()=>{if(typeof toggleDebug==="function")toggleDebug();else{const p=document.getElementById("debugPanel");if(p)p.classList.toggle("hidden")}})}
-    if(typeof debugLog==="function")debugLog("BOOT","PREMIUM DEBUG HUD ONLINE",{version:"4.4",testMode:true});
-  });
-})();
+document.addEventListener("DOMContentLoaded",()=>{
+  try{
+    if(typeof render==="function")render();
+    debugLog("BOOT","APPLICATION INITIALIZED",{coins:S.coins});
+  }catch(e){debugLog("ERROR","INITIALIZATION FAILED",{error:String(e),stack:e.stack})}
+});

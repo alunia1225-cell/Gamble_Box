@@ -27,17 +27,10 @@
 </section>
 <section class="lower"><div class="panel"><div class="panelhead"><h2>🏆 LIVE LEADERBOARD</h2><span>REALTIME</span></div><div id="ranking"></div></div><div class="panel"><div class="panelhead"><h2>📜 HISTORY</h2><span>LOCAL</span></div><div id="history"></div></div></section>
 </main><footer>GAMBLE BOX 3.0 • VIRTUAL COINS ONLY • NO REAL MONEY</footer>
-<div id="modal" class="modal hidden"><div class="tabletop"><button class="close" onclick="closeGame()">×</button><div id="modalContent"></div></div></div>
-<script src="app.js?v=4.0"></script>
-
-
-  <div class="debug-stats"><span>EVENTS <i id="dbgEvents">0</i></span><span>ERRORS <i id="dbgErrors">0</i></span><span>GAME OPS <i id="dbgGames">0</i></span><span>● ONLINE</span></div>
-  <pre id="debugBody"></pre>
-</div>
-
-<button id="debugToggle" type="button" aria-label="System diagnostics">
+<div id="modal" class="modal hidden"><div class="tabletop"><button class="close" onclick="closeGame()">×</button><div id="modalContent"></div></div></div> 
+<div id="debugToggle" role="button" aria-label="System diagnostics">
   <span class="dbg-led"></span><span class="dbg-label">SYSTEM</span><span class="dbg-num" id="debugCount">0</span>
-</button>
+</div>
 <div id="debugPanel" class="debug-panel hidden">
   <div class="dbg-header">
     <div class="dbg-brand"><span class="dbg-led big"></span><div><strong>SYSTEM DIAGNOSTICS</strong><small>GAMBLE BOX / LIVE RUNTIME</small></div></div>
@@ -52,4 +45,11 @@
   <pre id="debugBody"></pre>
   <div class="dbg-footer"><span>WEB RUNTIME</span><span id="debugClock">--:--:--</span></div>
 </div>
+<script src="app.js?v=4.7.3"></script>
+<script>
+(function(){
+  function tick(){var e=document.getElementById("debugClock");if(e)e.textContent=new Date().toLocaleTimeString();requestAnimationFrame(tick)}
+  tick();
+})();
+</script>
 </body></html>
