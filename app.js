@@ -185,17 +185,22 @@ let GB_GAME_TOKEN=0;
 function gbAlive(t){return t===GB_GAME_TOKEN&&window.GB_RUNTIME&&window.GB_RUNTIME.active}
 function openGame(g){
  debugLog("GAME","Launch requested",{game:g});
- GB_GAME_TOKEN++;
- if(typeof window.GB_stopGameRuntime==="function")window.GB_stopGameRuntime();
- if(typeof window.GB_startGameRuntime==="function")window.GB_startGameRuntime(g);
- const token=GB_GAME_TOKEN;
+ try{
+  GB_GAME_TOKEN++;
+  if(typeof window.GB_stopGameRuntime==="function")window.GB_stopGameRuntime();
+  if(typeof window.GB_startGameRuntime==="function")window.GB_startGameRuntime(g);
+  const token=GB_GAME_TOKEN;
  const title={slot:"ULTIMATE SLOTS",dice:"HIGH DICE",blackjack:"BLACKJACK",holdem:"TEXAS HOLD'EM",roulette:"ROULETTE",highlow:"HIGH & LOW",chohan:"丁半",coin:"COIN FLIP",lottery:"LOTTERY",multiplier:"CRASH ×",daily:"DAILY VAULT",shop:"CHIP SHOP"}[g]||g.toUpperCase();
  $("modalContent").innerHTML=`<div class="game"><div class="jackpot">GAMBLE BOX / ${title}</div><h2>${title}</h2><div id="gameBody"></div></div>`;
  $("modal").classList.remove("hidden");sfx("click");
  try{if(typeof games[g]!=="function")throw new Error("Unknown game: "+g);games[g]();debugLog("GAME","Launch success",{game:g,token})}
  catch(e){debugLog("ERROR","Game launch failed",{game:g,error:String(e),stack:e.stack});$("modalContent").innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`}
+ }catch(e){
+  debugLog("ERROR","Game runtime launch failed",{game:g,error:String(e),stack:e.stack});
+  $("modalContent").innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`;
+ }
 }
-function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:window.GB_RUNTIME?.game});if(typeof window.GB_stopGameRuntime==="function")window.GB_stopGameRuntime();$("modal").classList.add("hidden");sfx("click")}
+function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:GB_RUNTIME.game});window.GB_stopGameRuntime();$("modal").classList.add("hidden");sfx("click")}
 function betbox(min=100){
   const max=Math.max(min,S.coins||0);
   const step=max<=1000?10:max<=10000?100:500;
@@ -369,78 +374,40 @@ function spinSlot(){
 }
 let HL_BUSY=false;
 
-
 function hl(choice){
  if(HL_BUSY)return;
  const b=wager($("bet")?.value);if(!b)return;
- HL_BUSY=true;
- const token=GB_GAME_TOKEN;
+ HL_BUSY=true;const token=GB_GAME_TOKEN;
  const line=$("hlLine"),area=$("hlArea"),dot=$("hlDot"),vEl=$("hlValue"),res=$("res"),chart=$("hlChart");
  if(!line||!area||!dot||!vEl||!res||!chart){HL_BUSY=false;return}
-
- const finalHigh=Math.random()<.5;
- const start=performance.now(),duration=5600;
- const seed=Math.random()*10000;
- const points=[[12,206]];
- let lastY=206,lastShock=-1;
-
- res.textContent="LIVE…";
- chart.classList.remove("hl-high","hl-low","hl-wild");
- vEl.textContent="1.00";
- sfx("click");
-
+ // Outcome is locked on the initial tap, but the path is deliberately noisy and unpredictable.
+ const finalHigh=Math.random()<.5,start=performance.now(),duration=6000,seed=Math.random()*1000;
+ let points=[[12,214]],lastY=214,nextShock=0;
+ res.textContent="LIVE…";vEl.textContent="1.00";chart.classList.remove("hl-high","hl-low","hl-wild");sfx("click");
  const tick=now=>{
    if(!gbAlive(token)){HL_BUSY=false;return}
-   const p=Math.min(1,(now-start)/duration);
-
-   // X always advances at the same speed from left to right.
-   const x=12+596*p;
-
-   // Vertical movement remains dynamic, but the graph's horizontal travel is constant.
-   const targetY=finalHigh?28:222;
-   const basePull=(targetY-lastY)*0.028;
-   const wave=Math.sin(seed+p*17)*7+Math.sin(seed*.73+p*41)*4;
-   let shock=0;
-
-   if(p>.15&&p<.88){
-     const shockWindow=Math.floor(p*10);
-     if(shockWindow!==lastShock){
-       lastShock=shockWindow;
-       if(Math.random()<.38) shock=(Math.random()<.5?-1:1)*(36+Math.random()*65);
-     }
+   const p=Math.min(1,(now-start)/duration),x=12+596*p;
+   // Random walk + occasional direction changes. Only the final phase converges to the committed result.
+   const wave=Math.sin(seed+p*18)*8+Math.sin(seed*.37+p*43)*5;
+   const volatility=26*(1-p*.25);
+   let target=lastY+(Math.random()-.5)*volatility+wave*.15;
+   if(p>0.12 && p<0.88 && now>=nextShock){
+     nextShock=now+450+Math.random()*850;
+     if(Math.random()<.72)target += (Math.random()<.5?-1:1)*(28+Math.random()*65);
+     chart.classList.add("hl-wild");setTimeout(()=>chart.classList.remove("hl-wild"),180);
    }
-   if(finalHigh&&p>.42&&p<.75&&Math.random()<.04)shock-=35+Math.random()*55;
-   if(!finalHigh&&p>.42&&p<.75&&Math.random()<.04)shock+=35+Math.random()*55;
-
-   const finalBlend=p>.82?(p-.82)/.18:0;
-   let y=lastY+basePull+wave+shock;
-   y=Math.max(20,Math.min(228,y));
-   y=targetY*finalBlend+y*(1-finalBlend);
-   if(finalBlend>.85)y=targetY*(.6+.4*finalBlend)+y*(.4-.4*finalBlend);
-
-   lastY=y;points.push([x,y]);
-   dot.setAttribute("cx",x);dot.setAttribute("cy",y);
-
-   const liveVal=finalHigh?(1+p*8.6):(9.6-p*8.8);
-   vEl.textContent=Math.max(.5,liveVal).toFixed(2);
-
-   let d=`M ${points[0][0].toFixed(1)} ${points[0][1].toFixed(1)}`;
-   for(let i=1;i<points.length;i++)d+=` L ${points[i][0].toFixed(1)} ${points[i][1].toFixed(1)}`;
-   line.setAttribute("d",d);
-   area.setAttribute("d",d+` L ${x.toFixed(1)} 125 L 12 125 Z`);
-
-   if(shock)chart.classList.add("hl-wild");
-
+   const finalStart=.80,blend=p>finalStart?Math.min(1,(p-finalStart)/(1-finalStart)):0;
+   const targetY=finalHigh?34:220;
+   let y=target*(1-blend)+targetY*blend;
+   y=Math.max(24,Math.min(224,y));
+   lastY=y;points.push([x,y]);dot.setAttribute("cx",x);dot.setAttribute("cy",y);
+   vEl.textContent=(finalHigh?(1.05+p*8.8):(8.8-p*8.3)).toFixed(2);
+   let d=`M ${points[0][0]} ${points[0][1]}`;for(let i=1;i<points.length;i++)d+=` L ${points[i][0].toFixed(1)} ${points[i][1].toFixed(1)}`;
+   line.setAttribute("d",d);area.setAttribute("d",d+` L ${x.toFixed(1)} 125 L 12 125 Z`);
    if(p>=1){
-     HL_BUSY=false;chart.classList.remove("hl-wild");
-     chart.classList.add(finalHigh?"hl-high":"hl-low");
-     const win=(choice==="high")===finalHigh;
-     const final=finalHigh?"HIGH":"LOW";
-     vEl.textContent=finalHigh?"9.80":"0.45";
-     res.textContent=`${final} • ${win?"WIN":"LOSE"}`;
-     settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");
-     sfx(win?"win":"lose");
-     return;
+     HL_BUSY=false;chart.classList.remove("hl-wild");chart.classList.add(finalHigh?"hl-high":"hl-low");
+     const win=(choice==="high")===finalHigh;vEl.textContent=finalHigh?"9.80":"0.45";
+     res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");sfx(win?"win":"lose");return;
    }
    requestAnimationFrame(tick);
  };
@@ -812,81 +779,17 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener('DOMContentLoaded',()=>{document.getElementById('tapStart')?.addEventListener('click',start);document.getElementById('profileBtn')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('profileCard')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('friendsBtn')?.addEventListener('click',()=>openSocial('friends'));document.getElementById('lobbyDebugBtn')?.addEventListener('click',toggleDebug);document.getElementById('roomBtn')?.addEventListener('click',()=>openSocial('room'));document.querySelectorAll('.lobbyGrid button').forEach(b=>b.addEventListener('click',()=>{const p=prof();p.games=(p.games||0)+1;saveProf(p);renderProfile();document.getElementById('appLobby').classList.add('hidden');openGame(b.dataset.game)}));document.querySelectorAll('#lobbyTabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#lobbyTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.lobbyGrid button').forEach(g=>g.style.display=b.dataset.cat==='all'||g.dataset.cat===b.dataset.cat?'flex':'none')}));});
 })();
 
-/* ===== 4.7.24 GAME LAUNCH FIX ===== */
-(function(){
-  function gbLobbyOpen(game){
-    try{
-      if(typeof openGame!=="function") throw new Error("openGame is unavailable");
-      debugLog("GAME","LOBBY LAUNCH REQUEST",{game:game});
-      openGame(game);
-    }catch(e){
-      try{debugLog("ERROR","LOBBY LAUNCH FAILED",{game:game,error:String(e),stack:e.stack})}catch(_){}
-      const m=document.getElementById("modalContent");
-      if(m)m.innerHTML='<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">'+String(e.stack||e).replace(/[&<>]/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[s]))+'</pre></div>';
-      const modal=document.getElementById("modal");
-      if(modal)modal.classList.remove("hidden");
-    }
+/* 4.7.28 CLEAN BOOT: direct lobby launcher */
+window.GB_DIRECT_GAME=function(game){
+  try{
+    debugLog("GAME","DIRECT LAUNCH",{game:game});
+    if(typeof openGame!=="function")throw new Error("openGame() unavailable");
+    openGame(game);
+  }catch(e){
+    debugLog("ERROR","DIRECT LAUNCH FAILED",{game:game,error:String(e),stack:e.stack});
+    const m=document.getElementById("modal"),c=document.getElementById("modalContent");
+    if(m)m.classList.remove("hidden");
+    if(c)c.innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`;
   }
-  function gbBindLobby(){
-    document.querySelectorAll("#appLobby [data-game]").forEach(function(btn){
-      if(btn.__gbLaunchBound)return;
-      btn.__gbLaunchBound=true;
-      const game=btn.getAttribute("data-game");
-      const handler=function(e){e.preventDefault();gbLobbyOpen(game)};
-      btn.addEventListener("click",handler);
-      btn.addEventListener("touchend",handler,{passive:false});
-    });
-
-    document.querySelectorAll("#lobbyTabs [data-cat]").forEach(function(btn){
-      if(btn.__gbCatBound)return;
-      btn.__gbCatBound=true;
-      btn.addEventListener("click",function(){
-        const cat=btn.getAttribute("data-cat");
-        document.querySelectorAll("#lobbyTabs [data-cat]").forEach(b=>b.classList.toggle("active",b===btn));
-        document.querySelectorAll("#appLobby .lobbyGrid [data-game]").forEach(card=>{
-          card.style.display=(cat==="all"||card.getAttribute("data-cat")===cat)?"flex":"none";
-        });
-      });
-    });
-
-    const room=document.getElementById("roomBtn");
-    if(room&&!room.__gbBound){
-      room.__gbBound=true;
-      room.addEventListener("click",function(){
-        const code=Math.random().toString(36).slice(2,8).toUpperCase();
-        const url=location.href.split("#")[0]+"#room="+code;
-        if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
-        const out=document.getElementById("roomCode");if(out)out.textContent=code+" • INVITE COPIED";
-        try{debugLog("ROOM","PRIVATE ROOM CREATED",{room:code,url:url})}catch(_){}
-      });
-    }
-
-    const pbtn=document.getElementById("profileBtn"),pcard=document.getElementById("profileCard");
-    if(pbtn&&!pbtn.__gbBound){pbtn.__gbBound=true;pbtn.addEventListener("click",gbSimpleProfile)}
-    if(pcard&&!pcard.__gbBound){pcard.__gbBound=true;pcard.addEventListener("click",gbSimpleProfile)}
-    const fbtn=document.getElementById("friendsBtn");
-    if(fbtn&&!fbtn.__gbBound){fbtn.__gbBound=true;fbtn.addEventListener("click",gbSimpleFriends)}
-  }
-  function gbSimpleProfile(){
-    const ov=document.getElementById("socialOverlay"),p=document.getElementById("socialPanel");if(!ov||!p)return;
-    p.innerHTML='<h2>PROFILE</h2><label>PLAYER NAME</label><input id="gbProfileName" value="PLAYER" maxlength="16"><div class="social-actions"><button id="gbProfileSave">SAVE</button><button id="gbSocialClose">CLOSE</button></div>';
-    ov.classList.remove("hidden");
-    document.getElementById("gbSocialClose").onclick=()=>ov.classList.add("hidden");
-    document.getElementById("gbProfileSave").onclick=()=>{const n=(document.getElementById("gbProfileName").value||"PLAYER").trim()||"PLAYER";const e=document.getElementById("playerName");if(e)e.textContent=n;ov.classList.add("hidden")};
-  }
-  function gbSimpleFriends(){
-    const ov=document.getElementById("socialOverlay"),p=document.getElementById("socialPanel");if(!ov||!p)return;
-    p.innerHTML='<h2>FRIENDS</h2><p>FRIEND SYSTEM READY</p><small>PRIVATE ROOM INVITES CAN BE SHARED FROM THE LOBBY.</small><div class="social-actions"><button id="gbFriendsClose">CLOSE</button></div>';
-    ov.classList.remove("hidden");
-    document.getElementById("gbFriendsClose").onclick=()=>ov.classList.add("hidden");
-  }
-  document.addEventListener("DOMContentLoaded",function(){
-    gbBindLobby();
-    setTimeout(gbBindLobby,300);
-    setTimeout(gbBindLobby,1000);
-  });
-  window.GB_BIND_LOBBY=gbBindLobby;
-})();
-
+};
 window.openGame=openGame;
-window.closeGame=closeGame;

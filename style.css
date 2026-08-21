@@ -328,7 +328,7 @@
 /* APP SHELL HARDENING v4.7.17 */
 html,body{min-height:100%;background:#030405!important;}
 #boot{display:none!important;}
-.appSplash{z-index:2147483000!important;filter:none!important;-webkit-opacity:1;}
+.appSplash{z-index:2147483000!important;filter:none!important;opacity:1;}
 .appSplash.hide{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 .appSplash>*:not(.splashGlow){filter:none!important;-webkit-filter:none!important;}
 .appSplash .splashGlow{pointer-events:none;filter:blur(10px)!important;-webkit-filter:blur(10px)!important;}
@@ -376,14 +376,11 @@ html,body{min-height:100%;background:#030405!important;}
 .lobbyGrid button b{letter-spacing:.7px}
 @media(max-width:600px){.lobbyGrid button .gameEmoji{width:54px;height:54px;font-size:31px}.lobbyGrid button{padding:13px;min-height:142px}}
 
-/* 4.7.23 — CRISP GAMEPLAY: no blur anywhere in active game UI */
-#modal,#modalContent,.modal,.modalContent,.tabletop,.tabletop *,.game,.game *,
-.game-body,.gameBody,.he-stage,.he-stage *,.crash-chart,.hl-chart,
-.real-roulette,.real-wheel,.real-wheel-wrap,.choices,.result,
-.he-betbox,.he-actions,.card,.playing-card,.reel,.reels,.slot-machine{
-  
-  
+/* 4.7.28 gameplay clarity — no blur on playable surfaces */
+#modal,#modal .tabletop,#modal .game,#modalContent,#debugPanel,.debug-panel{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  filter:none!important;
 }
-#modal{background:rgba(0,0,0,.78)!important}
-#modalContent,.tabletop{background:#08090a!important}
-.game,.game-body,.gameBody{filter:none!important}
+#modal{background:rgba(0,0,0,.80)!important}
+#modal .tabletop{background:radial-gradient(circle at 50% 0,#292315,#0c0d0d 45%)!important}
