@@ -185,7 +185,9 @@ let GB_GAME_TOKEN=0;
 function gbAlive(t){return t===GB_GAME_TOKEN&&window.GB_RUNTIME&&window.GB_RUNTIME.active}
 function openGame(g){
  debugLog("GAME","Launch requested",{game:g});
- GB_GAME_TOKEN++;window.GB_stopGameRuntime();window.GB_startGameRuntime(g);
+ GB_GAME_TOKEN++;
+ if(typeof window.GB_stopGameRuntime==="function")window.GB_stopGameRuntime();
+ if(typeof window.GB_startGameRuntime==="function")window.GB_startGameRuntime(g);
  const token=GB_GAME_TOKEN;
  const title={slot:"ULTIMATE SLOTS",dice:"HIGH DICE",blackjack:"BLACKJACK",holdem:"TEXAS HOLD'EM",roulette:"ROULETTE",highlow:"HIGH & LOW",chohan:"丁半",coin:"COIN FLIP",lottery:"LOTTERY",multiplier:"CRASH ×",daily:"DAILY VAULT",shop:"CHIP SHOP"}[g]||g.toUpperCase();
  $("modalContent").innerHTML=`<div class="game"><div class="jackpot">GAMBLE BOX / ${title}</div><h2>${title}</h2><div id="gameBody"></div></div>`;
@@ -193,7 +195,7 @@ function openGame(g){
  try{if(typeof games[g]!=="function")throw new Error("Unknown game: "+g);games[g]();debugLog("GAME","Launch success",{game:g,token})}
  catch(e){debugLog("ERROR","Game launch failed",{game:g,error:String(e),stack:e.stack});$("modalContent").innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`}
 }
-function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:GB_RUNTIME.game});window.GB_stopGameRuntime();$("modal").classList.add("hidden");sfx("click")}
+function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:window.GB_RUNTIME?.game});if(typeof window.GB_stopGameRuntime==="function")window.GB_stopGameRuntime();$("modal").classList.add("hidden");sfx("click")}
 function betbox(min=100){
   const max=Math.max(min,S.coins||0);
   const step=max<=1000?10:max<=10000?100:500;
@@ -884,49 +886,4 @@ document.addEventListener("DOMContentLoaded",()=>{
     setTimeout(gbBindLobby,1000);
   });
   window.GB_BIND_LOBBY=gbBindLobby;
-})();
-
-/* ===== 4.7.25 HARD GAME LAUNCH — delegated mobile-safe handler ===== */
-(function(){
-  let lastLaunch=0;
-  function launch(game,ev){
-    const now=Date.now();
-    if(now-lastLaunch<450)return;
-    lastLaunch=now;
-    if(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();
-    }
-    const lobby=document.getElementById("appLobby");
-    const modal=document.getElementById("modal");
-    if(lobby)lobby.classList.add("hidden");
-    try{
-      debugLog("GAME","HARD LAUNCH",{game});
-      if(typeof window.openGame!=="function"){
-        throw new Error("openGame is not exposed");
-      }
-      window.openGame(game);
-      if(modal)modal.classList.remove("hidden");
-      debugLog("GAME","HARD LAUNCH SUCCESS",{game});
-    }catch(e){
-      debugLog("ERROR","HARD LAUNCH FAILED",{game,error:String(e),stack:e.stack});
-      if(modal){
-        modal.classList.remove("hidden");
-        const mc=document.getElementById("modalContent");
-        if(mc)mc.innerHTML='<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">'+String(e.stack||e).replace(/[&<>]/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[s]))+'</pre></div>';
-      }
-    }
-  }
-  // Make the game launcher explicitly global for mobile/WebView environments.
-  try{window.openGame=openGame}catch(e){}
-  document.addEventListener("pointerup",function(ev){
-    const b=ev.target.closest("#appLobby [data-game]");
-    if(b)launch(b.getAttribute("data-game"),ev);
-  },true);
-  document.addEventListener("click",function(ev){
-    const b=ev.target.closest("#appLobby [data-game]");
-    if(b)launch(b.getAttribute("data-game"),ev);
-  },true);
-  window.GB_HARD_LAUNCH=launch;
 })();
