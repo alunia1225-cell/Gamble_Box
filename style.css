@@ -765,3 +765,62 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 }
 .real-hub{z-index:12!important}
 .real-pointer{z-index:20!important}
+
+/* 4.7.47 — ROULETTE GEOMETRY HARD RESET
+   No decorative rings over the pockets. The pocket elements themselves are
+   the only visible sector frames, so numbers can never be crossed by a ring. */
+.real-wheel{
+  background:#17191a!important;
+  overflow:hidden!important;
+}
+.real-wheel::before,
+.real-wheel::after{
+  display:none!important;
+  content:none!important;
+}
+.real-pocket{
+  width:17px!important;
+  height:124px!important;
+  margin-left:-8.5px!important;
+  margin-top:-124px!important;
+  transform-origin:8.5px 124px!important;
+  padding-top:5px!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)!important;
+  z-index:5!important;
+}
+.real-pocket span{
+  width:17px!important;
+  min-width:17px!important;
+  max-width:17px!important;
+  font-size:6.5px!important;
+  line-height:1!important;
+  letter-spacing:-.35px!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.real-pocket.red{background:#a72e36!important}
+.real-pocket.black{background:#17191a!important}
+.real-pocket.green{background:#087b43!important}
+.real-hub{z-index:20!important}
+.real-ball{z-index:50!important}
+.real-pointer{z-index:60!important}
+@media(max-width:600px){
+  .real-pocket{
+    width:15px!important;
+    height:calc(var(--wheel-size)*.415)!important;
+    margin-left:-7.5px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.415)!important;
+    transform-origin:7.5px calc(var(--wheel-size)*.415)!important;
+    padding-top:4px!important;
+  }
+  .real-pocket span{
+    width:15px!important;
+    min-width:15px!important;
+    max-width:15px!important;
+    font-size:clamp(5.5px,1.65vw,6.5px)!important;
+    letter-spacing:-.3px!important;
+  }
+}
