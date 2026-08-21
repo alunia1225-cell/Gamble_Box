@@ -41,4 +41,15 @@
   </div>
   <pre id="debugBody">[BOOT] Debug console ready.</pre>
 </div>
+
+<div id="debugToggle" aria-label="Debug console"><span class="dbg-dot"></span><span>DEBUG</span><b id="debugCount">0</b></div>
+<div id="debugPanel" class="debug-panel hidden">
+  <div class="debug-top">
+    <div class="debug-title"><span class="dbg-dot"></span><div><b>SYSTEM DIAGNOSTICS</b><small>GAMBLE BOX / LIVE CONSOLE</small></div></div>
+    <div class="debug-actions"><button id="debugCopy">COPY LOG</button><button id="debugClear">CLEAR</button><button id="debugClose">×</button></div>
+  </div>
+  <div class="debug-stats"><span><i id="dbgEvents">0</i> EVENTS</span><span><i id="dbgErrors">0</i> ERRORS</span><span><i id="dbgGames">0</i> GAME OPS</span><span id="dbgState">● ONLINE</span></div>
+  <div id="debugBody" class="debug-body"></div>
+  <div class="debug-foot"><span>iPhone / Web Runtime</span><span id="debugTime">--:--:--</span></div>
+</div>
 </body></html>

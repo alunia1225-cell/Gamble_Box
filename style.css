@@ -9,3 +9,20 @@
 .debug-actions{display:flex;gap:5px}.debug-actions button{background:#17191a;color:#ddd;border:1px solid #3b3d3d;padding:7px 9px;font:8px Orbitron;cursor:pointer}
 #debugBody{margin:0;padding:13px;height:calc(100% - 48px);overflow:auto;color:#aeb5b8;font:10px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word}
 .debug-error{color:#ff8e8e;text-align:left;white-space:pre-wrap;font:10px/1.5 monospace;background:#180b0b;padding:12px;border:1px solid #642b2b}
+
+/* ===== PREMIUM DEBUG HUD ===== */
+#debugToggle{position:fixed;right:16px;bottom:16px;z-index:120;display:flex;align-items:center;gap:7px;padding:10px 13px;background:linear-gradient(180deg,#17191a,#0a0b0c);border:1px solid #51482f;border-radius:6px;color:#d8bd6a;font:800 9px Orbitron;letter-spacing:1px;box-shadow:0 10px 35px #000b;cursor:pointer;user-select:none}
+#debugToggle:active{transform:translateY(1px)}
+#debugToggle b{min-width:17px;height:17px;display:grid;place-items:center;background:#302a1b;border-radius:50%;font-size:8px;color:#fff}
+.dbg-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#67e39b;box-shadow:0 0 9px #67e39b;animation:dbgPulse 1.5s infinite}
+@keyframes dbgPulse{50%{opacity:.35;box-shadow:0 0 2px #67e39b}}
+.debug-panel{position:fixed;right:16px;bottom:62px;z-index:121;width:min(760px,calc(100vw - 32px));height:min(520px,68vh);display:flex;flex-direction:column;background:linear-gradient(145deg,#090b0dF7,#030405F7);border:1px solid #5d5030;border-radius:9px;box-shadow:0 30px 100px #000,0 0 50px #b28e3b10;overflow:hidden;backdrop-filter:blur(18px)}
+.debug-panel.hidden{display:none}
+.debug-top{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;border-bottom:1px solid #282a2d;background:linear-gradient(90deg,#111315,#0b0c0d)}
+.debug-title{display:flex;align-items:center;gap:10px}.debug-title b{display:block;font:800 11px Orbitron;color:#e0c16b;letter-spacing:1px}.debug-title small{display:block;color:#5f6469;font:7px Orbitron;letter-spacing:1.5px;margin-top:3px}
+.debug-actions{display:flex;gap:5px}.debug-actions button{background:#151719;color:#d6d8da;border:1px solid #34373a;border-radius:4px;padding:8px 10px;font:8px Orbitron;cursor:pointer}.debug-actions button:hover{border-color:#78643a;color:#e5c66c}
+.debug-stats{height:38px;display:flex;align-items:center;gap:17px;padding:0 16px;background:#080a0b;border-bottom:1px solid #1e2022;font:8px Orbitron;color:#5e6469}.debug-stats i{font-style:normal;color:#d8bc68;margin-right:4px}.debug-stats span:last-child{margin-left:auto;color:#6be29b}
+.debug-body{flex:1;overflow:auto;padding:12px;font:10px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#aeb4b7;white-space:pre-wrap;word-break:break-word}
+.debug-line{padding:8px 9px;margin-bottom:5px;border-left:2px solid #3c4144;background:#0d0f10;border-radius:0 4px 4px 0}.debug-line .time{color:#62686d}.debug-line .type{color:#d4b45d;font-weight:800}.debug-line.error{border-left-color:#d85d68;background:#180d0f}.debug-line.error .type{color:#ff7b86}.debug-line.game{border-left-color:#6aa7d9}.debug-line.game .type{color:#82bce9}.debug-line.audio{border-left-color:#8d71ca}.debug-line.audio .type{color:#a98ae0}
+.debug-foot{height:28px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #202224;color:#464b4f;font:7px Orbitron;letter-spacing:1px}
+@media(max-width:600px){#debugToggle{right:10px;bottom:10px}.debug-panel{right:8px;bottom:53px;width:calc(100vw - 16px);height:72vh}.debug-top{height:58px}.debug-actions button{padding:7px 8px}.debug-stats{gap:9px;font-size:7px}}

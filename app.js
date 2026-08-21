@@ -191,26 +191,50 @@ document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{document.que
 document.addEventListener("pointerdown",()=>{let a=audio();if(a&&a.state==="suspended")a.resume()},{once:true});
 render();
 
-/* ===== DEBUG CONSOLE ===== */
-const DEBUG_LOG=[];
-function debugLog(type,message,data){
-  const item={time:new Date().toLocaleTimeString("ja-JP",{hour12:false}),type,message,data:data??null};
-  DEBUG_LOG.push(item); if(DEBUG_LOG.length>300)DEBUG_LOG.shift();
-  const box=document.getElementById("debugBody");
-  if(box){
-    box.textContent=DEBUG_LOG.map(x=>`[${x.time}] [${x.type}] ${x.message}${x.data!==null?"\\n  "+JSON.stringify(x.data):""}`).join("\n");
-    box.scrollTop=box.scrollHeight;
-  }
-}
-window.addEventListener("error",e=>debugLog("ERROR",e.message,{file:e.filename,line:e.lineno,col:e.colno}));
-window.addEventListener("unhandledrejection",e=>debugLog("PROMISE",String(e.reason)));
-const _oldOpenGame=window.openGame;
 
-function toggleDebug(){const p=document.getElementById("debugPanel");p.classList.toggle("hidden");debugLog("DEBUG","Panel "+(p.classList.contains("hidden")?"closed":"opened"))}
-async function copyDebug(){
-  const text=DEBUG_LOG.map(x=>`[${x.time}] [${x.type}] ${x.message}${x.data!==null?"\\n  "+JSON.stringify(x.data):""}`).join("\n");
-  try{await navigator.clipboard.writeText(text);debugLog("DEBUG","Log copied to clipboard",{entries:DEBUG_LOG.length});}
-  catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();debugLog("DEBUG","Log copied using fallback",{entries:DEBUG_LOG.length});}
-}
-function clearDebug(){DEBUG_LOG.length=0;document.getElementById("debugBody").textContent="";debugLog("DEBUG","Log cleared")}
-debugLog("BOOT","Gamble Box debug console ready",{version:"3.4",audioRoot:true});
+
+/* ===== SELF-CONTAINED DEBUG HUD ===== */
+(function(){
+  const logs=[];
+  let errorCount=0, gameCount=0;
+  const max=300;
+  const $d=id=>document.getElementById(id);
+  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+  function render(){
+    const body=$d("debugBody"), count=$d("debugCount"), ev=$d("dbgEvents"), er=$d("dbgErrors"), gm=$d("dbgGames");
+    if(!body)return;
+    body.innerHTML=logs.map(x=>`<div class="debug-line ${x.type.toLowerCase()}"><span class="time">[${esc(x.time)}]</span> <span class="type">[${esc(x.type)}]</span> ${esc(x.message)}${x.data!==null?`<br><span style="color:#6d7479">↳ ${esc(JSON.stringify(x.data))}</span>`:""}</div>`).join("");
+    body.scrollTop=body.scrollHeight;
+    if(count)count.textContent=logs.length;
+    if(ev)ev.textContent=logs.length;
+    if(er)er.textContent=errorCount;
+    if(gm)gm.textContent=gameCount;
+    if($d("debugTime"))$d("debugTime").textContent=new Date().toLocaleTimeString("ja-JP",{hour12:false});
+  }
+  window.debugLog=function(type,message,data=null){
+    if(type==="ERROR"||type==="PROMISE")errorCount++;
+    if(type==="GAME")gameCount++;
+    logs.push({time:new Date().toLocaleTimeString("ja-JP",{hour12:false}),type,message,data});
+    if(logs.length>max)logs.shift();
+    render();
+  };
+  window.toggleDebug=function(){const p=$d("debugPanel");if(!p)return;p.classList.toggle("hidden");debugLog("DEBUG",p.classList.contains("hidden")?"Panel closed":"Panel opened");};
+  window.copyDebug=async function(){
+    const text=logs.map(x=>`[${x.time}] [${x.type}] ${x.message}${x.data!==null?"\n  "+JSON.stringify(x.data):""}`).join("\n\n");
+    try{await navigator.clipboard.writeText(text);debugLog("DEBUG","Log copied to clipboard",{entries:logs.length});}
+    catch(e){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();debugLog("DEBUG","Log copied via fallback",{entries:logs.length});}
+  };
+  window.clearDebug=function(){logs.length=0;errorCount=0;gameCount=0;render();debugLog("DEBUG","Log cleared")};
+  function wire(){
+    const t=$d("debugToggle"), c=$d("debugClose"), cp=$d("debugCopy"), cl=$d("debugClear");
+    if(t)t.addEventListener("click",window.toggleDebug);
+    if(c)c.addEventListener("click",window.toggleDebug);
+    if(cp)cp.addEventListener("click",window.copyDebug);
+    if(cl)cl.addEventListener("click",window.clearDebug);
+    render();
+  }
+  window.addEventListener("error",e=>debugLog("ERROR",e.message,{file:e.filename,line:e.lineno,column:e.colno}));
+  window.addEventListener("unhandledrejection",e=>debugLog("PROMISE",String(e.reason)));
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wire);else wire();
+  window.addEventListener("load",()=>debugLog("BOOT","DEBUG HUD ONLINE",{version:"3.7"}));
+})();
