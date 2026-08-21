@@ -244,3 +244,28 @@ function clearDebug(){GB_DEBUG.length=0;GB_ERRORS=0;GB_GAMES=0;debugLog("DEBUG",
 window.addEventListener("error",e=>debugLog("ERROR",e.message,{file:e.filename,line:e.lineno,column:e.colno}));
 window.addEventListener("unhandledrejection",e=>debugLog("PROMISE",String(e.reason)));
 document.addEventListener("DOMContentLoaded",()=>{const t=document.getElementById("debugToggle");if(t)t.addEventListener("click",toggleDebug);debugLog("BOOT","DEBUG HUD ONLINE",{version:"4.0"})});
+
+
+/* ===== TEST MODE: INFINITE COINS ===== */
+const TEST_MODE=true;
+const TEST_COINS=999999999;
+function testCoins(){
+  if(TEST_MODE){S.coins=TEST_COINS}
+}
+const _saveOriginal=save;
+save=function(){if(TEST_MODE)S.coins=TEST_COINS;return _saveOriginal.apply(this,arguments)};
+
+(function(){
+  if(!TEST_MODE)return;
+  const oldSetInterval=window.setInterval;
+  oldSetInterval(()=>{try{S.coins=TEST_COINS; if(typeof save==="function")save()}catch(e){}},1000);
+  document.addEventListener("DOMContentLoaded",()=>debugLog("TEST","INFINITE COINS ENABLED",{balance:TEST_COINS}));
+})();
+
+(function(){
+  document.addEventListener("DOMContentLoaded",()=>{
+    const t=document.getElementById("debugToggle");
+    if(t&&!t.dataset.wired){t.dataset.wired="1";t.addEventListener("click",()=>{if(typeof toggleDebug==="function")toggleDebug();else{const p=document.getElementById("debugPanel");if(p)p.classList.toggle("hidden")}})}
+    if(typeof debugLog==="function")debugLog("BOOT","PREMIUM DEBUG HUD ONLINE",{version:"4.4",testMode:true});
+  });
+})();
