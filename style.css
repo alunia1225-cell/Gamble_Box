@@ -397,3 +397,9 @@ html,body{min-height:100%;background:#030405!important;}
 #debugEmergencyPanel .de-head{display:flex;justify-content:space-between;align-items:center;color:#e0c269;font:800 10px Orbitron}
 #debugEmergencyBody{position:absolute;left:10px;right:10px;top:45px;bottom:75px;overflow:auto;white-space:pre-wrap;font:9px ui-monospace,monospace;line-height:1.45;background:#090a0b;padding:8px}
 #debugEmergencyPanel button{margin-top:calc(100vh - 92px);background:#17191a;color:#e0c269;border:1px solid #66562f;padding:8px 12px;border-radius:4px}
+
+/* 4.7.38 — cached CSS-proof gameplay layer */
+#modal{display:flex!important;z-index:2147483000!important;position:fixed!important;inset:0!important;visibility:visible!important;opacity:1!important}
+#modal.hidden{display:none!important}
+#appLobby.hidden{display:none!important}
+#modal .tabletop{z-index:2147483001!important;position:relative!important}
