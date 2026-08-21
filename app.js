@@ -367,40 +367,78 @@ function spinSlot(){
 }
 let HL_BUSY=false;
 
+
 function hl(choice){
  if(HL_BUSY)return;
  const b=wager($("bet")?.value);if(!b)return;
- HL_BUSY=true;const token=GB_GAME_TOKEN;
+ HL_BUSY=true;
+ const token=GB_GAME_TOKEN;
  const line=$("hlLine"),area=$("hlArea"),dot=$("hlDot"),vEl=$("hlValue"),res=$("res"),chart=$("hlChart");
  if(!line||!area||!dot||!vEl||!res||!chart){HL_BUSY=false;return}
- // Outcome is locked on the initial tap, but the path is deliberately noisy and unpredictable.
- const finalHigh=Math.random()<.5,start=performance.now(),duration=6000,seed=Math.random()*1000;
- let points=[[12,214]],lastY=214,nextShock=0;
- res.textContent="LIVE…";vEl.textContent="1.00";chart.classList.remove("hl-high","hl-low","hl-wild");sfx("click");
+
+ const finalHigh=Math.random()<.5;
+ const start=performance.now(),duration=5600;
+ const seed=Math.random()*10000;
+ const points=[[12,206]];
+ let lastY=206,lastShock=-1;
+
+ res.textContent="LIVE…";
+ chart.classList.remove("hl-high","hl-low","hl-wild");
+ vEl.textContent="1.00";
+ sfx("click");
+
  const tick=now=>{
    if(!gbAlive(token)){HL_BUSY=false;return}
-   const p=Math.min(1,(now-start)/duration),x=12+596*p;
-   // Random walk + occasional direction changes. Only the final phase converges to the committed result.
-   const wave=Math.sin(seed+p*18)*8+Math.sin(seed*.37+p*43)*5;
-   const volatility=26*(1-p*.25);
-   let target=lastY+(Math.random()-.5)*volatility+wave*.15;
-   if(p>0.12 && p<0.88 && now>=nextShock){
-     nextShock=now+450+Math.random()*850;
-     if(Math.random()<.72)target += (Math.random()<.5?-1:1)*(28+Math.random()*65);
-     chart.classList.add("hl-wild");setTimeout(()=>chart.classList.remove("hl-wild"),180);
+   const p=Math.min(1,(now-start)/duration);
+
+   // X always advances at the same speed from left to right.
+   const x=12+596*p;
+
+   // Vertical movement remains dynamic, but the graph's horizontal travel is constant.
+   const targetY=finalHigh?28:222;
+   const basePull=(targetY-lastY)*0.028;
+   const wave=Math.sin(seed+p*17)*7+Math.sin(seed*.73+p*41)*4;
+   let shock=0;
+
+   if(p>.15&&p<.88){
+     const shockWindow=Math.floor(p*10);
+     if(shockWindow!==lastShock){
+       lastShock=shockWindow;
+       if(Math.random()<.38) shock=(Math.random()<.5?-1:1)*(36+Math.random()*65);
+     }
    }
-   const finalStart=.80,blend=p>finalStart?Math.min(1,(p-finalStart)/(1-finalStart)):0;
-   const targetY=finalHigh?34:220;
-   let y=target*(1-blend)+targetY*blend;
-   y=Math.max(24,Math.min(224,y));
-   lastY=y;points.push([x,y]);dot.setAttribute("cx",x);dot.setAttribute("cy",y);
-   vEl.textContent=(finalHigh?(1.05+p*8.8):(8.8-p*8.3)).toFixed(2);
-   let d=`M ${points[0][0]} ${points[0][1]}`;for(let i=1;i<points.length;i++)d+=` L ${points[i][0].toFixed(1)} ${points[i][1].toFixed(1)}`;
-   line.setAttribute("d",d);area.setAttribute("d",d+` L ${x.toFixed(1)} 125 L 12 125 Z`);
+   if(finalHigh&&p>.42&&p<.75&&Math.random()<.04)shock-=35+Math.random()*55;
+   if(!finalHigh&&p>.42&&p<.75&&Math.random()<.04)shock+=35+Math.random()*55;
+
+   const finalBlend=p>.82?(p-.82)/.18:0;
+   let y=lastY+basePull+wave+shock;
+   y=Math.max(20,Math.min(228,y));
+   y=targetY*finalBlend+y*(1-finalBlend);
+   if(finalBlend>.85)y=targetY*(.6+.4*finalBlend)+y*(.4-.4*finalBlend);
+
+   lastY=y;points.push([x,y]);
+   dot.setAttribute("cx",x);dot.setAttribute("cy",y);
+
+   const liveVal=finalHigh?(1+p*8.6):(9.6-p*8.8);
+   vEl.textContent=Math.max(.5,liveVal).toFixed(2);
+
+   let d=`M ${points[0][0].toFixed(1)} ${points[0][1].toFixed(1)}`;
+   for(let i=1;i<points.length;i++)d+=` L ${points[i][0].toFixed(1)} ${points[i][1].toFixed(1)}`;
+   line.setAttribute("d",d);
+   area.setAttribute("d",d+` L ${x.toFixed(1)} 125 L 12 125 Z`);
+
+   if(shock)chart.classList.add("hl-wild");
+
    if(p>=1){
-     HL_BUSY=false;chart.classList.remove("hl-wild");chart.classList.add(finalHigh?"hl-high":"hl-low");
-     const win=(choice==="high")===finalHigh;vEl.textContent=finalHigh?"9.80":"0.45";
-     res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");sfx(win?"win":"lose");return;
+     HL_BUSY=false;chart.classList.remove("hl-wild");
+     chart.classList.add(finalHigh?"hl-high":"hl-low");
+     const win=(choice==="high")===finalHigh;
+     const final=finalHigh?"HIGH":"LOW";
+     vEl.textContent=finalHigh?"9.80":"0.45";
+     res.textContent=`${final} • ${win?"WIN":"LOSE"}`;
+     settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");
+     sfx(win?"win":"lose");
+     return;
    }
    requestAnimationFrame(tick);
  };

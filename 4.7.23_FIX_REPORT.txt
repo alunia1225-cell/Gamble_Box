@@ -1,0 +1,7 @@
+Gamble Box 4.7.23
+- Based on 4.7.22 BLACK GOLD READABLE.
+- Removed backdrop-filter blur from CSS.
+- Forced gameplay/modal surfaces to no-blur.
+- High & Low horizontal graph progression uses fixed elapsed-time interpolation, so left-to-right movement is constant speed.
+- High & Low vertical path can still fluctuate randomly; only horizontal travel speed is fixed.
+- JS syntax check passed.
