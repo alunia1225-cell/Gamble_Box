@@ -63,28 +63,6 @@ sfx=function(name){gbPlay(name);try{_sfxOriginal(name)}catch(e){}};
 
 
 
-window.spinSlot=function(){
-  const betEl=document.getElementById("bet"),res=document.getElementById("res");
-  const b=typeof wager==="function"?wager(betEl?betEl.value:100):100;if(!b)return;
-  const els=[1,2,3].map(i=>document.getElementById("reel"+i)).filter(Boolean),syms=["7","★","BAR","🍒","🔔","💎","🍋"];
-  if(res)res.textContent="SPINNING…";
-  els.forEach(e=>{e.classList.remove("reel-spin");void e.offsetWidth;e.classList.add("reel-spin")});
-  if(typeof sfx==="function")sfx("spin");
-  let n=0;
-  const iv=setInterval(()=>{
-    els.forEach(e=>e.textContent=syms[Math.floor(Math.random()*syms.length)]);
-    if(++n>=18){
-      clearInterval(iv);
-      const r=els.map(()=>syms[Math.floor(Math.random()*syms.length)]);
-      r.forEach((v,i)=>els[i].textContent=v);
-      const t=r[0]===r[1]&&r[1]===r[2],p=r[0]===r[1]||r[1]===r[2]||r[0]===r[2],j=t&&r[0]==="7",m=j?25:t?10:p?2:0;
-      if(res)res.textContent=j?"JACKPOT ×25":t?"TRIPLE ×10":p?"PAIR ×2":"LOSE";
-      if(typeof settle==="function")settle(b,m?b*m:0,"SLOT");
-      if(typeof sfx==="function")sfx(j?"jackpot":m?"win":"lose");
-      if(j&&typeof puchun==="function")puchun();
-    }
-  },90);
-};
 function puchun(){
   const e=$("blackout");
   if(e){
@@ -225,7 +203,7 @@ function lottery(){
 }
 const games={
 slot(){
- gameBody.innerHTML=betbox()+`<div class="anim-game slot-game"><div class="anim-title">GOLDEN REEL</div><div class="slot-machine"><div class="slot-top">★ JACKPOT ★</div><div class="reels"><div class="reel-window"><div id="reel1" class="reel">7️⃣</div></div><div class="reel-window"><div id="reel2" class="reel">7️⃣</div></div><div class="reel-window"><div id="reel3" class="reel">7️⃣</div></div><div class="payline"></div></div><button id="slotSpinBtn" class="slot-spin" onclick="spinSlot()">SPIN</button></div><div id="res" class="result">PLACE YOUR BET</div></div>`;
+ gameBody.innerHTML=betbox()+`<div class="anim-game slot-game"><div class="anim-title">GOLDEN REEL</div><div class="slot-machine"><div class="slot-top">★ JACKPOT ★</div><div class="slot-body"><div class="reels" id="slotReels"><div class="reel-window"><div id="reel1" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell cherry">●●</div></div></div><div class="reel-window"><div id="reel2" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell diamond">◆</div><div class="slot-cell bell">BELL</div></div></div><div class="reel-window"><div id="reel3" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell lemon">LEMON</div></div></div><div class="payline horizontal"></div><div class="payline diagonal down"></div><div class="payline diagonal up"></div></div><div class="slot-lever-wrap"><button id="slotLever" class="slot-lever" onclick="spinSlot()"><span class="lever-knob"></span><span class="lever-shaft"></span></button><small>PULL</small></div></div><button id="slotSpinBtn" class="slot-spin" onclick="spinSlot()">PULL LEVER</button></div><div id="res" class="result">PLACE YOUR BET</div></div>`;
 },
 dice(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
 blackjack(){
@@ -273,31 +251,79 @@ shop(){gameBody.innerHTML=`<div class="shop-item">🎩 LUCKY HAT <button onclick
 };
 
 let SLOT_BUSY=false;
+const SLOT_SYMBOLS=[
+ {id:"seven",html:'<span class="slot-cell seven">7</span>'},
+ {id:"bar",html:'<span class="slot-cell bar">BAR</span>'},
+ {id:"cherry",html:'<span class="slot-cell cherry">●●</span>'},
+ {id:"diamond",html:'<span class="slot-cell diamond">◆</span>'},
+ {id:"bell",html:'<span class="slot-cell bell">BELL</span>'},
+ {id:"lemon",html:'<span class="slot-cell lemon">LEMON</span>'}
+];
+function slotSetReel(el,rows){if(!el)return;el.innerHTML=rows.map(x=>SLOT_SYMBOLS.find(s=>s.id===x)?.html||SLOT_SYMBOLS[0].html).join("")}
+function slotPick(){return SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)].id}
+function slotAudio(type){
+ try{
+  if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const ctx=audioCtx,now=ctx.currentTime;
+  const osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);
+  if(type==="lever"){
+   osc.type="square";osc.frequency.setValueAtTime(180,now);osc.frequency.exponentialRampToValueAtTime(72,now+.13);
+   gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.13,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.17);osc.start(now);osc.stop(now+.18);
+  }else if(type==="reel"){
+   osc.type="triangle";osc.frequency.setValueAtTime(95,now);osc.frequency.exponentialRampToValueAtTime(145,now+.035);
+   gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.004);gain.gain.exponentialRampToValueAtTime(.0001,now+.045);osc.start(now);osc.stop(now+.05);
+  }else if(type==="stop"){
+   osc.type="square";osc.frequency.setValueAtTime(420,now);osc.frequency.exponentialRampToValueAtTime(110,now+.075);
+   gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.12,now+.006);gain.gain.exponentialRampToValueAtTime(.0001,now+.11);osc.start(now);osc.stop(now+.12);
+  }else if(type==="line"){
+   osc.type="sine";osc.frequency.setValueAtTime(520,now);osc.frequency.exponentialRampToValueAtTime(780,now+.16);
+   gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.09,now+.015);gain.gain.exponentialRampToValueAtTime(.0001,now+.2);osc.start(now);osc.stop(now+.21);
+  }
+ }catch(e){}
+}
+function slotMarkLines(lines){
+ document.querySelectorAll(".slot-machine .payline").forEach(e=>e.classList.remove("hit"));
+ lines.forEach(i=>{const el=document.querySelectorAll(".slot-machine .payline")[i];if(el)el.classList.add("hit")});
+}
 function spinSlot(){
  if(SLOT_BUSY)return;
  const b=wager($("bet")?.value);if(!b)return;
- const token=GB_GAME_TOKEN, symbols=["🍒","🍋","🔔","💎","7️⃣"];
- const result=symbols[Math.floor(Math.random()*symbols.length)];
- const r2=symbols[Math.floor(Math.random()*symbols.length)];
- const r3=symbols[Math.floor(Math.random()*symbols.length)];
- const final=[result,r2,r3];
- SLOT_BUSY=true;const btn=$("slotSpinBtn");if(btn)btn.disabled=true;sfx("spin");
- const reels=[1,2,3].map(i=>$("reel"+i));let ticks=[0,0,0];
+ const token=GB_GAME_TOKEN,res=$("res"),btn=$("slotSpinBtn"),lever=$("slotLever");
+ const reels=[1,2,3].map(i=>$("reel"+i));
+ SLOT_BUSY=true;if(btn)btn.disabled=true;if(lever)lever.classList.add("pulled");
+ if(res)res.textContent="GOOD LUCK…";
+ slotAudio("lever");sfx("click");
+ setTimeout(()=>{if(lever)lever.classList.remove("pulled")},230);
+ const final=[
+   [slotPick(),slotPick(),slotPick()],
+   [slotPick(),slotPick(),slotPick()],
+   [slotPick(),slotPick(),slotPick()]
+ ];
+ // Bias only the visual frequency, never force a win. Winning lines remain genuinely random.
+ const timers=[];
  reels.forEach((el,i)=>{
    if(!el)return;
-   el.classList.add("reel-spin");
-   const timer=setInterval(()=>{if(!gbAlive(token)){clearInterval(timer);return}el.textContent=symbols[Math.floor(Math.random()*symbols.length)];sfx("spin")},80);
+   el.classList.add("reel-running");
+   const iv=setInterval(()=>{if(!gbAlive(token)){clearInterval(iv);return}slotSetReel(el,[slotPick(),slotPick(),slotPick()]);slotAudio("reel")},72);
+   timers.push(iv);
    setTimeout(()=>{
-     clearInterval(timer);if(!gbAlive(token))return;
-     el.classList.remove("reel-spin");el.textContent=final[i];ticks[i]=1;
+     clearInterval(iv);el.classList.remove("reel-running");slotSetReel(el,final[i]);slotAudio("stop");
      if(i===2){
+       const lines=[];
+       const paths=[[0,0,0],[1,1,1],[2,2,2],[0,1,2],[2,1,0]];
+       paths.forEach((path,idx)=>{const ids=path.map((row,col)=>final[col][row]);if(ids[0]===ids[1]&&ids[1]===ids[2])lines.push(idx)});
+       slotMarkLines(lines);
+       let mult=0,hitName="";
+       for(const li of lines){const ids=paths[li];const id=final[0][ids[0]];const v=id==="seven"?50:id==="bar"?12:id==="diamond"?8:5;if(v>mult){mult=v;hitName=id.toUpperCase()}}
+       const winLines=lines.length;
+       if(winLines){mult*=winLines>1?1.5:1;mult=Math.floor(mult);}
        SLOT_BUSY=false;if(btn)btn.disabled=false;
-       const m=final[0]===final[1]&&final[1]===final[2]?(final[0]==="7️⃣"?50:15):final[0]===final[1]?3:0;
-       $("res").textContent=m?(m>=15?`JACKPOT ×${m}`:`PAIR ×${m}`):"LOSE";
-       settle(b,b*m,"ULTIMATE SLOTS");m?sfx(m>=15?"jackpot":"win"):sfx("lose");if(m>=15)puchun();
+       if(res)res.textContent=winLines?`${hitName} • ${winLines} LINE${winLines>1?"S":""} • ×${mult}`:"LOSE";
+       if(winLines){slotAudio("line");settle(b,Math.floor(b*mult),"ULTIMATE SLOTS");sfx(mult>=15?"jackpot":"win");if(mult>=15)puchun()}else{settle(b,0,"ULTIMATE SLOTS");sfx("lose")}
      }
-   },1000+i*650);
- });
+   },1000+i*700);
+ },
+ );
 }
 let HL_BUSY=false;
 function hl(choice){
