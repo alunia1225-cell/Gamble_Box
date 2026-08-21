@@ -1,0 +1,2 @@
+All audio assets are intentionally in the project root. No audio/ subfolder is used.
+Upload the extracted files directly to the GitHub repository root.

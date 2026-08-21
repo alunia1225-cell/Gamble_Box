@@ -6,7 +6,7 @@ function save(){localStorage.setItem(KEY,JSON.stringify(S));render()}
 function fmt(n){return Math.floor(n).toLocaleString()}
 function audio(){if(!S.sound)return null; try{return audioCtx||(audioCtx=new (window.AudioContext||window.webkitAudioContext)())}catch(e){return null}}
 function tone(freq,d=.08,type="sine",vol=.035,delay=0){let a=audio();if(!a)return;let o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0.0001,a.currentTime+delay);g.gain.exponentialRampToValueAtTime(vol,a.currentTime+delay+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+delay+d);o.connect(g);g.connect(a.destination);o.start(a.currentTime+delay);o.stop(a.currentTime+delay+d+.02)}
-function sfx(name){if(!S.sound)return;
+\nfunction audioFile(name){\n  if(!S.sound) return;\n  try{ const a=new Audio(name); a.volume=0.7; a.preload="auto"; a.play().catch(()=>{}); }catch(e){}\n}\n\nfunction sfx(name){if(!S.sound)return; const fileMap={click:"click.wav",chip:"chip.wav",card:"card.wav",win:"win.wav",lose:"lose.wav",spin:"spin.wav",dice:"dice.wav",roulette:"roulette.wav",crash:"crash.wav",jackpot:"jackpot.wav",flip:"flip.wav",deal:"card.wav"}; if(fileMap[name]) audioFile(fileMap[name]);
  const sets={click:[[180,.05]],chip:[[450,.05,"square"]],card:[[850,.045,"triangle"]],win:[[523,.08],[659,.08],[784,.16]],lose:[[180,.15],[120,.18]],spin:[[180,.05],[220,.05],[280,.05]],dice:[[220,.05],[330,.05],[180,.07]],roulette:[[260,.04],[320,.04],[390,.04],[460,.05]],crash:[[180,.15,"sawtooth"],[80,.35,"sawtooth"]],jackpot:[[392,.1],[523,.1],[659,.1],[1046,.3]],flip:[[600,.08],[400,.08]],deal:[[700,.05],[900,.05]]};
  (sets[name]||sets.click).forEach((x,i)=>tone(x[0],x[1],x[2]||"sine",.035,i*.06));
 }
@@ -23,7 +23,7 @@ function toggleSound(){S.sound=!S.sound;$("sound").textContent=S.sound?"🔊":"�
 const games={
 slot(){gameBody.innerHTML=betbox()+`<div class="reels"><div class="reel" id="r1">7️⃣</div><div class="reel" id="r2">7️⃣</div><div class="reel" id="r3">7️⃣</div></div><button onclick="slotSpin()">SPIN</button><div id="res" class="result"></div>`},
 dice(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
-blackjack(){gameBody.innerHTML=betbox(100)+`<div class="felt"><div class="street">BLACKJACK TABLE</div><div>DEALER</div><div id="dealer" class="holdem-row"></div><div class="pot">BET <span id="bjbet">0</span></div><div>PLAYER</div><div id="player" class="holdem-row"></div><div class="actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button><button id="bjsplit" onclick="bjSplit()" disabled>SPLIT</button></div><div id="bjres" class="result"></div></div>`},
+blackjack(){gameBody.innerHTML=betbox(100)+`<div class="felt"><div class="street">BLACKJACK TABLE</div><div>DEALER</div><div id="dealer" class="holdem-row"></div><div class="pot">BET <span id="bjbet">0</span></div><div>PLAYER</div><div id="player" class="holdem-row"></div><div class="actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button><button id="bjsplit" onclick="BJ.split?bjSplitAction():bjSplit()" disabled>SPLIT</button></div><div id="bjres" class="result"></div></div>`},
 holdem(){holdemInit()},
 roulette(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="roulette('red')">🔴 RED ×2</button><button onclick="roulette('black')">⚫ BLACK ×2</button><button onclick="roulette('green')">🟢 ZERO ×14</button></div><div id="res" class="result">0 — 36</div>`},
 highlow(){gameBody.innerHTML=betbox()+`<div id="card" class="result">7</div><div class="choices"><button onclick="hl('high')">HIGH</button><button onclick="hl('low')">LOW</button></div>`},
@@ -40,15 +40,121 @@ function dice(c){let b=wager($("bet").value);if(!b)return;sfx("dice");let d=1+Ma
 function deck(){let suits=["♠","♥","♦","♣"],ranks=["2","3","4","5","6","7","8","9","10","J","Q","K","A"],d=[];for(let s of suits)for(let r of ranks)d.push({s,r});return d.sort(()=>Math.random()-.5)}
 function val(cards){let total=0,aces=0;cards.forEach(c=>{if(["J","Q","K"].includes(c.r))total+=10;else if(c.r==="A"){total+=11;aces++}else total+=+c.r});while(total>21&&aces--)total-=10;return total}
 let BJ={};
-function cardEl(c){return `<div class="card ${c.s==="♥"||c.s==="♦"?"red":""} dealt">${c.r}${c.s}</div>`}
-function bjRender(){ $("player").innerHTML=BJ.p.map(cardEl).join("");$("dealer").innerHTML=BJ.d.map((c,i)=>i===1&&!BJ.over?'<div class="card back">?</div>':cardEl(c)).join("");$("bjbet").textContent=fmt(BJ.bet)}
-function bjDeal(){let b=wager($("bet").value);if(!b)return;BJ={d:[null,null],p:[],bet:b,over:false,deck:deck(),split:false};BJ.p=[BJ.deck.pop(),BJ.deck.pop()];BJ.d=[BJ.deck.pop(),BJ.deck.pop()];bjRender();sfx("deal");$("bjhit").disabled=false;$("bjstand").disabled=false;$("bjdouble").disabled=S.coins<b;$("bjsplit").disabled=!(BJ.p[0].r===BJ.p[1].r&&S.coins>=b);if(val(BJ.p)===21){BJ.over=true;bjRender();bjFinish()}}
-function bjHit(){if(BJ.over)return;BJ.p.push(BJ.deck.pop());sfx("card");bjRender();if(val(BJ.p)>21)bjFinish("BUST")}
-function bjStand(){if(BJ.over)return;while(val(BJ.d)<17)BJ.d.push(BJ.deck.pop());BJ.over=true;bjRender();bjFinish()}
-function bjDouble(){if(BJ.over||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.bet*=2;BJ.p.push(BJ.deck.pop());sfx("card");if(val(BJ.p)<=21)while(val(BJ.d)<17)BJ.d.push(BJ.deck.pop());BJ.over=true;bjRender();bjFinish()}
-function bjSplit(){if(BJ.over||BJ.split||BJ.p[0].r!==BJ.p[1].r||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.split=true;BJ.p=[BJ.p[0],BJ.deck.pop(),BJ.p[1],BJ.deck.pop()];$("bjres").textContent="SPLIT HANDS (簡易処理)";sfx("card");bjRender()}
-function bjFinish(force){let pv=val(BJ.p),dv=val(BJ.d),payout=0,msg=force||"";if(!msg){if(pv>21)msg="BUST";else if(dv>21||pv>dv){msg=pv===21?"BLACKJACK!":"YOU WIN";payout=pv===21&&BJ.p.length===2?Math.floor(BJ.bet*2.5):BJ.bet*2}else if(pv===dv){msg="PUSH";payout=BJ.bet}else msg="DEALER WINS"}$("bjres").textContent=msg;settle(BJ.bet,payout,"BLACKJACK");sfx(payout>BJ.bet?"win":payout===BJ.bet?"click":"lose");if(pv===21&&BJ.p.length===2)puchun();$("bjhit").disabled=true;$("bjstand").disabled=true;$("bjdouble").disabled=true;$("bjsplit").disabled=true}
+function cardEl(c, hidden=false){
+  if(hidden) return '<div class="card back">?</div>';
+  return `<div class="card ${c.s==="♥"||c.s==="♦"?"red":""} dealt">${c.r}${c.s}</div>`;
+}
+function bjRender(){
+  $("player").innerHTML=BJ.p.map(c=>cardEl(c)).join("");
+  $("dealer").innerHTML=BJ.d.map((c,i)=>cardEl(c, i===1&&!BJ.reveal)).join("");
+  $("bjbet").textContent=fmt(BJ.bet);
+}
+function bjSetActions(active){
+  ["bjhit","bjstand","bjdouble","bjsplit"].forEach(id=>$(id).disabled=!active);
+}
+function bjDeal(){
+  let b=wager($("bet").value); if(!b)return;
+  BJ={deck:deck(),p:[ ],d:[],bet:b,reveal:false,over:false,split:false};
+  BJ.p=[BJ.deck.pop(),BJ.deck.pop()];
+  BJ.d=[BJ.deck.pop(),BJ.deck.pop()];
+  bjRender(); sfx("deal");
+  $("bjdeal").disabled=true;
+  let canSplit=BJ.p[0].r===BJ.p[1].r && S.coins>=b;
+  $("bjsplit").disabled=!canSplit;
+  $("bjdouble").disabled=S.coins<b;
+  if(val(BJ.p)===21){
+    BJ.reveal=true; BJ.over=true; bjRender();
+    $("bjres").textContent="BLACKJACK!";
+    settle(BJ.bet,Math.floor(BJ.bet*2.5),"BLACKJACK");
+    sfx("jackpot"); puchun(); bjSetActions(false); return;
+  }
+  bjSetActions(true);
+}
+function bjHit(){
+  if(BJ.over)return;
+  BJ.p.push(BJ.deck.pop()); sfx("card"); bjRender();
+  let v=val(BJ.p);
+  if(v>21){
+    BJ.reveal=true; BJ.over=true; bjRender();
+    $("bjres").textContent="BUST";
+    settle(BJ.bet,0,"BLACKJACK"); sfx("lose"); bjSetActions(false);
+  } else if(v===21){
+    bjStand();
+  }
+}
+function bjStand(){
+  if(BJ.over)return;
+  BJ.reveal=true;
+  while(val(BJ.d)<17){ BJ.d.push(BJ.deck.pop()); sfx("card"); }
+  BJ.over=true; bjRender(); bjResolve();
+}
+function bjDouble(){
+  if(BJ.over||S.coins<BJ.bet)return;
+  S.coins-=BJ.bet; S.wagered+=BJ.bet; BJ.bet*=2;
+  BJ.p.push(BJ.deck.pop()); sfx("card");
+  if(val(BJ.p)>21){
+    BJ.reveal=true; BJ.over=true; bjRender();
+    $("bjres").textContent="DOUBLE BUST";
+    settle(BJ.bet,0,"BLACKJACK"); sfx("lose"); bjSetActions(false); return;
+  }
+  BJ.reveal=true;
+  while(val(BJ.d)<17){BJ.d.push(BJ.deck.pop());sfx("card")}
+  BJ.over=true; bjRender(); bjResolve();
+}
+function bjSplit(){
+  if(BJ.over||BJ.split||BJ.p.length!==2||BJ.p[0].r!==BJ.p[1].r||S.coins<BJ.bet)return;
+  // Split is handled as two hands with sequential player decisions.
+  S.coins-=BJ.bet; S.wagered+=BJ.bet;
+  BJ.split=true;
+  BJ.hands=[
+    [BJ.p[0],BJ.deck.pop()],
+    [BJ.p[1],BJ.deck.pop()]
+  ];
+  BJ.handIndex=0; BJ.p=BJ.hands[0]; BJ.originalBet=BJ.bet;
+  $("bjres").textContent="SPLIT — HAND 1";
+  bjRender(); sfx("card");
+  $("bjsplit").disabled=true;
+}
+function bjResolve(){
+  let pv=val(BJ.p), dv=val(BJ.d), payout=0, msg;
+  if(dv>21 || pv>dv){msg="YOU WIN";payout=BJ.bet*2}
+  else if(pv===dv){msg="PUSH";payout=BJ.bet}
+  else msg="DEALER WINS";
+  $("bjres").textContent=`${msg}　YOU ${pv} / DEALER ${dv}`;
+  settle(BJ.bet,payout,"BLACKJACK");
+  sfx(payout>BJ.bet?"win":payout===BJ.bet?"click":"lose");
+  bjSetActions(false);
+  $("bjdeal").disabled=false;
+  if(pv===21 && BJ.p.length===2){sfx("jackpot");puchun()}
+}
 
+function bjSplitAction(){
+  if(!BJ.split)return;
+  if(BJ.handIndex===0){
+    BJ.hands[0]=BJ.p.slice();
+    BJ.handIndex=1; BJ.p=BJ.hands[1];
+    $("bjres").textContent="SPLIT — HAND 2"; bjRender(); bjSetActions(true);
+  } else {
+    // resolve both split hands against dealer
+    BJ.hands[1]=BJ.p.slice();
+    BJ.reveal=true;
+    while(val(BJ.d)<17) BJ.d.push(BJ.deck.pop());
+    let dv=val(BJ.d), totalPayout=0, labels=[];
+    BJ.hands.forEach((hand,i)=>{
+      let pv=val(hand), p=0, label;
+      if(pv>21){label=`HAND ${i+1}: BUST`}
+      else if(dv>21||pv>dv){p=hand===BJ.hands[0]?BJ.originalBet*2:BJ.originalBet*2;label=`HAND ${i+1}: WIN`;totalPayout+=p}
+      else if(pv===dv){p=BJ.originalBet;label=`HAND ${i+1}: PUSH`;totalPayout+=p}
+      else label=`HAND ${i+1}: LOSE`;
+      labels.push(label);
+    });
+    BJ.over=true; BJ.p=BJ.hands[1]; bjRender();
+    $("bjres").textContent=labels.join("　");
+    settle(BJ.originalBet*2,totalPayout,"BLACKJACK SPLIT");
+    sfx(totalPayout> BJ.originalBet*2?"win":totalPayout===BJ.originalBet*2?"click":"lose");
+    bjSetActions(false); $("bjdeal").disabled=false;
+  }
+}
 let H={};
 function holdemInit(){H={deck:deck(),hero:[],villain:[],board:[],pot:0,currentBet:0,heroPaid:0,villainPaid:0,street:0,fold:false,over:false,ante:100};gameBody.innerHTML=`<div class="felt"><div class="street" id="hstreet">PRE-FLOP</div><div>VILLAIN</div><div id="villain" class="holdem-row"></div><div class="pot">POT <span id="hpot">0</span></div><div>BOARD</div><div id="board" class="holdem-row"></div><div>YOU</div><div id="hero" class="holdem-row"></div><div id="hstatus" class="result"></div><div class="actions"><button onclick="hCheck()">CHECK / CALL</button><button onclick="hBet(100)">BET 100</button><button onclick="hBet(500)">BET 500</button><button onclick="hBet(1000)">BET 1000</button><button onclick="hRaise()">RAISE</button><button onclick="hFold()">FOLD</button></div><div class="raisebox"><input id="hraise" type="number" min="1" value="100"><button onclick="hRaiseCustom()">RAISE CUSTOM</button></div></div><p class="hint">※ CPU 1人対戦。BET/RAISE額は自分で決定できます。</p>`;hStart()}
 function hStart(){let b=100;if(S.coins<b*2){$("hstatus").textContent="100 COIN以上必要";return}S.coins-=b;S.wagered+=b;H.hero=[H.deck.pop(),H.deck.pop()];H.villain=[H.deck.pop(),H.deck.pop()];H.pot=b*2;H.heroPaid=b;H.villainPaid=b;hRender();sfx("deal")}

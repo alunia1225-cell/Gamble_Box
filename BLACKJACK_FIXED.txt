@@ -1,0 +1,12 @@
+BLACKJACK FIXED SPEC
+- Dealer: first card open, second card hidden until player turn ends.
+- Player: both initial cards fully visible.
+- HIT: draw one card.
+- STAND: end player turn; reveal dealer hole card; dealer draws until 17+.
+- DOUBLE: doubles bet, one card, auto-stand.
+- SPLIT: matching starting ranks create two hands and allow sequential play.
+- Blackjack pays 2.5x total return.
+- Push returns the bet.
+- Bust loses.
+- Dealer reveal/card sounds and win/lose/jackpot/puchun effects are retained.
+- Audio files remain directly in project root.
