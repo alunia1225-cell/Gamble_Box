@@ -39,6 +39,26 @@ function puchun(){
   debugLog&&debugLog("AUDIO","PUCHUN",{file:"puchun_notice.mp3",blackout:true});
 }
 
+let CRASH={running:false,x:1,timer:null,bet:0};
+function crashStart(){
+  if(CRASH.running)return;const b=wager($("bet").value);if(!b)return;
+  CRASH={running:true,x:1,timer:null,bet:b};$("res").textContent="RUNNING…";sfx("click");
+  const path=$("crashLine");let t=0;
+  CRASH.timer=setInterval(()=>{t+=.075;CRASH.x=1+Math.pow(t,1.32)*(.6+Math.random()*.08);const px=Math.min(570,t*105),py=Math.max(22,280-(CRASH.x-1)*46);path.setAttribute("d",`M0 280 C${px*.22} ${280-py*.12},${px*.56} ${280-py*.68},${px} ${py}`);$("crashX").textContent=CRASH.x.toFixed(2)+"x";if(Math.random()<.006||CRASH.x>30){clearInterval(CRASH.timer);CRASH.running=false;$("res").textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;settle(b,0,"CRASH");sfx("crash")}},80);
+}
+function crashCashout(){
+  if(!CRASH.running)return;clearInterval(CRASH.timer);CRASH.running=false;const payout=Math.floor(CRASH.bet*CRASH.x);$("res").textContent=`CASH OUT ${CRASH.x.toFixed(2)}x — +${fmt(payout)}`;settle(CRASH.bet,payout,"CRASH");sfx("win");
+}
+function choHan(pick){
+  const b=wager($("bet").value);if(!b)return;
+  const x=$("diceA"),y=$("diceB");$("res").textContent="SHAKING…";[x,y].forEach(e=>{e.classList.remove("dice-shake");void e.offsetWidth;e.classList.add("dice-shake")});sfx("dice");
+  let n=0;const iv=setInterval(()=>{x.textContent=1+Math.floor(Math.random()*6);y.textContent=1+Math.floor(Math.random()*6);if(++n>=12){clearInterval(iv);const a=1+Math.floor(Math.random()*6),d=1+Math.floor(Math.random()*6),sum=a+d,side=sum%2===0?"cho":"han";x.textContent=a;y.textContent=d;$("res").textContent=`${a} + ${d} = ${sum} — ${side.toUpperCase()} / ${side===pick?"WIN":"LOSE"}`;settle(b,side===pick?b*2:0,"丁半");sfx(side===pick?"win":"lose")}},110);
+}
+function coinFlip(pick){
+  const b=wager($("bet").value);if(!b)return;
+  const c=$("coin3d");$("res").textContent="FLIPPING…";c.classList.remove("coin-flipping");void c.offsetWidth;c.classList.add("coin-flipping");sfx("flip");
+  setTimeout(()=>{const result=Math.random()<.5?"heads":"tails",win=result===pick;c.classList.remove("coin-flipping");c.classList.toggle("show-tail",result==="tails");$("res").textContent=`${result.toUpperCase()} — ${win?"WIN":"LOSE"}`;settle(b,win?b*2:0,"COIN TOSS");sfx(win?"win":"lose")},2200);
+}
 function save(){localStorage.setItem(KEY,JSON.stringify(S));render()}
 function fmt(n){return Math.floor(n).toLocaleString()}
 function audio(){if(!S.sound)return null; try{return audioCtx||(audioCtx=new (window.AudioContext||window.webkitAudioContext)())}catch(e){return null}}
@@ -101,8 +121,16 @@ roulette(){
   <div class="choices roulette-bets"><button onclick="roulette('red')">🔴 RED ×2</button><button onclick="roulette('black')">⚫ BLACK ×2</button><button onclick="roulette('green')">🟢 ZERO ×14</button></div><div id="res" class="result">PLACE YOUR BET</div>`;
 },
 highlow(){gameBody.innerHTML=betbox()+`<div id="card" class="result">7</div><div class="choices"><button onclick="hl('high')">HIGH</button><button onclick="hl('low')">LOW</button></div>`},
-chohan(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="ch('丁')">丁</button><button onclick="ch('半')">半</button></div><div id="res" class="result">🎯</div>`},
-coin(){gameBody.innerHTML=betbox()+`<div class="choices"><button onclick="coin('表')">表</button><button onclick="coin('裏')">裏</button></div><div id="res" class="result">🪙</div>`},
+chohan(){
+  document.getElementById("gameBody").innerHTML=betbox()+`<div class="anim-game dice-game">
+  <div class="anim-title">丁 半</div><div class="dice-stage"><div id="diceA" class="die">?</div><div id="diceB" class="die">?</div></div>
+  <div class="choices"><button onclick="choHan('cho')">丁 / EVEN</button><button onclick="choHan('han')">半 / ODD</button></div><div id="res" class="result">PLACE YOUR BET</div></div>`;
+},
+coin(){
+  document.getElementById("gameBody").innerHTML=betbox()+`<div class="anim-game coin-game">
+  <div class="anim-title">COIN TOSS</div><div class="coin-stage"><div id="coin3d" class="coin3d"><div class="coin-face coin-head">H</div><div class="coin-face coin-tail">T</div></div></div>
+  <div class="choices"><button onclick="coinFlip('heads')">HEADS</button><button onclick="coinFlip('tails')">TAILS</button></div><div id="res" class="result">CHOOSE YOUR SIDE</div></div>`;
+},
 lottery(){gameBody.innerHTML=`<p>ONE DRAW / 100 COIN</p><p>JACKPOT 100,000　•　1 / 500</p><p>GOLD 10,000　•　1 / 50</p><p>SILVER 500　•　約1 / 8</p><button onclick="lottery()">DRAW LOTTERY</button><div id="res" class="result">?</div>`},
 multiplier(){gameBody.innerHTML=betbox()+`<div id="mult" class="result">1.00×</div><div class="meter"><i id="meter"></i></div><button onclick="crashStart()">START</button><div id="res"></div>`},
 daily(){let ok=Date.now()-S.lastDaily>86400000;gameBody.innerHTML=`<p>${ok?"VAULT READY":"VAULT LOCKED"}</p><button ${ok?"":"disabled"} onclick="daily()">CLAIM 1,000</button><div id="res" class="result"></div>`},
@@ -248,7 +276,7 @@ document.addEventListener("DOMContentLoaded",()=>{const t=document.getElementByI
 
 /* ===== TEST MODE: INFINITE COINS ===== */
 const TEST_MODE=true;
-const TEST_COINS=999999999;
+const TEST_COINS=9999;
 function testCoins(){
   if(TEST_MODE){S.coins=TEST_COINS}
 }
