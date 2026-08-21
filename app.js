@@ -74,7 +74,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.40"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.41"});
 });
 
 const KEY="gb3_save";
@@ -208,7 +208,7 @@ function settle(b,p,g){
  else if(p===0){showOutcome("LOSE",g,-b)}
  S.history.unshift({g,net,t:new Date().toLocaleTimeString()});S.history=S.history.slice(0,20);save();return net;
 }
-function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join(""):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("")}
+function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);if($("welcomeCoins"))$("welcomeCoins").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join(""):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("")}
 
 let GB_GAME_TOKEN=0;
 function gbAlive(t){return t===GB_GAME_TOKEN&&window.GB_RUNTIME&&window.GB_RUNTIME.active}
@@ -507,7 +507,7 @@ function holdemInit(){
  players:holdemNames().map((name,i)=>({name,stack:9999,bet:0,total:0,folded:false,allin:false,cards:[],action:"",
    style:["TAG","LAG","TRICKSTER","CALLING"][i%4],bluff:0.06+(i%4)*0.045,confidence:.45,tilt:0,history:[]})),
  hero:0,button:Math.floor(Math.random()*HE_N),street:0,board:[],deck:deck(),pot:0,currentBet:0,turn:0,pending:new Set(),
- heroRevealed:[false,false],communityRevealed:[],over:false,timerId:null,advanceTimer:null,token:GB_GAME_TOKEN,raiseCount:0,lastRaiseSize:100,streetAggro:0,heroAggro:0};
+ heroRevealed:[false,false],communityRevealed:[],over:false,timerId:null,advanceTimer:null,cpuTimer:null,token:GB_GAME_TOKEN,raiseCount:0,lastRaiseSize:100,streetAggro:0,heroAggro:0};
  document.getElementById("gameBody").innerHTML=`<div class="felt he-clean"><div class="he-head"><span id="heStreet">PRE-FLOP</span><b id="hePot">POT 0</b><span id="heButton"></span></div>
  <div class="he-stage"><div id="hePlayers" class="he-players"></div><div class="he-center"><div class="he-potline">POT <strong id="hePotCenter">0</strong></div><div id="heBoard" class="he-board"></div><div id="heStreetCenter" class="he-street-label">PRE-FLOP</div></div><div id="heHero" class="he-hero"></div></div>
  <div class="he-actions"><button id="heCheck" onclick="heAction('CHECK')">CHECK</button><button id="heBet" onclick="heOpenBet('BET')">BET</button><button id="heCall" onclick="heAction('CALL')">CALL</button><button id="heRaise" onclick="heOpenBet('RAISE')">RAISE</button><button id="heFold" onclick="heAction('FOLD')">FOLD</button></div>
@@ -516,7 +516,7 @@ function holdemInit(){
  heStart();
 }
 function heStart(){
- clearTimeout(H.advanceTimer);cancelAnimationFrame(H.timerId);
+ clearTimeout(H.advanceTimer);clearTimeout(H.cpuTimer);cancelAnimationFrame(H.timerId);H.cpuTimer=null;
  H.street=0;H.board=[];H.deck=deck();H.pot=0;H.currentBet=0;H.over=false;H.heroRevealed=[false,false];H.communityRevealed=[];H.raiseCount=0;H.lastRaiseSize=100;H.streetAggro=0;H.heroAggro=0;
  H.players.forEach(p=>{p.stack=9999;p.bet=0;p.total=0;p.folded=false;p.allin=false;p.action="";p.cards=[H.deck.pop(),H.deck.pop()];p.confidence=.45;p.tilt=Math.max(0,(p.tilt||0)*.8);p.history=[]});
  const sb=(H.button+1)%HE_N,bb=(H.button+2)%HE_N;
@@ -586,7 +586,18 @@ function heAction(action,amount=0){
    heResetPending(H.hero);heAfter(p,p.allin?"ALL IN":(action==="BET"&&old===0?"BET":"RAISE"));
  }
 }
-function heCpuLater(){const delay=2300+Math.floor(Math.random()*1500);setTimeout(()=>{if(gbAlive(H.token))heCpu()},delay)}
+function heCpuLater(){
+ clearTimeout(H.cpuTimer);
+ const token=H.token,turn=H.turn;
+ const delay=2300+Math.floor(Math.random()*1500);
+ H.cpuTimer=setTimeout(()=>{
+   H.cpuTimer=null;
+   if(!gbAlive(token)||H.over||H.turn!==turn)return;
+   const p=H.players[turn];
+   if(!p||p.folded||p.allin)return;
+   heCpu();
+ },delay);
+}
 function heRankValue(c){return c.r==="A"?14:c.r==="K"?13:c.r==="Q"?12:c.r==="J"?11:+c.r}
 function hePreflopStrength(p){
  const a=heRankValue(p.cards[0]),b=heRankValue(p.cards[1]),hi=Math.max(a,b),lo=Math.min(a,b);
@@ -647,8 +658,11 @@ function heBluffChance(p,eq,call){
  return Math.min(.32,Math.max(.01,chance));
 }
 function heCpu(){
+ H.cpuTimer=null;
  if(H.over||H.turn===H.hero||!gbAlive(H.token))return;
- const i=H.turn,p=H.players[i],call=Math.max(0,H.currentBet-p.bet),eq=heEquity(p),pressure=call/Math.max(1,p.stack),bluff=heBluffChance(p,eq,call);
+ const i=H.turn,p=H.players[i];
+ if(!p||p.folded||p.allin)return;
+ const call=Math.max(0,H.currentBet-p.bet),eq=heEquity(p),pressure=call/Math.max(1,p.stack),bluff=heBluffChance(p,eq,call);
  let action="CHECK",amount=0;
 
  // Strong hands: value bet / value raise.
@@ -705,11 +719,13 @@ function heCpu(){
  p.action=p.allin?"ALL IN":action;
  p.history.push(action);
  if(action==="FOLD")p.confidence=Math.max(0,p.confidence-.06);
+ if(action==="FOLD")p.folded=true;
  H.pending.delete(i);
  pokerActionSound(p.action);heRender();heCut(`${p.name} • ${p.action}`);
  setTimeout(()=>{if(gbAlive(H.token))heNext()},p.action==="FOLD"||p.action==="ALL IN"?450:2200+Math.floor(Math.random()*1300));
 }
 function heNext(){
+ clearTimeout(H.cpuTimer);H.cpuTimer=null;
  if(H.over||!gbAlive(H.token))return;
  const contenders=H.players.filter(p=>!p.folded);const active=contenders.filter(p=>!p.allin);if(contenders.length<=1){heFinish(`${contenders[0]?.name||"CPU"} WINS`);return}
  if(active.length===0){heShowdown();return}
@@ -718,6 +734,7 @@ function heNext(){
  H.turn=n;heRender();heHero();if(H.turn===H.hero)heTimer();else heCpuLater();
 }
 function heStreet(){
+ clearTimeout(H.cpuTimer);H.cpuTimer=null;
  H.street++;debugLog("POKER","STREET",{street:["","FLOP","TURN","RIVER"][H.street]||"SHOWDOWN",pot:H.pot});H.currentBet=0;H.raiseCount=0;H.lastRaiseSize=100;H.streetAggro=0;H.players.forEach(p=>p.bet=0);
  if(H.street===1)H.board=[H.deck.pop(),H.deck.pop(),H.deck.pop()];else H.board.push(H.deck.pop());
  H.communityRevealed=H.board.map(()=>false);heRender();heCut(["","FLOP","TURN","RIVER"][H.street]);
@@ -740,11 +757,12 @@ function heTimer(){
  H.timerId=requestAnimationFrame(tick);
 }
 function heShowdown(){
+ clearTimeout(H.cpuTimer);H.cpuTimer=null;
  debugLog("POKER","SHOWDOWN",{pot:H.pot});H.over=true;cancelAnimationFrame(H.timerId);H.street=4;H.communityRevealed=H.board.map(()=>true);H.heroRevealed=[true,true];
  const live=H.players.filter(p=>!p.folded),ranked=live.map(p=>({p,r:best5([...p.cards,...H.board])})).sort((a,b)=>b.r.score-a.r.score),best=ranked[0].r.score,winners=ranked.filter(x=>x.r.score===best),share=Math.floor(H.pot/winners.length);
  winners.forEach(x=>x.p.stack+=share);heRender();heHero();heFinishOverlay(winners.some(x=>x.p===H.players[H.hero])?"YOU WIN":"SHOWDOWN");
 }
-function heFinish(text){H.over=true;cancelAnimationFrame(H.timerId);clearTimeout(H.advanceTimer);heRender();heHero();heFinishOverlay(text)}
+function heFinish(text){clearTimeout(H.cpuTimer);H.cpuTimer=null;H.over=true;cancelAnimationFrame(H.timerId);clearTimeout(H.advanceTimer);heRender();heHero();heFinishOverlay(text)}
 function heFinishOverlay(text){$("heStatus").textContent=text;heCut(text);$("heNext").classList.remove("hidden")}
 function heJoinNext(){H.button=(H.button+1)%HE_N;$("heNext").classList.add("hidden");$("heStatus").textContent="";heStart()}
 function heCut(t){const e=$("heCut");if(!e)return;e.textContent=t;e.classList.remove("hidden");void e.offsetWidth;e.classList.add("show");setTimeout(()=>e.classList.add("hidden"),900)}
