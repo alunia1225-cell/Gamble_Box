@@ -2040,3 +2040,15 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #modal .roulette-readout span{font-size:18px!important;}
   #modal .roulette-readout small{font-size:8px!important;}
 }
+
+
+/* CRASH history: five recent crash multipliers between bet control and graph. */
+#modal .crash-history-panel{width:calc(100% - 36px);margin:12px auto 10px;padding:8px 10px 9px;box-sizing:border-box;border:1px solid rgba(205,169,79,.34);border-radius:9px;background:linear-gradient(180deg,rgba(18,20,24,.96),rgba(10,11,14,.96));}
+#modal .crash-history-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+#modal .crash-history-head span{color:#e1c56a;font:900 9px/1 Orbitron,sans-serif;letter-spacing:1.8px;}
+#modal .crash-history-head small{color:#777d80;font:800 6px/1 Orbitron,sans-serif;letter-spacing:1px;}
+#modal .crash-history-list{display:flex;align-items:center;gap:6px;min-height:23px;overflow:hidden;}
+#modal .crash-history-item{flex:1 1 0;min-width:0;height:23px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border:1px solid #555b5e;border-radius:5px;background:#111316;color:#e8dfc3;font:900 8px/1 Orbitron,sans-serif;}
+#modal .crash-history-item.hot{border-color:#cda94f;background:rgba(115,82,20,.35);color:#f0cf6a;}
+#modal .crash-history-empty{color:#666d70;font:800 6px/1 Orbitron,sans-serif;letter-spacing:1.2px;}
+@media(max-width:520px){#modal .crash-history-panel{width:calc(100% - 28px);margin:10px auto 8px;padding:7px 8px 8px}#modal .crash-history-list{gap:4px}#modal .crash-history-item{height:21px;font-size:7px}#modal .crash-history-head span{font-size:8px}}
