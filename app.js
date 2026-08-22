@@ -74,7 +74,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.43"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.53"});
 });
 
 const KEY="gb3_save";
@@ -302,7 +302,27 @@ blackjack(){
   </div>`;
 },
 holdem(){holdemInit()},
-roulette(){$("gameBody").innerHTML=betbox()+`<div class="real-roulette"><div class="real-wheel-wrap"><div class="real-pointer"></div><div id="rouletteWheel" class="real-wheel"><div class="real-pocket green" style="--i:0"><span>0</span></div><div class="real-pocket red" style="--i:1"><span>32</span></div><div class="real-pocket black" style="--i:2"><span>15</span></div><div class="real-pocket red" style="--i:3"><span>19</span></div><div class="real-pocket black" style="--i:4"><span>4</span></div><div class="real-pocket red" style="--i:5"><span>21</span></div><div class="real-pocket black" style="--i:6"><span>2</span></div><div class="real-pocket red" style="--i:7"><span>25</span></div><div class="real-pocket black" style="--i:8"><span>17</span></div><div class="real-pocket red" style="--i:9"><span>34</span></div><div class="real-pocket black" style="--i:10"><span>6</span></div><div class="real-pocket red" style="--i:11"><span>27</span></div><div class="real-pocket black" style="--i:12"><span>13</span></div><div class="real-pocket red" style="--i:13"><span>36</span></div><div class="real-pocket black" style="--i:14"><span>11</span></div><div class="real-pocket red" style="--i:15"><span>30</span></div><div class="real-pocket black" style="--i:16"><span>8</span></div><div class="real-pocket red" style="--i:17"><span>23</span></div><div class="real-pocket black" style="--i:18"><span>10</span></div><div class="real-pocket red" style="--i:19"><span>5</span></div><div class="real-pocket black" style="--i:20"><span>24</span></div><div class="real-pocket red" style="--i:21"><span>16</span></div><div class="real-pocket black" style="--i:22"><span>33</span></div><div class="real-pocket red" style="--i:23"><span>1</span></div><div class="real-pocket black" style="--i:24"><span>20</span></div><div class="real-pocket red" style="--i:25"><span>14</span></div><div class="real-pocket black" style="--i:26"><span>31</span></div><div class="real-pocket red" style="--i:27"><span>9</span></div><div class="real-pocket black" style="--i:28"><span>22</span></div><div class="real-pocket red" style="--i:29"><span>18</span></div><div class="real-pocket black" style="--i:30"><span>29</span></div><div class="real-pocket red" style="--i:31"><span>7</span></div><div class="real-pocket black" style="--i:32"><span>28</span></div><div class="real-pocket red" style="--i:33"><span>12</span></div><div class="real-pocket black" style="--i:34"><span>35</span></div><div class="real-pocket red" style="--i:35"><span>3</span></div><div class="real-pocket black" style="--i:36"><span>26</span></div><div class="real-hub">GB</div></div><div id="rouletteBall" class="real-ball"></div></div><div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">WAITING</small></div><div class="roulette-bets" role="group" aria-label="Roulette bets"><button class="roulette-bet roulette-bet-red" onclick="rouletteSpin('red')"><b>RED</b><span>2× RETURN</span></button><button class="roulette-bet roulette-bet-black" onclick="rouletteSpin('black')"><b>BLACK</b><span>2× RETURN</span></button><button class="roulette-bet roulette-bet-zero" onclick="rouletteSpin('green')"><b>ZERO</b><span>14× RETURN</span></button></div><div id="res" class="result">PLACE YOUR BET</div></div>`},highlow(){
+roulette(){
+ const nums=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+ const cols=["green","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black"];
+ window.ROULETTE_NUMBER_BET=null;
+ $("gameBody").innerHTML=betbox()+`<div class="real-roulette">
+  <div class="real-wheel-wrap">
+   <div id="rouletteWheel" class="real-wheel">
+    ${nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join("")}
+    <div class="real-hub">GB</div>
+    <div id="rouletteBall" class="real-ball"></div>
+   </div>
+  </div>
+  <div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">SELECT BET</small></div>
+  <div class="roulette-bets" role="group" aria-label="Roulette color bets">
+   <button class="roulette-bet roulette-bet-red" onclick="rouletteSpin('red')"><b>RED</b><span>2× RETURN</span></button>
+   <button class="roulette-bet roulette-bet-black" onclick="rouletteSpin('black')"><b>BLACK</b><span>2× RETURN</span></button>
+   <button class="roulette-bet roulette-bet-zero" onclick="rouletteSpin('green')"><b>ZERO</b><span>14× RETURN</span></button>
+  </div>
+  <button id="rouletteNumberSpin" class="roulette-number-spin" onclick="rouletteSpin(window.ROULETTE_NUMBER_BET)" disabled>SPIN NUMBER <span>36× RETURN</span></button>
+ </div>`;
+},highlow(){
  $("gameBody").innerHTML=betbox()+`<div class="hl-game">
    <div class="hl-head"><span>HIGH</span><b id="hlValue">—</b><span>LOW</span></div>
    <div class="hl-axis"><span>HIGH ZONE</span><span>LOW ZONE</span></div>
@@ -787,52 +807,97 @@ function handRank(cs){
 }
 let GB_ROULETTE_BUSY=false;
 /* 4.7.49 roulette: wheel sectors and labels share the same 37-step coordinate system. */
+function rouletteNumberBet(number){
+ if(GB_ROULETTE_BUSY)return;
+ const pocket=document.querySelector(`.real-pocket[aria-label="Bet ${number}"]`);
+ document.querySelectorAll(".real-pocket").forEach(e=>{
+   e.classList.remove("number-selected");
+   const chip=e.querySelector(".roulette-chip");
+   if(chip)chip.remove();
+ });
+ if(!pocket)return;
+ window.ROULETTE_NUMBER_BET=number;
+ pocket.classList.add("number-selected");
+ const chip=document.createElement("span");
+ chip.className="roulette-chip";
+ chip.textContent="●";
+ pocket.appendChild(chip);
+ const spinBtn=$("rouletteNumberSpin");
+ if(spinBtn)spinBtn.disabled=false;
+ const nr=$("rouletteNumber"),cr=$("rouletteColor");
+ if(nr)nr.textContent=String(number);
+ if(cr)cr.textContent="STRAIGHT UP";
+ debugLog("ROULETTE","NUMBER BET SELECTED",{number});
+ sfx("click");
+}
+
 function rouletteSpin(choice){
  try{
   if(GB_ROULETTE_BUSY){debugLog("ROULETTE","SPIN IGNORED",{reason:"BUSY"});return;}
+  const numberChoice=typeof choice==="number" && Number.isFinite(choice);
   const betEl=$("bet");
   const rawBet=betEl ? Number(betEl.value) : Number(lastBet||100);
   const b=wager(rawBet);
   if(!b){debugLog("ROULETTE","SPIN BLOCKED",{reason:"INVALID_BET",rawBet,coins:S.coins});return;}
   GB_ROULETTE_BUSY=true;
-  debugLog("ROULETTE","SPIN START",{choice,bet:b,coins:S.coins});
- const token=GB_GAME_TOKEN,w=$("rouletteWheel"),ball=$("rouletteBall"),res=$("res"),numEl=$("rouletteNumber"),colEl=$("rouletteColor");
- if(!w||!ball||!res){GB_ROULETTE_BUSY=false;debugLog("ERROR","ROULETTE DOM MISSING");return}
- const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
- const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
- const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx],color=n===0?"green":red.includes(n)?"red":"black";
- const step=360/37;
- const finalWheel=360*8-idx*step;
- const ballTurns=12;
- res.textContent="NO MORE BETS";numEl.textContent="—";colEl.textContent="SPINNING";sfx("roulette");
- w.style.transition="none";ball.style.transition="none";
- // Ball starts on the roulette track, directly under the pointer.
- ball.style.setProperty("transform", `rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`, "important");
- const start=performance.now(),duration=6200;
- const tick=now=>{
+  debugLog("ROULETTE","SPIN START",{choice,bet:b,straightUp:numberChoice});
+
+  const token=GB_GAME_TOKEN,w=$("rouletteWheel"),ball=$("rouletteBall"),numEl=$("rouletteNumber"),colEl=$("rouletteColor");
+  if(!w||!ball){GB_ROULETTE_BUSY=false;debugLog("ERROR","ROULETTE DOM MISSING");return}
+
+  const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+  const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+  const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx];
+  const color=n===0?"green":red.includes(n)?"red":"black";
+  const step=360/37;
+  const finalWheel=360*8-idx*step;
+  const ballTurns=12;
+  if(numEl)numEl.textContent="—";
+  if(colEl)colEl.textContent="SPINNING";
+  const spinBtn=$("rouletteNumberSpin");if(spinBtn)spinBtn.disabled=true;
+  sfx("roulette");
+
+  w.style.transition="none";
+  ball.style.transition="none";
+
+  const ballRadius=getComputedStyle(document.querySelector(".real-wheel")).getPropertyValue("--ball-radius").trim() || "78px";
+  ball.style.setProperty("transform",`rotate(0deg) translateY(calc(-1 * ${ballRadius}))`,"important");
+
+  const start=performance.now(),duration=6200;
+  const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
    const p=Math.min(1,(now-start)/duration);
    const ease=1-Math.pow(1-p,4);
    const wheelAngle=finalWheel*ease;
    const ballAngle=-360*ballTurns*ease;
-   w.style.setProperty("transform", `translate(-50%,-50%) rotate(${wheelAngle}deg)`, "important");
-   ball.style.setProperty("transform", `rotate(${ballAngle}deg) translateY(calc(-1 * var(--ball-radius)))`, "important");
+   w.style.setProperty("transform",`translate(-50%,-50%) rotate(${wheelAngle}deg)`,"important");
+   ball.style.setProperty("transform",`rotate(${ballAngle}deg) translateY(calc(-1 * ${ballRadius}))`,"important");
+
    if(p<1){requestAnimationFrame(tick);return}
-   // Exact final state: selected pocket is centered under the pointer,
-   // while the ball is physically sitting at the top of its orbit.
-   w.style.setProperty("transform", `translate(-50%,-50%) rotate(${finalWheel}deg)`, "important");
-   ball.style.setProperty("transform", `rotate(0deg) translateY(calc(-1 * var(--ball-radius)))`, "important");
-   numEl.textContent=String(n);colEl.textContent=color.toUpperCase();
-   const win=color===choice;res.textContent=`${n} • ${color.toUpperCase()} • ${win?"WIN":"LOSE"}`;
-   settle(b,win?b*(choice==="green"?14:2):0,"ROULETTE");sfx(win?"win":"lose");if(win&&choice==="green")puchun();GB_ROULETTE_BUSY=false;
- };
- requestAnimationFrame(tick);
- }catch(err){
+
+   // Final: selected pocket is under the top of the wheel and the ball sits
+   // on the pocket's outer red/black track, not outside the gold rim.
+   w.style.setProperty("transform",`translate(-50%,-50%) rotate(${finalWheel}deg)`,"important");
+   ball.style.setProperty("transform",`rotate(0deg) translateY(calc(-1 * ${ballRadius}))`,"important");
+
+   if(numEl)numEl.textContent=String(n);
+   if(colEl)colEl.textContent=(numberChoice?"STRAIGHT UP • ":"")+color.toUpperCase();
+
+   const win=numberChoice?(n===choice):(color===choice);
+   const payout=numberChoice?36:(choice==="green"?14:2);
+   debugLog("ROULETTE","SPIN RESULT",{number:n,color,bet:b,betType:numberChoice?"straight-up":choice,win,payout});
+   settle(b,win?b*payout:0,"ROULETTE");
+   sfx(win?"win":"lose");
+   if(win&&choice==="green")puchun();
    GB_ROULETTE_BUSY=false;
-   debugLog("ERROR","ROULETTE SPIN FAILED",{error:String(err),stack:err&&err.stack});
-   const r=$("res"); if(r)r.textContent="SPIN ERROR";
+  };
+  requestAnimationFrame(tick);
+ }catch(err){
+  GB_ROULETTE_BUSY=false;
+  debugLog("ERROR","ROULETTE SPIN FAILED",{error:String(err),stack:err&&err.stack});
  }
 }
+
 function roulette(c){return rouletteSpin(c)}
 
 document.addEventListener("DOMContentLoaded",()=>{
