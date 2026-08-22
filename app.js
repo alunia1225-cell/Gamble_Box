@@ -83,7 +83,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.65"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.64"});
 });
 
 const KEY="gb3_save";
@@ -884,10 +884,17 @@ function rouletteSelectBet(bet){
    document.querySelectorAll(outsideSelector).forEach(e=>e.classList.add('bet-selected'));
    if(bet.type==='green')document.querySelectorAll('.roulette-zero-cell').forEach(e=>e.classList.add('bet-selected'));
  }
-if(bet.type==='number'){
+
+ // Keep one chip indicator for straight-up bets only.
+ document.querySelectorAll('.roulette-chip').forEach(e=>e.remove());
+ if(bet.type==='number'){
    const target=document.querySelector(`.real-pocket[aria-label="Bet ${bet.value}"]`);
    if(target){
-}
+     const chip=document.createElement('span');
+     chip.className='roulette-chip';
+     chip.textContent='●';
+     target.appendChild(chip);
+   }
  }
 
  const label=$('rouletteBetLabel'),pay=$('rouletteSpinPayout'),nr=$('rouletteNumber'),cr=$('rouletteColor'),spin=$('rouletteNumberSpin');

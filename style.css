@@ -1259,6 +1259,27 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   text-shadow:0 0 7px #e7c766!important;
   z-index:20!important;
 }
+#modal .real-pocket .roulette-chip{
+  position:absolute!important;
+  left:-7px!important;
+  top:-6px!important;
+  width:14px!important;
+  height:14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 35% 30%,#fff,#d9b85d 45%,#735315 100%)!important;
+  border:1px solid #f5df93!important;
+  box-shadow:0 2px 8px #000,0 0 7px #e0c36b!important;
+  color:#171208!important;
+  font:900 7px/1 Arial,sans-serif!important;
+  transform:
+    rotate(calc(var(--i) * 9.72972973deg))
+    translateY(calc(-1 * (var(--wheel-size) * .392)))
+    rotate(calc(var(--i) * -9.72972973deg))!important;
+  pointer-events:none!important;
+}
 #modal .real-ball{
   left:50%!important;
   top:50%!important;
@@ -1340,6 +1361,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   transform-origin:center!important;
   pointer-events:none!important;
 }
+#modal .real-pocket .roulette-chip{
+  left:3px!important;
+  top:1px!important;
+  transform:translateY(calc(-1 * (var(--wheel-size) * .365)))!important;
+}
 #modal .real-pocket.number-selected{filter:drop-shadow(0 0 5px #f1d06b)!important}
 #modal .real-ball{z-index:30!important}
 
@@ -1357,6 +1383,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 #modal .real-pocket span{display:flex!important;align-items:center!important;justify-content:center!important;width:30px!important;height:30px!important;color:#f7edc7!important;font:900 8px/1 Orbitron,sans-serif!important;text-shadow:0 1px 2px #000!important;transform:rotate(calc(-1 * var(--a)))!important;pointer-events:none!important}
 #modal .real-pocket.green span{color:#baffce!important}
 #modal .real-pocket.bet-selected span{color:#fff1a5!important;text-shadow:0 0 7px #e3c46b,0 1px 2px #000!important}
+#modal .roulette-chip{position:absolute!important;left:50%!important;top:50%!important;width:13px!important;height:13px!important;margin:-6.5px!important;border-radius:50%!important;background:radial-gradient(circle at 35% 30%,#fff,#dfc268 43%,#745317 100%)!important;border:1px solid #fff0a2!important;box-shadow:0 1px 5px #000,0 0 7px #d8b65b!important;color:#1b160b!important;font:900 6px/13px Arial!important;text-align:center!important;transform:rotate(calc(-1 * var(--a)))!important;pointer-events:none!important;z-index:12!important}
 #modal .real-pocket.red,#modal .real-pocket.black,#modal .real-pocket.green{background:transparent!important}
 #modal .real-hub{position:absolute!important;left:50%!important;top:50%!important;width:76px!important;height:76px!important;margin:-38px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:radial-gradient(circle at 35% 28%,#f4d77c,#c69c42 45%,#80601d 100%)!important;border:5px solid #e5c66e!important;box-shadow:0 5px 14px #000,inset 0 0 0 3px #9a7628!important;color:#15110a!important;font:900 11px Orbitron,sans-serif!important;z-index:15!important}
 #modal .real-ball{position:absolute!important;left:50%!important;top:50%!important;width:12px!important;height:12px!important;margin:-6px!important;border-radius:50%!important;background:radial-gradient(circle at 30% 25%,#fff,#e6e8e8 45%,#9da1a2 100%)!important;box-shadow:0 1px 4px #000,0 0 5px #fff8!important;z-index:25!important;pointer-events:none!important;transform-origin:center!important}
@@ -1396,6 +1423,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
  #modal .real-hub{width:64px!important;height:64px!important;margin:-32px!important;font-size:9px!important}
  #modal .real-pocket{width:30px!important;height:30px!important}
  #modal .real-pocket span{width:27px!important;height:27px!important;font-size:6.5px!important}
+ #modal .roulette-chip{width:12px!important;height:12px!important;margin:-6px!important;font-size:5px!important;line-height:12px!important}
  #modal .roulette-outside b,#modal .roulette-dozens b{font-size:5.5px!important}
  #modal .roulette-action{position:sticky!important;bottom:4px!important;z-index:40!important}
 }
@@ -1442,6 +1470,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 #modal .real-ball{width:10px!important;height:10px!important;margin:-5px!important}
 #modal .real-pocket{width:26px!important;height:26px!important}
 #modal .real-pocket span{width:24px!important;height:24px!important;font-size:6px!important}
+#modal .roulette-chip{width:11px!important;height:11px!important;margin:-5.5px!important;line-height:11px!important;font-size:5px!important}
 #modal .roulette-readout{min-height:18px!important;margin:0!important}
 #modal .roulette-readout span{font-size:14px!important}
 #modal .roulette-readout small{font-size:5px!important}
@@ -1626,7 +1655,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   }
 }
 
-/* 4.7.65 — clear bet-group visualization */
+/* 4.7.64 — clear bet-group visualization */
 #modal .roulette-cell.bet-selected{
   position:relative!important;
   box-shadow:
