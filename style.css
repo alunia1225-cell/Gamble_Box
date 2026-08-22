@@ -1602,3 +1602,55 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   top:0!important;
   margin:0!important;
 }
+
+/* 4.7.63 — label coordinate root fix
+   Labels are no longer children of the rotating pocket hitboxes.
+   Every label uses one polar coordinate system from the exact wheel center. */
+#modal .roulette-wheel-labels{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:8!important;
+  pointer-events:none!important;
+}
+#modal .roulette-wheel-label{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:22px!important;
+  height:12px!important;
+  margin:-6px 0 0 -11px!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:clamp(6px,1.7vw,8px)!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.15px!important;
+  color:#f7e9bc!important;
+  white-space:nowrap!important;
+  text-shadow:0 1px 2px #000!important;
+  transform:
+    rotate(var(--a))
+    translateY(-110px)
+    rotate(calc(-1 * var(--a)))!important;
+  transform-origin:50% 50%!important;
+}
+#modal .roulette-wheel-label.green{color:#72f0a0!important}
+#modal .real-pocket > span{display:none!important}
+#modal .real-pocket{
+  /* hitboxes remain on the exact same sector centers; no text geometry here */
+  font-size:0!important;
+}
+@media(max-width:600px){
+  #modal .roulette-wheel-label{
+    transform:
+      rotate(var(--a))
+      translateY(calc(-1 * min(38.7vw,110px)))
+      rotate(calc(-1 * var(--a)))!important;
+    font-size:clamp(5.8px,1.65vw,7.5px)!important;
+  }
+}

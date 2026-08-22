@@ -83,7 +83,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.62"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.63"});
 });
 
 const KEY="gb3_save";
@@ -318,11 +318,12 @@ roulette(){
  window.ROULETTE_BET=null;
  const gridCols=[[3,6,9,12,15,18,21,24,27,30,33,36],[2,5,8,11,14,17,20,23,26,29,32,35],[1,4,7,10,13,16,19,22,25,28,31,34]];
  const cells=gridCols.flatMap(col=>col.map(n=>`<button type="button" class="roulette-cell ${red.includes(n)?'red':'black'}" onclick="rouletteNumberBet(${n})" aria-label="Bet ${n}"><span>${n}</span></button>`)).join('');
- const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i};--a:${(i+0.5)*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join('');
+ const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i};--a:${(i+0.5)*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"></button>`).join('');
+ const wheelLabels=nums.map((n,i)=>`<span class="roulette-wheel-label ${cols[i]}" style="--i:${i};--a:${(i+0.5)*360/37}deg">${n}</span>`).join('');
  $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
   <section class="roulette-wheel-card">
    <div class="roulette-wheel-title"><span>EUROPEAN WHEEL</span><b>ONE ZERO</b></div>
-   <div class="real-wheel-wrap"><div id="rouletteWheel" class="real-wheel">${wheel}<div class="real-hub">GB</div><div id="rouletteBall" class="real-ball"></div></div></div>
+   <div class="real-wheel-wrap"><div id="rouletteWheel" class="real-wheel">${wheel}<div class="roulette-wheel-labels">${wheelLabels}</div><div class="real-hub">GB</div><div id="rouletteBall" class="real-ball"></div></div></div>
    <div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">SELECT BET</small></div>
   </section>
   <section class="roulette-table-card">
