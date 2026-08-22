@@ -226,14 +226,14 @@ function openGame(g){
  catch(e){debugLog("ERROR","Game launch failed",{game:g,error:String(e),stack:e.stack});$("modalContent").innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`}
 }
 function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:GB_RUNTIME.game});window.GB_stopGameRuntime();$("modal").classList.add("hidden");const lobby=document.getElementById("appLobby");if(lobby)lobby.classList.remove("hidden");sfx("click")}
-function betbox(min=100){
+function betbox(min=100,hideMax=false){
   const max=Math.max(min,S.coins||0);
   const step=max<=1000?10:max<=10000?100:500;
   const value=Math.min(max,Math.max(min,lastBet||min));
-  return `<div class="bet-control">
+  return `<div class="bet-control${hideMax?" roulette-bet-control":""}">
     <div class="bet-control-head"><span>BET AMOUNT</span><strong id="betValue">${fmt(value)}</strong><small>COIN</small></div>
     <input id="bet" class="bet-slider" type="range" min="${Math.min(min,max)}" max="${Math.max(min,max)}" step="${step}" value="${value}" oninput="updateBetSlider(this.value)">
-    <div class="bet-scale"><span>${fmt(Math.min(min,max))}</span><span>${fmt(max)}</span></div>
+    <div class="bet-scale"><span>${fmt(Math.min(min,max))}</span><span class="bet-max-label">${fmt(max)}</span></div>
   </div>`;
 }
 function updateBetSlider(v){
@@ -306,10 +306,10 @@ roulette(){
  const nums=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
  const cols=["green","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black","red","black"];
  window.ROULETTE_NUMBER_BET=null;
- $("gameBody").innerHTML=betbox()+`<div class="real-roulette">
+ $("gameBody").innerHTML=betbox(100,true)+`<div class="real-roulette">
   <div class="real-wheel-wrap">
    <div id="rouletteWheel" class="real-wheel">
-    ${nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join("")}
+    ${nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i}" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join("")}
     <div class="real-hub">GB</div>
     <div id="rouletteBall" class="real-ball"></div>
    </div>
@@ -850,8 +850,13 @@ function rouletteSpin(choice){
   const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx];
   const color=n===0?"green":red.includes(n)?"red":"black";
   const step=360/37;
-  const finalWheel=360*8-idx*step;
+  // Leave the wheel at a random final orientation. The ball's final angle is
+  // calculated from that orientation + the winning pocket index, so the ball
+  // visibly stops on the actual red/black pocket instead of always at 12 o'clock.
+  const randomFinalOffset=Math.random()*360;
+  const finalWheel=360*8+randomFinalOffset;
   const ballTurns=12;
+  const finalBallAngle=finalWheel + idx*step;
   if(numEl)numEl.textContent="—";
   if(colEl)colEl.textContent="SPINNING";
   const spinBtn=$("rouletteNumberSpin");if(spinBtn)spinBtn.disabled=true;
@@ -869,7 +874,7 @@ function rouletteSpin(choice){
    const p=Math.min(1,(now-start)/duration);
    const ease=1-Math.pow(1-p,4);
    const wheelAngle=finalWheel*ease;
-   const ballAngle=-360*ballTurns*ease;
+   const ballAngle=(-360*ballTurns + finalBallAngle)*ease;
    w.style.setProperty("transform",`translate(-50%,-50%) rotate(${wheelAngle}deg)`,"important");
    ball.style.setProperty("transform",`rotate(${ballAngle}deg) translateY(calc(-1 * ${ballRadius}))`,"important");
 
@@ -878,7 +883,7 @@ function rouletteSpin(choice){
    // Final: selected pocket is under the top of the wheel and the ball sits
    // on the pocket's outer red/black track, not outside the gold rim.
    w.style.setProperty("transform",`translate(-50%,-50%) rotate(${finalWheel}deg)`,"important");
-   ball.style.setProperty("transform",`rotate(0deg) translateY(calc(-1 * ${ballRadius}))`,"important");
+   ball.style.setProperty("transform",`rotate(${finalBallAngle}deg) translateY(calc(-1 * ${ballRadius}))`,"important");
 
    if(numEl)numEl.textContent=String(n);
    if(colEl)colEl.textContent=(numberChoice?"STRAIGHT UP • ":"")+color.toUpperCase();

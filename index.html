@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja">
-<head><meta name="gb-build" content="4.7.53">
+<head><meta name="gb-build" content="4.7.54">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>GAMBLE BOX 4.7.48</title><link rel="stylesheet" href="style.css?v=4.7.48"></head>
 <body>
@@ -56,7 +56,7 @@
     if(!splash||!lobby||!btn)return;
     if(window.__GB_LOADING)return; window.__GB_LOADING=true;
     btn.classList.add("hidden"); if(box)box.classList.remove("hidden");
-    var assets=["style.css?v=4.7.53","app.js?v=4.7.53","click.wav","chip.wav","card.wav","spin.wav","roulette.wav","dice.wav","flip.wav","win.wav","lose.wav","jackpot.wav","crash.wav"];
+    var assets=["style.css?v=4.7.54","app.js?v=4.7.54","click.wav","chip.wav","card.wav","spin.wav","roulette.wav","dice.wav","flip.wav","win.wav","lose.wav","jackpot.wav","crash.wav"];
     var i=0;
     function step(){
       if(i>=assets.length){if(txt)txt.textContent="READY";if(detail)detail.textContent="GAME RUNTIME ONLINE";setTimeout(function(){splash.classList.add("hide");lobby.classList.remove("hidden");},300);return;}

@@ -1331,3 +1331,40 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #modal .roulette-bets{margin-top:8px!important}
   #modal .roulette-number-spin{width:88%!important}
 }
+
+/* 4.7.54 — roulette interaction/number coordinate correction */
+#modal .roulette-bet-control .bet-max-label{display:none!important}
+#modal .real-pocket{
+  left:50%!important;
+  top:50%!important;
+  width:30px!important;
+  height:calc(var(--wheel-size) * .405)!important;
+  margin-left:-15px!important;
+  margin-top:calc(-1 * var(--wheel-size) * .405)!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  transform:rotate(calc(var(--i) * 9.72972973deg))!important;
+  transform-origin:15px calc(var(--wheel-size) * .405)!important;
+  cursor:pointer!important;
+  pointer-events:auto!important;
+  z-index:12!important;
+}
+#modal .real-pocket span{
+  left:5px!important;
+  top:4px!important;
+  width:20px!important;
+  min-width:20px!important;
+  max-width:20px!important;
+  height:12px!important;
+  transform:translateY(calc(-1 * (var(--wheel-size) * .365)))!important;
+  transform-origin:center!important;
+  pointer-events:none!important;
+}
+#modal .real-pocket .roulette-chip{
+  left:3px!important;
+  top:1px!important;
+  transform:translateY(calc(-1 * (var(--wheel-size) * .365)))!important;
+}
+#modal .real-pocket.number-selected{filter:drop-shadow(0 0 5px #f1d06b)!important}
+#modal .real-ball{z-index:30!important}
