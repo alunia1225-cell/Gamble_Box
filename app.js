@@ -144,6 +144,13 @@ function puchun(){
   debugLog&&debugLog("AUDIO","PUCHUN",{file:"puchun_notice.mp3",blackout:true});
 }
 
+const CRASH_HISTORY_KEY="gb_crash_history_v1";
+let CRASH_HISTORY=[];
+try{const saved=JSON.parse(localStorage.getItem(CRASH_HISTORY_KEY)||"[]");if(Array.isArray(saved))CRASH_HISTORY=saved.filter(v=>Number.isFinite(Number(v))).slice(0,5).map(Number)}catch(e){}
+function saveCrashHistory(){try{localStorage.setItem(CRASH_HISTORY_KEY,JSON.stringify(CRASH_HISTORY.slice(0,5)))}catch(e){}}
+function addCrashHistory(value){const n=Number(value);if(!Number.isFinite(n))return;CRASH_HISTORY.unshift(Number(n.toFixed(2)));CRASH_HISTORY=CRASH_HISTORY.slice(0,5);saveCrashHistory();renderCrashHistory()}
+function renderCrashHistory(){const el=$("crashHistory");if(!el)return;el.innerHTML=CRASH_HISTORY.length?CRASH_HISTORY.map(v=>`<span class="crash-history-item ${v>=2?"hot":""}"><b>${Number(v).toFixed(2)}x</b></span>`).join(""):`<span class="crash-history-empty">NO HISTORY</span>`}
+
 let CRASH={running:false,x:1,bet:0,t:0,raf:null,token:0,crashPoint:2,points:[]};
 function crashPickPoint(){
  const r=Math.random();
@@ -172,7 +179,7 @@ function crashStart(){
    for(let i=1;i<CRASH.points.length;i++)d+=` L ${CRASH.points[i][0].toFixed(1)} ${CRASH.points[i][1].toFixed(1)}`;
    path.setAttribute("d",d);area.setAttribute("d",d+` L ${px.toFixed(1)} ${H-B} L ${L} ${H-B} Z`);dot.setAttribute("cx",px);dot.setAttribute("cy",py);
    if(CRASH.x>=CRASH.crashPoint-.0001){
-     CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");settle(b,0,"CRASH");sfx("crash");return;
+     CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");addCrashHistory(CRASH.x);settle(b,0,"CRASH");sfx("crash");return;
    }
    CRASH.raf=requestAnimationFrame(draw);
  };
@@ -412,7 +419,7 @@ coin(){
 },
 lottery(){$("gameBody").innerHTML=`<div class="lottery-game"><div class="lottery-hero">ONE DRAW <b>100 COIN</b></div><div class="lottery-prizes"><div><b>100,000</b><small>JACKPOT</small></div><div><b>10,000</b><small>GOLD</small></div><div><b>500</b><small>SILVER</small></div></div><div class="lottery-ball">?</div><button class="lottery-draw" onclick="lottery()">DRAW LOTTERY</button><div id="res" class="result">READY</div></div>`},
 multiplier(){
- $("gameBody").innerHTML=betbox()+`<div class="crash-wrap">
+ $("gameBody").innerHTML=betbox()+`<div class="crash-history-panel"><div class="crash-history-head"><span>HISTORY</span><small>LAST 5</small></div><div id="crashHistory" class="crash-history-list"></div></div><div class="crash-wrap">
  <div id="crashChart" class="crash-chart">
   <div class="crash-grid"></div><div id="crashX" class="crash-big">1.00x</div>
   <svg viewBox="0 0 620 300" preserveAspectRatio="none">
@@ -423,7 +430,7 @@ multiplier(){
  </div>
  <div id="res" class="result">READY</div>
  <div class="crash-controls"><button onclick="crashStart()">START</button><button onclick="crashCashout()">CASH OUT</button></div>
- </div>`;
+ </div>`;renderCrashHistory();
 },
 daily(){let ok=Date.now()-S.lastDaily>86400000;$("gameBody").innerHTML=`<p>${ok?"VAULT READY":"VAULT LOCKED"}</p><button ${ok?"":"disabled"} onclick="daily()">CLAIM 1,000</button><div id="res" class="result"></div>`},
 shop(){$("gameBody").innerHTML=`<div class="shop-head"><small>CHIP BANK</small><h2>TABLE CHIPS</h2><p>Prepare your virtual stack before entering a table.</p></div><div class="chip-bank"><div><b>🪙 ${fmt(S.coins)}</b><small>AVAILABLE</small></div><button onclick="buy('100 CHIP STACK',100)">+100</button><button onclick="buy('500 CHIP STACK',500)">+500</button><button onclick="buy('1,000 CHIP STACK',1000)">+1,000</button></div><div class="shop-note">Chip stacks are virtual table markers. Your bankroll remains fixed at 9,999 in TEST MODE.</div><div id="res" class="result">READY</div>`}
