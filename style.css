@@ -1427,3 +1427,85 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
  #modal .roulette-outside b,#modal .roulette-dozens b{font-size:5.5px!important}
  #modal .roulette-action{position:sticky!important;bottom:4px!important;z-index:40!important}
 }
+
+
+/* 4.7.57 — roulette compact mobile layout / fixed hub center */
+#modal .roulette-redesign{
+  width:100%!important;
+  max-width:720px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-wheel-card{
+  margin:2px auto 6px!important;
+  padding:6px 6px 4px!important;
+}
+#modal .roulette-wheel-title{padding:0 6px 2px!important}
+#modal .real-wheel-wrap{
+  width:210px!important;
+  height:210px!important;
+  min-height:210px!important;
+  margin:2px auto!important;
+}
+#modal .real-wheel{
+  --wheel-size:210px!important;
+  --label-radius:79px!important;
+  --ball-radius:79px!important;
+  width:210px!important;
+  height:210px!important;
+  border-width:7px!important;
+}
+/* Critical: the hub is centered by transform, not double-offset by margin. */
+#modal .real-hub{
+  left:50%!important;
+  top:50%!important;
+  width:58px!important;
+  height:58px!important;
+  margin:0!important;
+  transform:translate(-50%,-50%)!important;
+  border-width:4px!important;
+  font-size:8px!important;
+}
+#modal .real-ball{width:10px!important;height:10px!important;margin:-5px!important}
+#modal .real-pocket{width:26px!important;height:26px!important}
+#modal .real-pocket span{width:24px!important;height:24px!important;font-size:6px!important}
+#modal .roulette-chip{width:11px!important;height:11px!important;margin:-5.5px!important;line-height:11px!important;font-size:5px!important}
+#modal .roulette-readout{min-height:18px!important;margin:0!important}
+#modal .roulette-readout span{font-size:14px!important}
+#modal .roulette-readout small{font-size:5px!important}
+#modal .roulette-table-card{
+  margin:5px 0 4px!important;
+  padding:6px!important;
+}
+#modal .roulette-table-head{padding:0 2px 4px!important;font-size:6px!important}
+#modal .roulette-zero-row{margin-bottom:2px!important}
+#modal .roulette-zero-cell{min-height:27px!important;font-size:10px!important}
+#modal .roulette-zero-cell small{font-size:5px!important;margin-top:1px!important}
+#modal .roulette-grid{gap:1px!important}
+#modal .roulette-cell{min-height:24px!important;height:24px!important;font-size:6px!important}
+#modal .roulette-outside{gap:1px!important;margin-top:2px!important}
+#modal .roulette-outside button,#modal .roulette-dozens button{min-height:27px!important;height:27px!important;padding:2px 1px!important}
+#modal .roulette-outside b,#modal .roulette-dozens b{font-size:5px!important}
+#modal .roulette-outside span,#modal .roulette-dozens span{font-size:4px!important;margin-top:1px!important}
+#modal .roulette-dozens{gap:1px!important;margin-top:2px!important}
+#modal .roulette-action{
+  margin:4px 0 5px!important;
+  padding:5px!important;
+  min-height:39px!important;
+}
+#modal #rouletteBetLabel{font-size:6px!important}
+#modal .roulette-action small{font-size:4.5px!important;margin-top:1px!important}
+#modal #rouletteNumberSpin{min-width:128px!important;min-height:35px!important;font-size:7px!important}
+#modal #rouletteNumberSpin span{font-size:5px!important;margin-top:1px!important}
+@media(max-height:760px){
+  #modal .roulette-wheel-card{padding-top:4px!important}
+  #modal .real-wheel-wrap{width:190px!important;height:190px!important;min-height:190px!important}
+  #modal .real-wheel{--wheel-size:190px!important;--label-radius:70px!important;--ball-radius:70px!important;width:190px!important;height:190px!important}
+  #modal .real-hub{width:52px!important;height:52px!important}
+  #modal .real-pocket{width:23px!important;height:23px!important}
+  #modal .real-pocket span{width:21px!important;height:21px!important;font-size:5.5px!important}
+  #modal .roulette-cell{min-height:21px!important;height:21px!important}
+  #modal .roulette-zero-cell{min-height:24px!important}
+  #modal .roulette-outside button,#modal .roulette-dozens button{min-height:24px!important;height:24px!important}
+}
