@@ -1567,3 +1567,17 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .lobbyTools .profile-tool{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important}
 .lobbyTools .profile-tool>#profileCard{width:100%!important;min-height:85px!important}
 #lobbyDebugBtn.profile-system-btn{margin-top:0!important;min-height:34px!important}
+
+/* 4.7.60 — diagnostics only from lobby SYSTEM */
+#debugToggle,#debugEmergency,#debugEmergencyPanel{display:none!important}
+.profile-system-btn{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+}
+.profile-system-btn .dbg-led{
+  width:8px!important;height:8px!important;border-radius:50%!important;
+  background:#58d89c!important;box-shadow:0 0 9px #58d89c!important;
+}
+.profile-system-btn b{font:900 9px Orbitron,sans-serif!important;color:#d9bd63!important}

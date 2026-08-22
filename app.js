@@ -34,7 +34,7 @@ function debugLog(level,msg,data){
     try{
       const body=document.getElementById("debugBody");if(body)body.textContent=window.__GB_DEBUG_LINES.join("\n");
       const count=document.getElementById("debugCount");if(count)count.textContent=window.__GB_DEBUG_COUNT;
-      const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT;
+      const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT; const lc=document.getElementById("debugCountLobby");if(lc)lc.textContent=window.__GB_DEBUG_COUNT;
       const err=document.getElementById("dbgErrors");if(err&&level==="ERROR")err.textContent=Number(err.textContent||0)+1;
     }catch(uiErr){try{console.error("[GAMBLE BOX][DEBUG UI ERROR]",uiErr)}catch(e){}}
     try{console.log("[GAMBLE BOX]",line)}catch(e){}
@@ -67,14 +67,23 @@ try{
 }catch(e){}
 
 function toggleDebug(){const p=document.getElementById("debugPanel");if(p)p.classList.toggle("hidden")}
-function clearDebug(){window.__GB_DEBUG_LINES=[];window.__GB_DEBUG_COUNT=0;const b=document.getElementById("debugBody");if(b)b.textContent="";const n=document.getElementById("debugCount");if(n)n.textContent="0"}
+function clearDebug(){
+  window.__GB_DEBUG_LINES=[];
+  window.__GB_DEBUG_COUNT=0;
+  try{localStorage.removeItem("GB_DEBUG_LOG")}catch(e){}
+  const b=document.getElementById("debugBody");if(b)b.textContent="";
+  const n=document.getElementById("debugCount");if(n)n.textContent="0";
+  const e=document.getElementById("dbgErrors");if(e)e.textContent="0";
+  const g=document.getElementById("dbgGames");if(g)g.textContent="0";
+  const ev=document.getElementById("dbgEvents");if(ev)ev.textContent="0";
+}
 async function copyDebug(){const text=(window.__GB_DEBUG_LINES||[]).join("\n")||"NO DEBUG LOGS";try{await navigator.clipboard.writeText(text);debugLog("SYSTEM","DEBUG COPIED")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();}}
 window.addEventListener("error",e=>debugLog("ERROR","UNCAUGHT ERROR",{message:e.message,source:e.filename,line:e.lineno,col:e.colno,stack:e.error&&e.error.stack}));
 window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROMISE",{reason:String(e.reason),stack:e.reason&&e.reason.stack}));
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.59"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.60"});
 });
 
 const KEY="gb3_save";
@@ -898,7 +907,9 @@ function rouletteSpin(choice){
   const finalWheel=currentWheel + wheelDir*360*wheelLaps + wheelDelta;
 
   // Ball absolute angle must equal wheel angle + pocket angle at rest.
-  const desiredBallMod=norm(finalWheel + idx*step);
+  // IMPORTANT: #rouletteBall is a child of #rouletteWheel.
+  // Its angle is therefore LOCAL to the wheel. The selected pocket is at idx*step.
+  const desiredBallMod=norm(idx*step);
   let ballDelta=desiredBallMod-norm(currentBall);
   if(ballDir>0){if(ballDelta<=0)ballDelta+=360;}else{if(ballDelta>=0)ballDelta-=360;}
   const finalBall=currentBall + ballDir*360*ballLaps + ballDelta;
@@ -922,7 +933,9 @@ function rouletteSpin(choice){
 
    // Final correction is calculated from the same wheel angle/idx pair.
    w.style.setProperty('transform',`translate(-50%,-50%) rotate(${finalWheel}deg)`,'important');
-   const exactBall=finalWheel + idx*step;
+   // Local ball angle must equal the selected pocket angle.
+   // Parent-wheel rotation then places both at the same physical pocket.
+   const exactBall=idx*step;
    ball.style.setProperty('transform',`rotate(${exactBall}deg) translateY(calc(-1 * ${radius}))`,'important');
    w.dataset.angle=String(finalWheel);
    ball.dataset.angle=String(exactBall);
@@ -939,7 +952,11 @@ function rouletteSpin(choice){
    else if(bet.type==='dozen1')win=n>=1&&n<=12;
    else if(bet.type==='dozen2')win=n>=13&&n<=24;
    else if(bet.type==='dozen3')win=n>=25&&n<=36;
-   debugLog('ROULETTE','SPIN RESULT',{number:n,color,bet,amount:b,win,payout,pocketIndex:idx,wheelAngle:finalWheel,ballAngle:exactBall});
+   debugLog('ROULETTE','SPIN RESULT',{
+ number:n,color,bet,amount:b,win,payout,pocketIndex:idx,
+ pocketAngle:idx*step,wheelStopAngle:finalWheel,
+ ballLocalAngle:exactBall,visualScreenAngle:norm(finalWheel+exactBall)
+});
    settle(b,win?b*payout:0,'ROULETTE');
    sfx(win?'win':'lose');
    if(win&&color==='green')puchun();
@@ -989,3 +1006,17 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(b)b.addEventListener("click",function(){syncEmergency();if(p)p.classList.remove("hidden");});
   });
 })();
+
+document.addEventListener("DOMContentLoaded",function(){
+  const lb=document.getElementById("lobbyDebugBtn");
+  const panel=document.getElementById("debugPanel");
+  if(lb){
+    lb.addEventListener("click",function(){
+      if(panel)panel.classList.remove("hidden");
+      try{
+        const body=document.getElementById("debugBody");
+        if(body)body.textContent=(window.__GB_DEBUG_LINES||[]).join("\n");
+      }catch(e){}
+    });
+  }
+});
