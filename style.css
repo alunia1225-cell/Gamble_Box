@@ -1373,7 +1373,14 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 #modal .roulette-redesign{max-width:720px!important;margin:0 auto!important;text-align:center!important}
 #modal .roulette-bet-control .bet-max-label{visibility:hidden!important}
 #modal .roulette-wheel-card{margin:8px auto 12px!important;padding:10px 8px 8px!important;border:1px solid #5b4821!important;border-radius:14px!important;background:linear-gradient(180deg,#151515,#0a0b0c)!important;box-shadow:inset 0 0 0 1px #1e1a10,0 10px 35px #000!important}
-#modal .roulette-wheel-title{display:flex!important;justify-content:space-between!important;align-items:center!important;padding:0 8px 5px!important;color:#777b7d!important;font:700 7px Orbitron,sans-serif!important;letter-spacing:1.5px!important}
+#modal .roulette-wheel-title{
+  position:relative!important;
+  min-height:18px!important;
+  height:18px!important;
+  align-items:center!important;
+  padding:0 8px 5px!important;
+  box-sizing:border-box!important;
+}
 #modal .roulette-wheel-title b{color:#d8b95d!important;font-size:7px!important}
 #modal .real-wheel-wrap{width:min(76vw,300px)!important;height:min(76vw,300px)!important;min-height:0!important;margin:4px auto!important;position:relative!important;display:block!important;overflow:visible!important}
 #modal .real-wheel{--wheel-size:min(76vw,300px);--label-radius:calc(var(--wheel-size)*.385);--ball-radius:calc(var(--wheel-size)*.385);position:absolute!important;left:50%!important;top:50%!important;width:var(--wheel-size)!important;height:var(--wheel-size)!important;margin:0!important;border:9px solid #d5b65f!important;border-radius:50%!important;background:conic-gradient(from 0deg,#0b7048 0.000000deg 9.729730deg, #a92f3a 9.729730deg 19.459459deg, #17191b 19.459459deg 29.189189deg, #a92f3a 29.189189deg 38.918919deg, #17191b 38.918919deg 48.648649deg, #a92f3a 48.648649deg 58.378378deg, #17191b 58.378378deg 68.108108deg, #a92f3a 68.108108deg 77.837838deg, #17191b 77.837838deg 87.567568deg, #a92f3a 87.567568deg 97.297297deg, #17191b 97.297297deg 107.027027deg, #a92f3a 107.027027deg 116.756757deg, #17191b 116.756757deg 126.486486deg, #a92f3a 126.486486deg 136.216216deg, #17191b 136.216216deg 145.945946deg, #a92f3a 145.945946deg 155.675676deg, #17191b 155.675676deg 165.405405deg, #a92f3a 165.405405deg 175.135135deg, #17191b 175.135135deg 184.864865deg, #a92f3a 184.864865deg 194.594595deg, #17191b 194.594595deg 204.324324deg, #a92f3a 204.324324deg 214.054054deg, #17191b 214.054054deg 223.783784deg, #a92f3a 223.783784deg 233.513514deg, #17191b 233.513514deg 243.243243deg, #a92f3a 243.243243deg 252.972973deg, #17191b 252.972973deg 262.702703deg, #a92f3a 262.702703deg 272.432432deg, #17191b 272.432432deg 282.162162deg, #a92f3a 282.162162deg 291.891892deg, #17191b 291.891892deg 301.621622deg, #a92f3a 301.621622deg 311.351351deg, #17191b 311.351351deg 321.081081deg, #a92f3a 321.081081deg 330.810811deg, #17191b 330.810811deg 340.540541deg, #a92f3a 340.540541deg 350.270270deg, #17191b 350.270270deg 360.000000deg)!important;box-shadow:0 0 0 3px #3b2d12,0 12px 30px #000,inset 0 0 0 5px #090a0b!important;overflow:visible!important;transform:translate(-50%,-50%)!important;transform-origin:center!important;will-change:transform!important}
@@ -1764,12 +1771,19 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   align-items:flex-start!important;
 }
 #modal .roulette-history-box{
+  position:absolute!important;
+  right:8px!important;
+  top:0!important;
+  z-index:40!important;
   display:flex!important;
   flex-direction:column!important;
-  align-items:flex-end!important;
+  align-items:stretch!important;
   gap:4px!important;
-  max-width:48%!important;
-  min-width:0!important;
+  width:92px!important;
+  max-width:92px!important;
+  min-width:92px!important;
+  margin:0!important;
+  padding:0!important;
 }
 #modal .roulette-history-box>b{
   color:#e4c65e!important;
@@ -1780,11 +1794,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   display:flex!important;
   flex-direction:column!important;
   flex-wrap:nowrap!important;
-  align-items:flex-end!important;
+  align-items:stretch!important;
   justify-content:flex-start!important;
   gap:4px!important;
-  width:100%!important;
-  max-width:185px!important;
+  width:92px!important;
+  max-width:92px!important;
   max-height:250px!important;
   overflow:hidden!important;
 }
@@ -1820,4 +1834,151 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   color:#6d7375!important;
   font:800 6px/1 Orbitron,sans-serif!important;
   letter-spacing:1.2px!important;
+}
+
+/* History rail: beside the centered wheel, never above/below it. */
+#modal .roulette-wheel-card{position:relative!important}
+@media (max-width:520px){
+  #modal .roulette-history-box{right:5px!important;width:76px!important;min-width:76px!important;max-width:76px!important}
+  #modal #rouletteHistory{width:76px!important;max-width:76px!important}
+  #modal .roulette-history-number{max-width:76px!important;height:18px!important;min-height:18px!important;padding:0 5px!important;font-size:7px!important}
+  #modal .roulette-history-box>b{font-size:8px!important}
+}
+
+/* 4.7.76 — FINAL HISTORY SIDE RAIL
+   History is an overlay rail beside the wheel. It MUST NOT affect wheel layout. */
+#modal .roulette-redesign{
+  position:relative!important;
+}
+#modal .roulette-wheel-card{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:238px!important;
+  min-height:238px!important;
+  max-height:238px!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;
+}
+#modal .roulette-wheel-title{
+  position:relative!important;
+  display:block!important;
+  height:20px!important;
+  min-height:20px!important;
+  max-height:20px!important;
+  margin:0!important;
+  padding:0 6px!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-wheel-title > span{
+  position:absolute!important;
+  left:6px!important;
+  top:2px!important;
+}
+#modal .roulette-history-box{
+  position:absolute!important;
+  right:6px!important;
+  top:0!important;
+  z-index:80!important;
+  width:78px!important;
+  min-width:78px!important;
+  max-width:78px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:4px!important;
+  pointer-events:none!important;
+}
+#modal .roulette-history-box>b{
+  display:block!important;
+  width:100%!important;
+  text-align:right!important;
+  color:#e4c65e!important;
+  font:900 8px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.4px!important;
+}
+#modal #rouletteHistory{
+  display:flex!important;
+  flex-direction:column!important;
+  flex-wrap:nowrap!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:3px!important;
+  width:78px!important;
+  max-width:78px!important;
+  height:auto!important;
+  max-height:190px!important;
+  overflow:hidden!important;
+}
+#modal .roulette-history-number{
+  width:78px!important;
+  max-width:78px!important;
+  height:17px!important;
+  min-height:17px!important;
+  padding:0 6px!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  box-sizing:border-box!important;
+  border-radius:4px!important;
+  font:900 6.5px/1 Orbitron,sans-serif!important;
+}
+#modal .roulette-history-number.red{
+  background:#8f2633!important;
+  border-color:#c66b73!important;
+}
+#modal .roulette-history-number.black{
+  background:#101214!important;
+  border-color:#555a5c!important;
+}
+#modal .roulette-history-number.green{
+  background:#087c4b!important;
+  border-color:#56d19c!important;
+}
+
+/* Wheel stays exactly in its own centered 210px area. */
+#modal .roulette-wheel-card .real-wheel-wrap{
+  position:relative!important;
+  display:block!important;
+  width:210px!important;
+  height:210px!important;
+  min-height:210px!important;
+  margin:2px auto 0!important;
+  padding:0!important;
+}
+#modal .roulette-wheel-card .real-wheel{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+}
+
+/* Mobile: slightly tighter history rail, wheel remains unchanged. */
+@media(max-width:520px){
+  #modal .roulette-wheel-card{
+    height:238px!important;
+    min-height:238px!important;
+    max-height:238px!important;
+  }
+  #modal .roulette-history-box{
+    right:4px!important;
+    width:72px!important;
+    min-width:72px!important;
+    max-width:72px!important;
+  }
+  #modal #rouletteHistory{
+    width:72px!important;
+    max-width:72px!important;
+  }
+  #modal .roulette-history-number{
+    width:72px!important;
+    max-width:72px!important;
+    height:16px!important;
+    min-height:16px!important;
+    font-size:6px!important;
+  }
 }
