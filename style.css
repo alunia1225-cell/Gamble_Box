@@ -1509,3 +1509,13 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #modal .roulette-zero-cell{min-height:24px!important}
   #modal .roulette-outside button,#modal .roulette-dozens button{min-height:24px!important;height:24px!important}
 }
+
+/* 4.7.58 — roulette bet amount appears only after a bet is selected */
+#modal .roulette-bet-picker{position:fixed!important;inset:0!important;z-index:1200!important;display:grid!important;place-items:center!important;padding:18px!important;background:rgba(0,0,0,.62)!important;backdrop-filter:blur(3px)!important;-webkit-backdrop-filter:blur(3px)!important;box-sizing:border-box!important}
+#modal .roulette-bet-picker.hidden{display:none!important}
+#modal .roulette-bet-picker-card{width:min(360px,calc(100vw - 34px))!important;padding:16px!important;border:1px solid #725b2a!important;border-radius:14px!important;background:linear-gradient(180deg,#181817,#090a0b)!important;box-shadow:0 22px 70px #000,0 0 0 1px #241d10 inset!important}
+#modal .roulette-picker-title{text-align:center!important;color:#e2c56c!important;font:900 13px Orbitron,sans-serif!important;letter-spacing:2px!important;margin-bottom:8px!important}
+#modal .roulette-bet-picker .bet-control{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:10px!important;box-sizing:border-box!important}
+#modal .roulette-picker-confirm{display:block!important;width:100%!important;min-height:44px!important;margin-top:10px!important;border:1px solid #80652e!important;border-radius:7px!important;background:linear-gradient(#25231d,#101111)!important;color:#e6ca70!important;font:900 9px Orbitron,sans-serif!important;letter-spacing:1px!important;touch-action:manipulation!important}
+#modal .roulette-picker-confirm:active{transform:scale(.985)!important}
+@media(max-width:600px){#modal .roulette-bet-picker{padding:14px!important}#modal .roulette-bet-picker-card{width:min(340px,calc(100vw - 28px))!important;padding:13px!important}}

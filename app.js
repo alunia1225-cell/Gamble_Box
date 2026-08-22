@@ -310,7 +310,7 @@ roulette(){
  const gridCols=[[3,6,9,12,15,18,21,24,27,30,33,36],[2,5,8,11,14,17,20,23,26,29,32,35],[1,4,7,10,13,16,19,22,25,28,31,34]];
  const cells=gridCols.flatMap(col=>col.map(n=>`<button type="button" class="roulette-cell ${red.includes(n)?'red':'black'}" onclick="rouletteNumberBet(${n})" aria-label="Bet ${n}"><span>${n}</span></button>`)).join('');
  const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i};--a:${i*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join('');
- $("gameBody").innerHTML=betbox(100,true)+`<div class="real-roulette roulette-redesign">
+ $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
   <section class="roulette-wheel-card">
    <div class="roulette-wheel-title"><span>EUROPEAN WHEEL</span><b>ONE ZERO</b></div>
    <div class="real-wheel-wrap"><div id="rouletteWheel" class="real-wheel">${wheel}<div class="real-hub">GB</div><div id="rouletteBall" class="real-ball"></div></div></div>
@@ -334,7 +334,8 @@ roulette(){
     <button onclick="rouletteTableBet('dozen3')"><b>3rd 12</b><span>3×</span></button>
    </div>
   </section>
-  <div class="roulette-action"><div><span id="rouletteBetLabel">NO BET</span><small>BET AMOUNT ${fmt(100)}</small></div><button id="rouletteNumberSpin" onclick="rouletteSpin(window.ROULETTE_BET)" disabled>SPIN <span id="rouletteSpinPayout">SELECT BET</span></button></div>
+  <div class="roulette-action"><div><span id="rouletteBetLabel">NO BET</span><small>BET AMOUNT <span id="rouletteBetAmount">100</span></small></div><button id="rouletteNumberSpin" onclick="rouletteSpin(window.ROULETTE_BET)" disabled>SPIN <span id="rouletteSpinPayout">SELECT BET</span></button></div>
+  <div id="rouletteBetPicker" class="roulette-bet-picker hidden"><div class="roulette-bet-picker-card"><div class="roulette-picker-title">SET YOUR BET</div>${betbox(100,true)}<button type="button" class="roulette-picker-confirm" onclick="rouletteConfirmBet()">BET SET</button></div></div>
  </div>`;
 },highlow(){
  $("gameBody").innerHTML=betbox()+`<div class="hl-game">
@@ -847,8 +848,18 @@ function rouletteSelectBet(bet){
  if(pay)pay.textContent=`${bet.payout}× RETURN`;
  if(nr)nr.textContent=bet.type==='number'?String(bet.value):'—';
  if(cr)cr.textContent=bet.type==='number'?'STRAIGHT UP':bet.label;
+ const amount=$('rouletteBetAmount');if(amount)amount.textContent=fmt(lastBet||100);
  if(spin)spin.disabled=false;
+ const picker=$('rouletteBetPicker');if(picker)picker.classList.remove('hidden');
  debugLog('ROULETTE','BET SELECTED',bet);sfx('click');
+}
+function rouletteConfirmBet(){
+ const picker=$('rouletteBetPicker');
+ const amount=$('rouletteBetAmount');
+ if(amount)amount.textContent=fmt(lastBet||100);
+ if(picker)picker.classList.add('hidden');
+ debugLog('ROULETTE','BET AMOUNT CONFIRMED',{amount:lastBet||100,bet:window.ROULETTE_BET});
+ sfx('click');
 }
 
 function rouletteSpin(choice){
@@ -864,8 +875,13 @@ function rouletteSpin(choice){
   const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
   const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
   const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx],color=n===0?'green':red.includes(n)?'red':'black',step=360/37;
-  const finalWheel=360*7+Math.random()*360;
-  const finalBallAngle=finalWheel+idx*step;
+  const currentWheel=Number(w.dataset.angle||0);
+  const currentBall=Number(ball.dataset.angle||0);
+  const normalize=a=>((a%360)+360)%360;
+  const wheelCorrection=normalize(-idx*step-currentWheel);
+  const finalWheel=currentWheel+360*7+wheelCorrection;
+  const ballCorrection=normalize(-currentBall);
+  const finalBallAngle=currentBall+360*11+ballCorrection;
   if(numEl)numEl.textContent='—';if(colEl)colEl.textContent='SPINNING';
   const spin=$('rouletteNumberSpin');if(spin)spin.disabled=true;sfx('roulette');
   const radius=getComputedStyle(w).getPropertyValue('--ball-radius').trim()||'76px';
@@ -873,13 +889,15 @@ function rouletteSpin(choice){
   const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
    const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,4);
-   const wheelAngle=finalWheel*ease;
-   const ballAngle=(-360*11+finalBallAngle)*ease;
+   const wheelAngle=currentWheel+(finalWheel-currentWheel)*ease;
+   const ballAngle=currentBall+(finalBallAngle-currentBall)*ease;
    w.style.setProperty('transform',`translate(-50%,-50%) rotate(${wheelAngle}deg)`,'important');
    ball.style.setProperty('transform',`rotate(${ballAngle}deg) translateY(calc(-1 * ${radius}))`,'important');
    if(p<1){requestAnimationFrame(tick);return}
    w.style.setProperty('transform',`translate(-50%,-50%) rotate(${finalWheel}deg)`,'important');
    ball.style.setProperty('transform',`rotate(${finalBallAngle}deg) translateY(calc(-1 * ${radius}))`,'important');
+   w.dataset.angle=String(finalWheel);
+   ball.dataset.angle=String(finalBallAngle);
    if(numEl)numEl.textContent=String(n);if(colEl)colEl.textContent=color.toUpperCase();
    let win=false,payout=bet.payout;
    if(bet.type==='number')win=n===bet.value;
