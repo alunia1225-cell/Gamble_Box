@@ -83,7 +83,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.60"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.61"});
 });
 
 const KEY="gb3_save";
@@ -318,7 +318,7 @@ roulette(){
  window.ROULETTE_BET=null;
  const gridCols=[[3,6,9,12,15,18,21,24,27,30,33,36],[2,5,8,11,14,17,20,23,26,29,32,35],[1,4,7,10,13,16,19,22,25,28,31,34]];
  const cells=gridCols.flatMap(col=>col.map(n=>`<button type="button" class="roulette-cell ${red.includes(n)?'red':'black'}" onclick="rouletteNumberBet(${n})" aria-label="Bet ${n}"><span>${n}</span></button>`)).join('');
- const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i};--a:${i*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join('');
+ const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i};--a:${(i+0.5)*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"><span>${n}</span></button>`).join('');
  $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
   <section class="roulette-wheel-card">
    <div class="roulette-wheel-title"><span>EUROPEAN WHEEL</span><b>ONE ZERO</b></div>
@@ -909,7 +909,7 @@ function rouletteSpin(choice){
   // Ball absolute angle must equal wheel angle + pocket angle at rest.
   // IMPORTANT: #rouletteBall is a child of #rouletteWheel.
   // Its angle is therefore LOCAL to the wheel. The selected pocket is at idx*step.
-  const desiredBallMod=norm(idx*step);
+  const desiredBallMod=norm((idx+0.5)*step);
   let ballDelta=desiredBallMod-norm(currentBall);
   if(ballDir>0){if(ballDelta<=0)ballDelta+=360;}else{if(ballDelta>=0)ballDelta-=360;}
   const finalBall=currentBall + ballDir*360*ballLaps + ballDelta;
@@ -935,7 +935,7 @@ function rouletteSpin(choice){
    w.style.setProperty('transform',`translate(-50%,-50%) rotate(${finalWheel}deg)`,'important');
    // Local ball angle must equal the selected pocket angle.
    // Parent-wheel rotation then places both at the same physical pocket.
-   const exactBall=idx*step;
+   const exactBall=(idx+0.5)*step;
    ball.style.setProperty('transform',`rotate(${exactBall}deg) translateY(calc(-1 * ${radius}))`,'important');
    w.dataset.angle=String(finalWheel);
    ball.dataset.angle=String(exactBall);
@@ -954,7 +954,7 @@ function rouletteSpin(choice){
    else if(bet.type==='dozen3')win=n>=25&&n<=36;
    debugLog('ROULETTE','SPIN RESULT',{
  number:n,color,bet,amount:b,win,payout,pocketIndex:idx,
- pocketAngle:idx*step,wheelStopAngle:finalWheel,
+ pocketAngle:(idx+0.5)*step,wheelStopAngle:finalWheel,
  ballLocalAngle:exactBall,visualScreenAngle:norm(finalWheel+exactBall)
 });
    settle(b,win?b*payout:0,'ROULETTE');
