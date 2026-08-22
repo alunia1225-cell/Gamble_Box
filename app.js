@@ -74,7 +74,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.56"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.59"});
 });
 
 const KEY="gb3_save";
@@ -872,33 +872,63 @@ function rouletteSpin(choice){
   GB_ROULETTE_BUSY=true;
   const token=GB_GAME_TOKEN,w=$('rouletteWheel'),ball=$('rouletteBall'),numEl=$('rouletteNumber'),colEl=$('rouletteColor');
   if(!w||!ball){GB_ROULETTE_BUSY=false;debugLog('ERROR','ROULETTE DOM MISSING');return}
+
+  // European wheel order. The ball is locked to the same 37-position coordinate
+  // system as the pockets, so the visual stop and the reported number can never diverge.
   const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
   const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-  const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx],color=n===0?'green':red.includes(n)?'red':'black',step=360/37;
+  const step=360/37;
+  const idx=Math.floor(Math.random()*pockets.length);
+  const n=pockets[idx];
+  const color=n===0?'green':red.includes(n)?'red':'black';
   const currentWheel=Number(w.dataset.angle||0);
   const currentBall=Number(ball.dataset.angle||0);
-  const normalize=a=>((a%360)+360)%360;
-  const wheelCorrection=normalize(-idx*step-currentWheel);
-  const finalWheel=currentWheel+360*7+wheelCorrection;
-  const ballCorrection=normalize(-currentBall);
-  const finalBallAngle=currentBall+360*11+ballCorrection;
-  if(numEl)numEl.textContent='—';if(colEl)colEl.textContent='SPINNING';
-  const spin=$('rouletteNumberSpin');if(spin)spin.disabled=true;sfx('roulette');
+  const norm=a=>((a%360)+360)%360;
+
+  // Give every spin a different physical path. Wheel and ball use independent
+  // lap counts/directions, then converge on the exact same pocket coordinate.
+  const wheelDir=Math.random()<0.5?-1:1;
+  const ballDir=Math.random()<0.5?-1:1;
+  const wheelLaps=5+Math.floor(Math.random()*4); // 5–8 turns
+  const ballLaps=8+Math.floor(Math.random()*5);  // 8–12 turns
+  const wheelTargetMod=norm(-(idx*step));
+  const wheelBase=norm(currentWheel);
+  let wheelDelta=wheelTargetMod-wheelBase;
+  if(wheelDir>0){if(wheelDelta<=0)wheelDelta+=360;}else{if(wheelDelta>=0)wheelDelta-=360;}
+  const finalWheel=currentWheel + wheelDir*360*wheelLaps + wheelDelta;
+
+  // Ball absolute angle must equal wheel angle + pocket angle at rest.
+  const desiredBallMod=norm(finalWheel + idx*step);
+  let ballDelta=desiredBallMod-norm(currentBall);
+  if(ballDir>0){if(ballDelta<=0)ballDelta+=360;}else{if(ballDelta>=0)ballDelta-=360;}
+  const finalBall=currentBall + ballDir*360*ballLaps + ballDelta;
+
+  if(numEl)numEl.textContent='—';
+  if(colEl)colEl.textContent='SPINNING';
+  const spin=$('rouletteNumberSpin');if(spin)spin.disabled=true;
+  sfx('roulette');
   const radius=getComputedStyle(w).getPropertyValue('--ball-radius').trim()||'76px';
-  const start=performance.now(),duration=6200;
+  const start=performance.now(),duration=6800+Math.floor(Math.random()*900);
   const tick=now=>{
    if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
-   const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,4);
+   const p=Math.min(1,(now-start)/duration);
+   // Smooth deceleration with a tiny natural ease-out variation per spin.
+   const ease=1-Math.pow(1-p,4);
    const wheelAngle=currentWheel+(finalWheel-currentWheel)*ease;
-   const ballAngle=currentBall+(finalBallAngle-currentBall)*ease;
+   const ballAngle=currentBall+(finalBall-currentBall)*ease;
    w.style.setProperty('transform',`translate(-50%,-50%) rotate(${wheelAngle}deg)`,'important');
    ball.style.setProperty('transform',`rotate(${ballAngle}deg) translateY(calc(-1 * ${radius}))`,'important');
    if(p<1){requestAnimationFrame(tick);return}
+
+   // Final correction is calculated from the same wheel angle/idx pair.
    w.style.setProperty('transform',`translate(-50%,-50%) rotate(${finalWheel}deg)`,'important');
-   ball.style.setProperty('transform',`rotate(${finalBallAngle}deg) translateY(calc(-1 * ${radius}))`,'important');
+   const exactBall=finalWheel + idx*step;
+   ball.style.setProperty('transform',`rotate(${exactBall}deg) translateY(calc(-1 * ${radius}))`,'important');
    w.dataset.angle=String(finalWheel);
-   ball.dataset.angle=String(finalBallAngle);
-   if(numEl)numEl.textContent=String(n);if(colEl)colEl.textContent=color.toUpperCase();
+   ball.dataset.angle=String(exactBall);
+
+   if(numEl)numEl.textContent=String(n);
+   if(colEl)colEl.textContent=color.toUpperCase();
    let win=false,payout=bet.payout;
    if(bet.type==='number')win=n===bet.value;
    else if(bet.type==='red'||bet.type==='black'||bet.type==='green')win=color===bet.type;
@@ -909,13 +939,15 @@ function rouletteSpin(choice){
    else if(bet.type==='dozen1')win=n>=1&&n<=12;
    else if(bet.type==='dozen2')win=n>=13&&n<=24;
    else if(bet.type==='dozen3')win=n>=25&&n<=36;
-   debugLog('ROULETTE','SPIN RESULT',{number:n,color,bet,amount:b,win,payout});
-   settle(b,win?b*payout:0,'ROULETTE');sfx(win?'win':'lose');if(win&&color==='green')puchun();GB_ROULETTE_BUSY=false;
+   debugLog('ROULETTE','SPIN RESULT',{number:n,color,bet,amount:b,win,payout,pocketIndex:idx,wheelAngle:finalWheel,ballAngle:exactBall});
+   settle(b,win?b*payout:0,'ROULETTE');
+   sfx(win?'win':'lose');
+   if(win&&color==='green')puchun();
+   GB_ROULETTE_BUSY=false;
   };
   requestAnimationFrame(tick);
  }catch(err){GB_ROULETTE_BUSY=false;debugLog('ERROR','ROULETTE SPIN FAILED',{error:String(err),stack:err&&err.stack})}
 }
-
 function roulette(c){return rouletteSpin(c)}
 
 document.addEventListener("DOMContentLoaded",()=>{

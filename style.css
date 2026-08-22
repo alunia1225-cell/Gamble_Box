@@ -1519,3 +1519,51 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 #modal .roulette-picker-confirm{display:block!important;width:100%!important;min-height:44px!important;margin-top:10px!important;border:1px solid #80652e!important;border-radius:7px!important;background:linear-gradient(#25231d,#101111)!important;color:#e6ca70!important;font:900 9px Orbitron,sans-serif!important;letter-spacing:1px!important;touch-action:manipulation!important}
 #modal .roulette-picker-confirm:active{transform:scale(.985)!important}
 @media(max-width:600px){#modal .roulette-bet-picker{padding:14px!important}#modal .roulette-bet-picker-card{width:min(340px,calc(100vw - 28px))!important;padding:13px!important}}
+
+
+/* 4.7.59 — roulette exact pocket/ball lock + profile-only diagnostics */
+#debugToggle,#debugEmergency{display:none!important}
+#lobbyDebugBtn.profile-system-btn{
+  display:block!important;
+  width:100%!important;
+  min-height:34px!important;
+  margin-top:10px!important;
+  padding:7px 10px!important;
+  border:1px solid #5b4b2b!important;
+  border-radius:6px!important;
+  background:linear-gradient(180deg,#17150f,#0b0c0d)!important;
+  color:#d9bc67!important;
+  font:800 7px Orbitron,sans-serif!important;
+  letter-spacing:1px!important;
+  text-align:center!important;
+}
+#lobbyDebugBtn.profile-system-btn:active{transform:scale(.985)!important}
+#modal .roulette-action{
+  display:block!important;
+  margin:5px 0 8px!important;
+  padding:5px!important;
+  border:0!important;
+  background:transparent!important;
+}
+#modal .roulette-action>div{display:none!important}
+#modal #rouletteNumberSpin{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:46px!important;
+  border:1px solid #80672f!important;
+  border-radius:7px!important;
+  background:linear-gradient(180deg,#242119,#0f1010)!important;
+  color:#e7ca70!important;
+  font:900 10px Orbitron,sans-serif!important;
+  letter-spacing:1.5px!important;
+}
+#modal #rouletteNumberSpin span{display:none!important}
+#modal .roulette-readout{min-height:24px!important}
+#modal .real-wheel{will-change:transform!important}
+#modal .real-ball{will-change:transform!important}
+
+/* 4.7.59 profile diagnostics placement */
+.lobbyTools .profile-tool{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important}
+.lobbyTools .profile-tool>#profileCard{width:100%!important;min-height:85px!important}
+#lobbyDebugBtn.profile-system-btn{margin-top:0!important;min-height:34px!important}
