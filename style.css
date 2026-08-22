@@ -1807,3 +1807,165 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
       rotate(calc(-1 * var(--a)))!important;
   }
 }
+
+/* 4.7.71 — final roulette layout correction
+   Keep the game surface 4:3, but fit wheel + betting table + SPIN button
+   inside the surface instead of pushing the controls below the viewport. */
+
+/* Do not let the generic .game min-height force the roulette content out of view. */
+#modal .tabletop .game,
+#modal .roulette-redesign{
+  min-height:0!important;
+  height:auto!important;
+}
+#modal .roulette-redesign{
+  width:100%!important;
+  max-width:720px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Smaller wheel specifically for the 4:3 game surface. */
+#modal .roulette-wheel-card{
+  margin:0 auto 3px!important;
+  padding:5px 6px 3px!important;
+}
+#modal .roulette-wheel-title{
+  min-height:25px!important;
+  padding:0 5px 2px!important;
+}
+#modal .roulette-wheel-title > span{
+  font-size:6px!important;
+}
+#modal .roulette-history-head>b{
+  font-size:6px!important;
+}
+#modal .roulette-history{
+  max-width:58vw!important;
+  gap:2px!important;
+}
+#modal .roulette-history-item{
+  width:21px!important;
+  height:21px!important;
+  flex-basis:21px!important;
+}
+#modal .roulette-history-item b{font-size:6px!important}
+#modal .roulette-history-item small{font-size:3.5px!important}
+
+/* Exact wheel geometry: labels sit on the colored pocket area, not outside the gold rim. */
+#modal .real-wheel-wrap{
+  width:210px!important;
+  height:210px!important;
+  min-height:210px!important;
+  margin:0 auto!important;
+}
+#modal .real-wheel{
+  --wheel-size:210px!important;
+  --label-radius:76px!important;
+  --ball-radius:79px!important;
+  width:210px!important;
+  height:210px!important;
+  border-width:7px!important;
+}
+#modal .real-pocket{
+  width:24px!important;
+  height:88px!important;
+  margin-left:-12px!important;
+  margin-top:-88px!important;
+  transform-origin:12px 88px!important;
+}
+#modal .real-ball{
+  transform-origin:0 79px!important;
+}
+#modal .real-hub{
+  width:52px!important;
+  height:52px!important;
+  border-width:4px!important;
+  font-size:8px!important;
+}
+
+/* Labels: 76px radius is safely inside the gold rim of the 210px wheel. */
+#modal .roulette-wheel-label{
+  width:17px!important;
+  height:11px!important;
+  font-size:6px!important;
+  transform:
+    translate(-50%,-50%)
+    rotate(var(--a))
+    translateY(-76px)
+    rotate(calc(-1 * var(--a)))!important;
+}
+#modal .roulette-wheel-label.green{color:#72f0a0!important}
+
+/* Keep the result line very compact. */
+#modal .roulette-readout{
+  min-height:16px!important;
+  margin:0!important;
+  gap:6px!important;
+}
+#modal .roulette-readout span{font-size:12px!important}
+#modal .roulette-readout small{font-size:4.5px!important}
+
+/* Compact table so all betting controls remain visible. */
+#modal .roulette-table-card{
+  margin:3px 0 2px!important;
+  padding:4px!important;
+}
+#modal .roulette-table-head{
+  padding:0 2px 2px!important;
+  font-size:5px!important;
+}
+#modal .roulette-table-head span{font-size:4px!important}
+#modal .roulette-zero-row{margin-bottom:1px!important}
+#modal .roulette-zero-cell{
+  min-height:20px!important;
+  height:20px!important;
+  font-size:8px!important;
+}
+#modal .roulette-zero-cell small{font-size:4px!important;margin-top:0!important}
+#modal .roulette-grid{gap:1px!important}
+#modal .roulette-cell{
+  min-height:17px!important;
+  height:17px!important;
+  font-size:5px!important;
+}
+#modal .roulette-outside{
+  gap:1px!important;
+  margin-top:1px!important;
+}
+#modal .roulette-outside button,
+#modal .roulette-dozens button{
+  min-height:20px!important;
+  height:20px!important;
+  padding:1px!important;
+}
+#modal .roulette-outside b,
+#modal .roulette-dozens b{font-size:4px!important}
+#modal .roulette-outside span,
+#modal .roulette-dozens span{font-size:3px!important;margin-top:0!important}
+#modal .roulette-dozens{
+  gap:1px!important;
+  margin-top:1px!important;
+}
+
+/* Restore a clearly visible SPIN button. */
+#modal .roulette-action{
+  display:block!important;
+  margin:2px 0 0!important;
+  padding:2px!important;
+  min-height:0!important;
+}
+#modal .roulette-action>div{
+  display:none!important;
+}
+#modal #rouletteNumberSpin{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:30px!important;
+  height:30px!important;
+  padding:2px!important;
+  font-size:7px!important;
+}
+#modal #rouletteNumberSpin span{display:inline!important;font-size:4px!important}
