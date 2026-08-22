@@ -440,10 +440,10 @@ let SLOT_BUSY=false;
 const SLOT_SYMBOLS=[
  {id:"seven",html:'<span class="slot-cell seven">7</span>'},
  {id:"bar",html:'<span class="slot-cell bar">BAR</span>'},
- {id:"cherry",html:'<span class="slot-cell cherry">●●</span>'},
+ {id:"cherry",html:'<span class="slot-cell cherry"><i class="stem"></i><i class="fruit f1"></i><i class="fruit f2"></i></span>'},
  {id:"diamond",html:'<span class="slot-cell diamond">◆</span>'},
- {id:"bell",html:'<span class="slot-cell bell">◉</span>'},
- {id:"lemon",html:'<span class="slot-cell lemon">●</span>'}
+ {id:"bell",html:'<span class="slot-cell bell">BELL</span>'},
+ {id:"lemon",html:'<span class="slot-cell lemon"><i class="leaf"></i></span>'}
 ];
 function slotSetReel(el,rows){if(!el)return;el.innerHTML=rows.map(x=>SLOT_SYMBOLS.find(s=>s.id===x)?.html||SLOT_SYMBOLS[0].html).join("")}
 function slotPick(){return SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)].id}
