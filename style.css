@@ -1661,3 +1661,149 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 #modal #rouletteBetLabel{
   text-shadow:0 0 6px #cda94f44!important;
 }
+
+/* 4.7.69 — game surface fixed to 4:3 aspect ratio */
+#modal{
+  width:100vw!important;
+  height:100svh!important;
+  max-height:none!important;
+  padding:10px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+}
+#modal .tabletop{
+  width:min(960px,calc(100vw - 20px),calc((100svh - 20px) * 4 / 3))!important;
+  aspect-ratio:4 / 3!important;
+  height:auto!important;
+  max-width:calc(100vw - 20px)!important;
+  max-height:calc(100svh - 20px)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:14px 12px!important;
+  box-sizing:border-box!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+#modal .tabletop .game{
+  width:100%!important;
+  max-width:none!important;
+  min-height:100%!important;
+}
+@media(max-width:600px){
+  #modal{padding:6px!important}
+  #modal .tabletop{
+    width:min(calc(100vw - 12px),calc((100svh - 12px) * 4 / 3))!important;
+    max-width:calc(100vw - 12px)!important;
+    max-height:calc(100svh - 12px)!important;
+    padding:10px 8px!important;
+  }
+}
+
+/* 4.7.70 — roulette numbers inside gold rim + history */
+#modal .roulette-wheel-labels{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:9!important;
+  pointer-events:none!important;
+}
+#modal .roulette-wheel-label{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:20px!important;
+  height:13px!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:clamp(6px,1.55vw,8px)!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.25px!important;
+  color:#f7e9bc!important;
+  text-shadow:0 1px 2px #000!important;
+  white-space:nowrap!important;
+  transform:
+    translate(-50%,-50%)
+    rotate(var(--a))
+    translateY(calc(-1 * min(25vw,104px)))
+    rotate(calc(-1 * var(--a)))!important;
+  transform-origin:50% 50%!important;
+}
+#modal .roulette-wheel-label.green{color:#72f0a0!important}
+
+#modal .roulette-wheel-title{
+  position:relative!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+}
+#modal .roulette-history-head{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  gap:3px!important;
+  min-width:0!important;
+}
+#modal .roulette-history-head>b{
+  color:#e2c66c!important;
+  font:900 8px Orbitron,sans-serif!important;
+  letter-spacing:1.5px!important;
+}
+#modal .roulette-history{
+  display:flex!important;
+  gap:3px!important;
+  max-width:min(62vw,270px)!important;
+  overflow:hidden!important;
+  justify-content:flex-end!important;
+}
+#modal .roulette-history-empty{
+  color:#64696b!important;
+  font:700 6px Orbitron,sans-serif!important;
+  white-space:nowrap!important;
+}
+#modal .roulette-history-item{
+  width:26px!important;
+  height:26px!important;
+  flex:0 0 26px!important;
+  border:1px solid #47402d!important;
+  border-radius:4px!important;
+  background:#121415!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-history-item b{
+  color:#eee7d0!important;
+  font:900 7px/1 Orbitron,sans-serif!important;
+}
+#modal .roulette-history-item small{
+  color:#7b8082!important;
+  font:800 4.5px/1 Orbitron,sans-serif!important;
+  margin-top:2px!important;
+}
+#modal .roulette-history-item.red{border-color:#913742!important}
+#modal .roulette-history-item.black{border-color:#4d4d4d!important}
+#modal .roulette-history-item.green{
+  border-color:#2d8157!important;
+  box-shadow:inset 0 -2px 0 #176c45!important;
+}
+@media(max-width:600px){
+  #modal .roulette-wheel-label{
+    transform:
+      translate(-50%,-50%)
+      rotate(var(--a))
+      translateY(calc(-1 * min(25vw,104px)))
+      rotate(calc(-1 * var(--a)))!important;
+  }
+}
