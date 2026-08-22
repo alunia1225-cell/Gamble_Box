@@ -91,6 +91,21 @@ const S=JSON.parse(localStorage.getItem(KEY)||'{"coins":9999,"wagered":0,"profit
 // BASE RESET: test balance remains 9999; dashboard statistics start clean.
 S.coins=9999; S.wagered=0; S.profit=0; S.wins=0; S.maxwin=0; S.history=[];
 const $=id=>document.getElementById(id); let audioCtx=null,lastBet=0,timer=null,multi=1;
+const ROULETTE_HISTORY_KEY="gb_roulette_history_v1";
+let rouletteHistory=[];
+try{rouletteHistory=JSON.parse(localStorage.getItem(ROULETTE_HISTORY_KEY)||"[]");if(!Array.isArray(rouletteHistory))rouletteHistory=[]}catch(e){rouletteHistory=[]}
+function saveRouletteHistory(){try{localStorage.setItem(ROULETTE_HISTORY_KEY,JSON.stringify(rouletteHistory.slice(0,20)))}catch(e){}}
+function rouletteHistoryColor(n){
+ const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+ return n===0?"green":red.includes(Number(n))?"red":"black";
+}
+function renderRouletteHistory(){
+ const el=$("rouletteHistory");if(!el)return;
+ const list=rouletteHistory.slice(0,10);
+ el.innerHTML=list.length
+   ? list.map((x,i)=>`<span class="roulette-history-number ${rouletteHistoryColor(x)}" title="${x}">${x}</span>`).join("")
+   : `<small>NO HISTORY</small>`;
+}
 
 
 function gbPlay(name){
@@ -332,7 +347,10 @@ roulette(){
  const wheelLabels=nums.map((n,i)=>`<span class="roulette-wheel-label ${cols[i]}" data-number="${n}" style="--i:${i};--a:${(i+0.5)*360/37}deg">${n}</span>`).join('');
  $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
   <section class="roulette-wheel-card">
-   <div class="roulette-wheel-title"><span>EUROPEAN WHEEL</span><b>ONE ZERO</b></div>
+   <div class="roulette-wheel-title">
+    <span>EUROPEAN WHEEL</span>
+    <div class="roulette-history-box"><b>HISTORY</b><div id="rouletteHistory"></div></div>
+   </div>
    <div class="real-wheel-wrap"><div id="rouletteWheel" class="real-wheel">${wheel}<div class="roulette-wheel-labels">${wheelLabels}</div><div class="real-hub">GB</div><div id="rouletteBall" class="real-ball"></div></div></div>
    <div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">SELECT BET</small></div>
   </section>
@@ -357,6 +375,7 @@ roulette(){
   <div class="roulette-action"><div><span id="rouletteBetLabel">NO BET</span><small>BET AMOUNT <span id="rouletteBetAmount">100</span></small></div><button id="rouletteNumberSpin" onclick="rouletteSpin(window.ROULETTE_BET)" disabled>SPIN <span id="rouletteSpinPayout">SELECT BET</span></button></div>
   <div id="rouletteBetPicker" class="roulette-bet-picker hidden"><div class="roulette-bet-picker-card"><div class="roulette-picker-title">SET YOUR BET</div>${betbox(100,true)}<button type="button" class="roulette-picker-confirm" onclick="rouletteConfirmBet()">BET SET</button></div></div>
  </div>`;
+ renderRouletteHistory();
 },highlow(){
  $("gameBody").innerHTML=betbox()+`<div class="hl-game">
    <div class="hl-head"><span>HIGH</span><b id="hlValue">—</b><span>LOW</span></div>
@@ -1006,6 +1025,10 @@ function rouletteSpin(choice){
  pocketAngle:(idx+0.5)*step,wheelStopAngle:finalWheel,
  ballLocalAngle:exactBall,visualScreenAngle:norm(finalWheel+exactBall)
 });
+   rouletteHistory.unshift(n);
+   rouletteHistory=rouletteHistory.slice(0,20);
+   saveRouletteHistory();
+   renderRouletteHistory();
    settle(b,win?b*payout:0,'ROULETTE');
    sfx(win?'win':'lose');
    if(win&&color==='green')puchun();

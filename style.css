@@ -1756,3 +1756,61 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   font-style:normal!important;
   letter-spacing:1px!important;
 }
+
+/* Roulette history: compact, readable result trail in the wheel header */
+#modal .roulette-wheel-title{
+  position:relative!important;
+  min-height:44px!important;
+  align-items:flex-start!important;
+}
+#modal .roulette-history-box{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  gap:4px!important;
+  max-width:48%!important;
+  min-width:0!important;
+}
+#modal .roulette-history-box>b{
+  color:#e4c65e!important;
+  font:900 9px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.8px!important;
+}
+#modal #rouletteHistory{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  justify-content:flex-end!important;
+  gap:3px!important;
+  max-width:185px!important;
+  min-height:16px!important;
+}
+#modal .roulette-history-number{
+  width:19px!important;
+  height:19px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid rgba(218,190,101,.45)!important;
+  border-radius:50%!important;
+  color:#f7f0d5!important;
+  background:#121416!important;
+  font:900 7px/1 Orbitron,sans-serif!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-history-number.red{
+  background:#8f2633!important;
+  border-color:#c66b73!important;
+}
+#modal .roulette-history-number.black{
+  background:#101214!important;
+  border-color:#555a5c!important;
+}
+#modal .roulette-history-number.green{
+  background:#087c4b!important;
+  border-color:#56d19c!important;
+}
+#modal #rouletteHistory small{
+  color:#6d7375!important;
+  font:800 6px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.2px!important;
+}
