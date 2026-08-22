@@ -144,12 +144,6 @@ function puchun(){
   debugLog&&debugLog("AUDIO","PUCHUN",{file:"puchun_notice.mp3",blackout:true});
 }
 
-const CRASH_HISTORY_KEY="gb_crash_history_v1";
-let CRASH_HISTORY=[];
-try{const saved=JSON.parse(localStorage.getItem(CRASH_HISTORY_KEY)||"[]");if(Array.isArray(saved))CRASH_HISTORY=saved.filter(v=>Number.isFinite(Number(v))).slice(0,5).map(Number)}catch(e){}
-function saveCrashHistory(){try{localStorage.setItem(CRASH_HISTORY_KEY,JSON.stringify(CRASH_HISTORY.slice(0,5)))}catch(e){}}
-function addCrashHistory(value){const n=Number(value);if(!Number.isFinite(n))return;CRASH_HISTORY.unshift(Number(n.toFixed(2)));CRASH_HISTORY=CRASH_HISTORY.slice(0,5);saveCrashHistory();renderCrashHistory()}
-function renderCrashHistory(){const el=$("crashHistory");if(!el)return;el.innerHTML=CRASH_HISTORY.length?CRASH_HISTORY.map(v=>`<span class="crash-history-item ${v>=2?"hot":""}"><b>${Number(v).toFixed(2)}x</b></span>`).join(""):`<span class="crash-history-empty">NO HISTORY</span>`}
 let CRASH={running:false,x:1,bet:0,t:0,raf:null,token:0,crashPoint:2,points:[]};
 function crashPickPoint(){
  const r=Math.random();
@@ -178,7 +172,7 @@ function crashStart(){
    for(let i=1;i<CRASH.points.length;i++)d+=` L ${CRASH.points[i][0].toFixed(1)} ${CRASH.points[i][1].toFixed(1)}`;
    path.setAttribute("d",d);area.setAttribute("d",d+` L ${px.toFixed(1)} ${H-B} L ${L} ${H-B} Z`);dot.setAttribute("cx",px);dot.setAttribute("cy",py);
    if(CRASH.x>=CRASH.crashPoint-.0001){
-     CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");addCrashHistory(CRASH.x);settle(b,0,"CRASH");sfx("crash");return;
+     CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");settle(b,0,"CRASH");sfx("crash");return;
    }
    CRASH.raf=requestAnimationFrame(draw);
  };
@@ -337,8 +331,7 @@ blackjack(){
     <div class="bj-zone"><div class="bj-label">DEALER <span id="bjDealerValue">0</span></div><div id="dealer" class="holdem-row"></div></div>
     <div class="pot">BET <span id="bjbet">0</span></div>
     <div class="bj-zone"><div class="bj-label">YOU <span id="bjPlayerValue">0</span></div><div id="player" class="holdem-row"></div></div>
-    <div class="actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button></div>
-    <div id="bjres" class="result"></div><div id="bjNext" class="bj-next hidden"><span>ROUND FINISHED</span><button onclick="bjJoinNext()">JOIN NEXT HAND</button></div>
+    <div class="actions bj-actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button></div>
   </div>`;
 },
 holdem(){holdemInit()},
@@ -409,7 +402,7 @@ coin(){
 },
 lottery(){$("gameBody").innerHTML=`<div class="lottery-game"><div class="lottery-hero">ONE DRAW <b>100 COIN</b></div><div class="lottery-prizes"><div><b>100,000</b><small>JACKPOT</small></div><div><b>10,000</b><small>GOLD</small></div><div><b>500</b><small>SILVER</small></div></div><div class="lottery-ball">?</div><button class="lottery-draw" onclick="lottery()">DRAW LOTTERY</button><div id="res" class="result">READY</div></div>`},
 multiplier(){
- $("gameBody").innerHTML=betbox()+`<div class="crash-history-panel"><div class="crash-history-head"><span>HISTORY</span><small>LAST 5</small></div><div id="crashHistory" class="crash-history-list"></div></div><div class="crash-wrap">
+ $("gameBody").innerHTML=betbox()+`<div class="crash-wrap">
  <div id="crashChart" class="crash-chart">
   <div class="crash-grid"></div><div id="crashX" class="crash-big">1.00x</div>
   <svg viewBox="0 0 620 300" preserveAspectRatio="none">
@@ -420,7 +413,7 @@ multiplier(){
  </div>
  <div id="res" class="result">READY</div>
  <div class="crash-controls"><button onclick="crashStart()">START</button><button onclick="crashCashout()">CASH OUT</button></div>
- </div>`;renderCrashHistory();
+ </div>`;
 },
 daily(){let ok=Date.now()-S.lastDaily>86400000;$("gameBody").innerHTML=`<p>${ok?"VAULT READY":"VAULT LOCKED"}</p><button ${ok?"":"disabled"} onclick="daily()">CLAIM 1,000</button><div id="res" class="result"></div>`},
 shop(){$("gameBody").innerHTML=`<div class="shop-head"><small>CHIP BANK</small><h2>TABLE CHIPS</h2><p>Prepare your virtual stack before entering a table.</p></div><div class="chip-bank"><div><b>🪙 ${fmt(S.coins)}</b><small>AVAILABLE</small></div><button onclick="buy('100 CHIP STACK',100)">+100</button><button onclick="buy('500 CHIP STACK',500)">+500</button><button onclick="buy('1,000 CHIP STACK',1000)">+1,000</button></div><div class="shop-note">Chip stacks are virtual table markers. Your bankroll remains fixed at 9,999 in TEST MODE.</div><div id="res" class="result">READY</div>`}
@@ -563,20 +556,19 @@ function bjRender(){
  $("bjDealerValue").textContent=BJ.reveal?bjValueText(BJ.d):bjValueText([BJ.d[0]]);
  $("bjbet").textContent=fmt(BJ.bet);
 }
-function bjActions(on){["bjhit","bjstand","bjdouble"].forEach(id=>$(id).disabled=!on);const n=$("bjNext");if(n)n.classList.toggle("hidden",on)}
-function bjJoinNext(){const n=$("bjNext");if(n)n.classList.add("hidden");bjDeal()}
+function bjActions(on){["bjhit","bjstand","bjdouble"].forEach(id=>$(id).disabled=!on)}
 function bjDeal(){
  const b=wager($("bet").value);if(!b)return;
  BJ={deck:deck(),p:[],d:[],bet:b,reveal:false,over:false,split:false,hands:[],active:0,totalBet:b};
  BJ.p=[BJ.deck.pop(),BJ.deck.pop()];BJ.d=[BJ.deck.pop(),BJ.deck.pop()];
  $("bjdeal").disabled=true;bjRender();sfx("deal");
- if(val(BJ.p)===21){BJ.reveal=true;BJ.over=true;bjRender();$("bjres").textContent="BLACKJACK!";settle(BJ.bet,Math.floor(BJ.bet*2.5),"BLACKJACK");sfx("jackpot");puchun();bjActions(false);return}
+ if(val(BJ.p)===21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,Math.floor(BJ.bet*2.5),"BLACKJACK");sfx("jackpot");puchun();bjActions(false);$("bjdeal").disabled=false;return}
  bjActions(true);
 }
-function bjHit(){if(BJ.over)return;const hand=BJ.split?BJ.hands[BJ.active]:BJ.p;hand.push(BJ.deck.pop());sfx("card");bjRender();if(val(hand)>21){BJ.reveal=true;BJ.over=true;bjRender();$("bjres").textContent="BUST";settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false)}else if(val(hand)===21)bjStand()}
+function bjHit(){if(BJ.over)return;const hand=BJ.split?BJ.hands[BJ.active]:BJ.p;hand.push(BJ.deck.pop());sfx("card");bjRender();if(val(hand)>21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);$("bjdeal").disabled=false}else if(val(hand)===21)bjStand()}
 function bjStand(){if(BJ.over)return;BJ.reveal=true;while(val(BJ.d)<17){BJ.d.push(BJ.deck.pop());sfx("card")}BJ.over=true;bjRender();bjResolve()}
-function bjDouble(){if(BJ.over||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.bet*=2;BJ.p.push(BJ.deck.pop());sfx("chip");if(val(BJ.p)>21){BJ.reveal=true;BJ.over=true;bjRender();$("bjres").textContent="DOUBLE BUST";settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);return}bjStand()}
-function bjResolve(){const pv=val(BJ.p),dv=val(BJ.d);let payout=0,msg;if(dv>21||pv>dv){msg="YOU WIN";payout=BJ.bet*2}else if(pv===dv){msg="PUSH";payout=BJ.bet}else msg="DEALER WINS";$("bjres").textContent=`${msg}　YOU ${pv} / DEALER ${dv}`;settle(BJ.bet,payout,"BLACKJACK");sfx(payout>BJ.bet?"win":payout===BJ.bet?"click":"lose");bjActions(false);$("bjdeal").disabled=false}
+function bjDouble(){if(BJ.over||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.bet*=2;BJ.p.push(BJ.deck.pop());sfx("chip");if(val(BJ.p)>21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);$("bjdeal").disabled=false;return}bjStand()}
+function bjResolve(){const pv=val(BJ.p),dv=val(BJ.d);let payout=0;if(dv>21||pv>dv)payout=BJ.bet*2;else if(pv===dv)payout=BJ.bet;settle(BJ.bet,payout,"BLACKJACK");sfx(payout>BJ.bet?"win":payout===BJ.bet?"click":"lose");bjActions(false);$("bjdeal").disabled=false}
 let H={};
 function pokerActionSound(action){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const x=new C(),o=x.createOscillator(),g=x.createGain();o.type=action==="CHECK"?"triangle":"square";o.frequency.value=action==="CHECK"?165:930;g.gain.value=.03;o.connect(g);g.connect(x.destination);o.start();o.stop(x.currentTime+(action==="CHECK"?.11:.07));if(["BET","RAISE","CALL","ALL IN"].includes(action))sfx("chip")}catch(e){}}
 function pokerTurnSound(){try{sfx("click")}catch(e){}}
