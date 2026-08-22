@@ -1982,3 +1982,64 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     font-size:6px!important;
   }
 }
+
+/* 4.7.77 — RESULT DISPLAY POSITION
+   Remove EUROPEAN WHEEL text. Put the current result directly under
+   the former title line, left/centered in the wheel card, at a readable size. */
+#modal .roulette-wheel-title-label{
+  display:none!important;
+}
+#modal .roulette-wheel-title{
+  height:34px!important;
+  min-height:34px!important;
+  max-height:34px!important;
+  padding:0!important;
+}
+#modal .roulette-wheel-title > span:first-child{
+  display:none!important;
+}
+#modal .roulette-wheel-title .roulette-readout,
+#modal .roulette-readout{
+  position:absolute!important;
+  left:10px!important;
+  top:18px!important;
+  z-index:70!important;
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  min-height:28px!important;
+  margin:0!important;
+  padding:0!important;
+}
+#modal .roulette-readout span{
+  font-size:20px!important;
+  line-height:1!important;
+  font-weight:900!important;
+}
+#modal .roulette-readout small{
+  font-size:9px!important;
+  line-height:1!important;
+  letter-spacing:1.4px!important;
+}
+#modal .roulette-history-box{
+  top:0!important;
+}
+@media(max-width:520px){
+  #modal .roulette-wheel-title{
+    height:34px!important;
+    min-height:34px!important;
+    max-height:34px!important;
+  }
+  #modal .roulette-wheel-title .roulette-readout,
+  #modal .roulette-readout{
+    left:8px!important;
+    top:18px!important;
+  }
+  #modal .roulette-readout span{
+    font-size:18px!important;
+  }
+  #modal .roulette-readout small{
+    font-size:8px!important;
+  }
+}
