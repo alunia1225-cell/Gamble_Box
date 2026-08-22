@@ -83,7 +83,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.63"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.65"});
 });
 
 const KEY="gb3_save";
@@ -318,8 +318,8 @@ roulette(){
  window.ROULETTE_BET=null;
  const gridCols=[[3,6,9,12,15,18,21,24,27,30,33,36],[2,5,8,11,14,17,20,23,26,29,32,35],[1,4,7,10,13,16,19,22,25,28,31,34]];
  const cells=gridCols.flatMap(col=>col.map(n=>`<button type="button" class="roulette-cell ${red.includes(n)?'red':'black'}" onclick="rouletteNumberBet(${n})" aria-label="Bet ${n}"><span>${n}</span></button>`)).join('');
- const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" style="--i:${i};--a:${(i+0.5)*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"></button>`).join('');
- const wheelLabels=nums.map((n,i)=>`<span class="roulette-wheel-label ${cols[i]}" style="--i:${i};--a:${(i+0.5)*360/37}deg">${n}</span>`).join('');
+ const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" data-number="${n}" style="--i:${i};--a:${(i+0.5)*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"></button>`).join('');
+ const wheelLabels=nums.map((n,i)=>`<span class="roulette-wheel-label ${cols[i]}" data-number="${n}" style="--i:${i};--a:${(i+0.5)*360/37}deg">${n}</span>`).join('');
  $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
   <section class="roulette-wheel-card">
    <div class="roulette-wheel-title"><span>EUROPEAN WHEEL</span><b>ONE ZERO</b></div>
@@ -843,16 +843,53 @@ function rouletteTableBet(type){
  rouletteSelectBet({type:m[1],value:m[1],label:m[0],payout:m[2]});
 }
 function rouletteSelectBet(bet){
- window.ROULETTE_BET=bet;
- document.querySelectorAll('.real-pocket,.roulette-cell,.roulette-zero-cell,.roulette-outside button,.roulette-dozens button').forEach(e=>e.classList.remove('bet-selected'));
- let matches=[];
- if(bet.type==='number') matches=[...document.querySelectorAll(`.real-pocket[aria-label="Bet ${bet.value}"],.roulette-cell[aria-label="Bet ${bet.value}"]`)];
- else if(bet.type==='green') matches=[...document.querySelectorAll('.real-pocket.green,.roulette-zero-cell')];
- else matches=[...document.querySelectorAll(`[onclick="rouletteTableBet('${bet.type}')"]`)];
- matches.forEach(e=>e.classList.add('bet-selected'));
- const chipTarget=bet.type==='number'?document.querySelector(`.real-pocket[aria-label="Bet ${bet.value}"]`):null;
- document.querySelectorAll('.roulette-chip').forEach(e=>e.remove());
- if(chipTarget){const chip=document.createElement('span');chip.className='roulette-chip';chip.textContent='●';chipTarget.appendChild(chip)}
+ window.ROULETTE_BET={...bet}; // keep the selected wager for repeat SPINs
+ const all=document.querySelectorAll('.real-pocket,.roulette-wheel-label,.roulette-cell,.roulette-zero-cell,.roulette-outside button,.roulette-dozens button');
+ all.forEach(e=>e.classList.remove('bet-selected','bet-group-selected'));
+
+ const nums=[...document.querySelectorAll('.roulette-cell')];
+ const isRed=n=>[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n);
+ const matchesNumber=n=>{
+   if(bet.type==='number') return n===Number(bet.value);
+   if(bet.type==='red') return isRed(n);
+   if(bet.type==='black') return n>0&&!isRed(n);
+   if(bet.type==='green') return n===0;
+   if(bet.type==='even') return n!==0&&n%2===0;
+   if(bet.type==='odd') return n%2===1;
+   if(bet.type==='low') return n>=1&&n<=18;
+   if(bet.type==='high') return n>=19&&n<=36;
+   if(bet.type==='dozen1') return n>=1&&n<=12;
+   if(bet.type==='dozen2') return n>=13&&n<=24;
+   if(bet.type==='dozen3') return n>=25&&n<=36;
+   return false;
+ };
+
+ // Highlight every covered number in the numbered betting table.
+ nums.forEach(el=>{
+   const n=Number(el.getAttribute('aria-label')?.replace('Bet ',''));
+   if(Number.isFinite(n)&&matchesNumber(n))el.classList.add('bet-selected');
+ });
+
+ // Highlight the corresponding pockets/labels on the wheel too.
+ document.querySelectorAll('.real-pocket[data-number],.roulette-wheel-label[data-number]').forEach(el=>{
+   const n=Number(el.dataset.number);
+   if(Number.isFinite(n)&&matchesNumber(n))el.classList.add('bet-group-selected');
+ });
+
+ // Highlight the category button itself.
+ const outsideSelector=`[onclick="rouletteTableBet('${bet.type}')"]`;
+ if(bet.type==='number'){
+   document.querySelectorAll(`[aria-label="Bet ${bet.value}"]`).forEach(e=>e.classList.add('bet-selected'));
+ }else{
+   document.querySelectorAll(outsideSelector).forEach(e=>e.classList.add('bet-selected'));
+   if(bet.type==='green')document.querySelectorAll('.roulette-zero-cell').forEach(e=>e.classList.add('bet-selected'));
+ }
+if(bet.type==='number'){
+   const target=document.querySelector(`.real-pocket[aria-label="Bet ${bet.value}"]`);
+   if(target){
+}
+ }
+
  const label=$('rouletteBetLabel'),pay=$('rouletteSpinPayout'),nr=$('rouletteNumber'),cr=$('rouletteColor'),spin=$('rouletteNumberSpin');
  if(label)label.textContent=bet.type==='number'?`NUMBER ${bet.value}`:bet.label;
  if(pay)pay.textContent=`${bet.payout}× RETURN`;
@@ -860,14 +897,26 @@ function rouletteSelectBet(bet){
  if(cr)cr.textContent=bet.type==='number'?'STRAIGHT UP':bet.label;
  const amount=$('rouletteBetAmount');if(amount)amount.textContent=fmt(lastBet||100);
  if(spin)spin.disabled=false;
- const picker=$('rouletteBetPicker');if(picker)picker.classList.remove('hidden');
+
+ // Bet amount picker is only needed the first time; once the bet is confirmed,
+ // the same selection remains active and the player can press SPIN repeatedly.
+ const picker=$('rouletteBetPicker');
+ if(picker && picker.classList.contains('hidden')===false) {
+   // already open: keep it open until BET SET
+ } else if(picker && !window.ROULETTE_BET_CONFIRMED){
+   picker.classList.remove('hidden');
+ }
+ window.ROULETTE_BET_CONFIRMED=false;
  debugLog('ROULETTE','BET SELECTED',bet);sfx('click');
 }
+
 function rouletteConfirmBet(){
  const picker=$('rouletteBetPicker');
  const amount=$('rouletteBetAmount');
  if(amount)amount.textContent=fmt(lastBet||100);
  if(picker)picker.classList.add('hidden');
+ window.ROULETTE_BET_CONFIRMED=true;
+ const spin=$('rouletteNumberSpin');if(spin&&window.ROULETTE_BET)spin.disabled=false;
  debugLog('ROULETTE','BET AMOUNT CONFIRMED',{amount:lastBet||100,bet:window.ROULETTE_BET});
  sfx('click');
 }
@@ -962,6 +1011,7 @@ function rouletteSpin(choice){
    sfx(win?'win':'lose');
    if(win&&color==='green')puchun();
    GB_ROULETTE_BUSY=false;
+   const spinAgain=$('rouletteNumberSpin');if(spinAgain&&window.ROULETTE_BET)spinAgain.disabled=false;
   };
   requestAnimationFrame(tick);
  }catch(err){GB_ROULETTE_BUSY=false;debugLog('ERROR','ROULETTE SPIN FAILED',{error:String(err),stack:err&&err.stack})}
