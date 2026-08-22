@@ -213,14 +213,14 @@ function audioFile(name){
 }
 
 function sfx(name){if(!S.sound)return; const fileMap={click:"click.wav",chip:"chip.wav",card:"card.wav",win:"win.wav",lose:"lose.wav",spin:"spin.wav",dice:"dice.wav",roulette:"roulette.wav",crash:"crash.wav",jackpot:"jackpot.wav",flip:"flip.wav",deal:"card.wav"}; if(fileMap[name]) audioFile(fileMap[name]);
- const sets={click:[[180,.05]],chip:[[450,.05,"square"]],card:[[850,.045,"triangle"]],win:[[523,.08],[659,.08],[784,.16]],lose:[[180,.15],[120,.18]],spin:[[180,.05],[220,.05],[280,.05]],dice:[[220,.05],[330,.05],[180,.07]],roulette:[[260,.04],[320,.04],[390,.04],[460,.05]],crash:[[180,.15,"sawtooth"],[80,.35,"sawtooth"]],jackpot:[[392,.1],[523,.1],[659,.1],[1046,.3]],flip:[[600,.08],[400,.08]],deal:[[700,.05],[900,.05]]};
+ const sets={click:[[180,.05]],chip:[[450,.05,"square"]],card:[[850,.045,"triangle"]],win:[[523,.08],[659,.08],[784,.16]],lose:[[180,.15],[120,.18]],spin:[[180,.05],[220,.05],[280,.05]],dice:[[220,.05],[330,.05],[180,.07]],roulette:[[260,.04],[320,.04],[390,.04],[460,.05]],crash:[[180,.15,"sawtooth"],[80,.35,"sawtooth"]],jackpot:[[392,.1],[523,.1],[659,.1],[1046,.3]],draw:[[392,.12],[392,.12],[330,.18]],flip:[[600,.08],[400,.08]],deal:[[700,.05],[900,.05]]};
  (sets[name]||sets.click).forEach((x,i)=>tone(x[0],x[1],x[2]||"sine",.035,i*.06));
 }
 function wager(v){v=Number(v);if(!Number.isFinite(v)||v<1||v>S.coins)return 0;lastBet=v;S.coins-=v;S.wagered+=v;lastBet=v;sfx("chip");return v}
 function showOutcome(kind,game,amount,multiplier,net){
  const root=document.getElementById("modalContent");if(!root)return;
  const old=document.getElementById("gbOutcome");if(old)old.remove();
- const el=document.createElement("div");el.id="gbOutcome";el.className=`gb-outcome ${kind==="BIG WIN"?"big":kind.toLowerCase().replace(/\s+/g,"-")}`;
+ const el=document.createElement("div");el.id="gbOutcome";el.className=`gb-outcome ${kind==="BIG WIN"?"big":kind==="DRAW"?"draw":kind.toLowerCase().replace(/\s+/g,"-")}`;
  const gross=Number(amount)||0, m=Number(multiplier)||0, n=Number(net)||0;
  const grossText=gross>0?`+${fmt(gross)} COIN RETURN`:`${fmt(Math.abs(gross))} COIN`;
  const multText=m>0?`×${m.toFixed(2).replace(/\.00$/,"")} PAYOUT`:"";
@@ -229,6 +229,16 @@ function showOutcome(kind,game,amount,multiplier,net){
  root.appendChild(el);
  requestAnimationFrame(()=>el.classList.add("show"));
  setTimeout(()=>{el.classList.remove("show");setTimeout(()=>el.remove(),300)},1250);
+}
+function settleDraw(b,g){
+ S.coins+=b;
+ S.profit+=0;
+ S.history.unshift({g,net:0,t:new Date().toLocaleTimeString()});
+ S.history=S.history.slice(0,20);
+ save();
+ showOutcome("DRAW",g,b,1,0);
+ sfx("draw");
+ return 0;
 }
 function settle(b,p,g){
  let net=p-b;S.coins+=p;S.profit+=net;
@@ -568,7 +578,18 @@ function bjDeal(){
 function bjHit(){if(BJ.over)return;const hand=BJ.split?BJ.hands[BJ.active]:BJ.p;hand.push(BJ.deck.pop());sfx("card");bjRender();if(val(hand)>21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);$("bjdeal").disabled=false}else if(val(hand)===21)bjStand()}
 function bjStand(){if(BJ.over)return;BJ.reveal=true;while(val(BJ.d)<17){BJ.d.push(BJ.deck.pop());sfx("card")}BJ.over=true;bjRender();bjResolve()}
 function bjDouble(){if(BJ.over||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.bet*=2;BJ.p.push(BJ.deck.pop());sfx("chip");if(val(BJ.p)>21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);$("bjdeal").disabled=false;return}bjStand()}
-function bjResolve(){const pv=val(BJ.p),dv=val(BJ.d);let payout=0;if(dv>21||pv>dv)payout=BJ.bet*2;else if(pv===dv)payout=BJ.bet;settle(BJ.bet,payout,"BLACKJACK");sfx(payout>BJ.bet?"win":payout===BJ.bet?"click":"lose");bjActions(false);$("bjdeal").disabled=false}
+function bjResolve(){
+ const pv=val(BJ.p),dv=val(BJ.d);
+ if(pv===dv){
+   settleDraw(BJ.bet,"BLACKJACK");
+ }else{
+   let payout=0;
+   if(dv>21||pv>dv)payout=BJ.bet*2;
+   settle(BJ.bet,payout,"BLACKJACK");
+   sfx(payout>BJ.bet?"win":"lose");
+ }
+ bjActions(false);$("bjdeal").disabled=false;
+}
 let H={};
 function pokerActionSound(action){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const x=new C(),o=x.createOscillator(),g=x.createGain();o.type=action==="CHECK"?"triangle":"square";o.frequency.value=action==="CHECK"?165:930;g.gain.value=.03;o.connect(g);g.connect(x.destination);o.start();o.stop(x.currentTime+(action==="CHECK"?.11:.07));if(["BET","RAISE","CALL","ALL IN"].includes(action))sfx("chip")}catch(e){}}
 function pokerTurnSound(){try{sfx("click")}catch(e){}}
@@ -832,10 +853,22 @@ function heShowdown(){
  clearTimeout(H.cpuTimer);H.cpuTimer=null;
  debugLog("POKER","SHOWDOWN",{pot:H.pot});H.over=true;cancelAnimationFrame(H.timerId);H.street=4;H.communityRevealed=H.board.map(()=>true);H.heroRevealed=[true,true];
  const live=H.players.filter(p=>!p.folded),ranked=live.map(p=>({p,r:best5([...p.cards,...H.board])})).sort((a,b)=>b.r.score-a.r.score),best=ranked[0].r.score,winners=ranked.filter(x=>x.r.score===best),share=Math.floor(H.pot/winners.length);
- winners.forEach(x=>x.p.stack+=share);heRender();heHero();heFinishOverlay(winners.some(x=>x.p===H.players[H.hero])?"YOU WIN":"SHOWDOWN");
+ winners.forEach(x=>x.p.stack+=share);
+ heRender();heHero();
+ const heroWin=winners.some(x=>x.p===H.players[H.hero]);
+ if(heroWin&&winners.length>1){
+   heFinishOverlay("DRAW");
+ }else{
+   heFinishOverlay(heroWin?"YOU WIN":"SHOWDOWN");
+ }
 }
 function heFinish(text){clearTimeout(H.cpuTimer);H.cpuTimer=null;H.over=true;cancelAnimationFrame(H.timerId);clearTimeout(H.advanceTimer);heRender();heHero();heFinishOverlay(text)}
-function heFinishOverlay(text){$("heStatus").textContent=text;heCut(text);$("heNext").classList.remove("hidden")}
+function heFinishOverlay(text){
+ $("heStatus").textContent=text;
+ heCut(text);
+ if(text==="DRAW")sfx("draw");
+ $("heNext").classList.remove("hidden")
+}
 function heJoinNext(){H.button=(H.button+1)%HE_N;$("heNext").classList.add("hidden");$("heStatus").textContent="";heStart()}
 function heCut(t){const e=$("heCut");if(!e)return;e.textContent=t;e.classList.remove("hidden");void e.offsetWidth;e.classList.add("show");setTimeout(()=>e.classList.add("hidden"),900)}
 function best5(cards){const out=[];function r(st,a){if(a.length===5){out.push(a.slice());return}for(let i=st;i<cards.length;i++){a.push(cards[i]);r(i+1,a);a.pop()}}r(0,[]);let b=null;for(const x of out){const q=handRank(x);if(!b||q.score>b.score)b=q}return b}

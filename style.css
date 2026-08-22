@@ -2040,3 +2040,158 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #modal .roulette-readout span{font-size:18px!important;}
   #modal .roulette-readout small{font-size:8px!important;}
 }
+
+/* Blackjack enhancement — black/gold premium table treatment */
+#modal .bj-felt{
+  position:relative!important;
+  overflow:hidden!important;
+  padding:24px 14px 18px!important;
+  border:1px solid #6e5a2c!important;
+  border-radius:12px!important;
+  background:
+    radial-gradient(circle at 50% 10%,rgba(205,169,76,.11),transparent 36%),
+    radial-gradient(circle at 50% 90%,rgba(7,55,36,.28),transparent 42%),
+    linear-gradient(180deg,#063b27 0%,#032f20 100%)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(234,210,137,.10),
+    inset 0 -28px 70px rgba(0,0,0,.24),
+    0 12px 34px rgba(0,0,0,.45)!important;
+}
+#modal .bj-felt:before{
+  content:"BLACKJACK • TABLE 01";
+  position:absolute!important;
+  left:12px!important;
+  top:10px!important;
+  color:#b7a16a!important;
+  font:800 6px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.6px!important;
+}
+#modal .bj-felt:after{
+  content:"♠  ♥  ♦  ♣";
+  position:absolute!important;
+  right:12px!important;
+  top:8px!important;
+  color:#d6bb6c!important;
+  font:700 8px/1 serif!important;
+  letter-spacing:3px!important;
+  opacity:.6!important;
+}
+#modal .bj-felt .street{
+  margin-top:8px!important;
+  margin-bottom:10px!important;
+  color:#ded3b1!important;
+  font-size:8px!important;
+  letter-spacing:3.5px!important;
+}
+#modal .bj-zone{
+  position:relative!important;
+  margin:10px 0 18px!important;
+  padding:10px 8px 14px!important;
+  border:1px solid rgba(216,193,117,.18)!important;
+  border-radius:9px!important;
+  background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.03))!important;
+}
+#modal .bj-zone:before{
+  content:"";
+  position:absolute!important;
+  left:16px!important;
+  right:16px!important;
+  top:0!important;
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,#d7ba66,transparent)!important;
+  opacity:.55!important;
+}
+#modal .bj-label{
+  margin:0 0 10px!important;
+  font-size:8px!important;
+  letter-spacing:2.8px!important;
+  color:#aeb5b2!important;
+}
+#modal .bj-label span{
+  color:#e0c36a!important;
+  margin-left:8px!important;
+  font-size:18px!important;
+  text-shadow:0 0 10px rgba(224,195,106,.12)!important;
+}
+#modal .bj-felt .pot{
+  position:relative!important;
+  display:inline-block!important;
+  margin:2px 0 8px!important;
+  padding:5px 12px!important;
+  border:1px solid rgba(221,192,105,.35)!important;
+  border-radius:999px!important;
+  background:rgba(5,9,8,.38)!important;
+  color:#b9c1be!important;
+  font-size:9px!important;
+  letter-spacing:2px!important;
+}
+#modal .bj-felt .pot span{
+  color:#e6c96f!important;
+  font-size:15px!important;
+}
+#modal .bj-felt .holdem-row{
+  min-height:92px!important;
+  align-items:center!important;
+}
+#modal .bj-felt .card{
+  width:62px!important;
+  height:88px!important;
+  border:1px solid #ded9c8!important;
+  border-radius:7px!important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.42),
+    inset 0 0 0 1px rgba(0,0,0,.05)!important;
+  font-size:24px!important;
+}
+#modal .bj-felt .bj-actions{
+  position:relative!important;
+  margin-top:12px!important;
+  padding-top:12px!important;
+  gap:8px!important;
+}
+#modal .bj-felt .bj-actions:before{
+  content:"TABLE ACTIONS";
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:0!important;
+  transform:translateY(-1px)!important;
+  color:#7f887f!important;
+  text-align:center!important;
+  font:700 5px/1 Orbitron,sans-serif!important;
+  letter-spacing:2px!important;
+}
+#modal .bj-felt .bj-actions button{
+  min-width:92px!important;
+  min-height:46px!important;
+  border-color:#6d5930!important;
+  border-radius:6px!important;
+  background:linear-gradient(180deg,#23231f 0%,#0d0e0e 100%)!important;
+  color:#e1c56e!important;
+  box-shadow:
+    0 5px 14px rgba(0,0,0,.34),
+    inset 0 1px rgba(255,255,255,.05)!important;
+}
+#modal .bj-felt .bj-actions button:hover:not(:disabled){
+  border-color:#d6b965!important;
+  color:#f4dc8d!important;
+  box-shadow:
+    0 0 18px rgba(214,185,101,.14),
+    inset 0 1px rgba(255,255,255,.07)!important;
+}
+#modal .bj-felt .bj-actions button:disabled{
+  color:#68716d!important;
+  border-color:#3c443f!important;
+  background:linear-gradient(180deg,#101614 0%,#0a0d0c 100%)!important;
+}
+#modal .bj-felt .bj-actions button:first-child{
+  border-color:#b28a3c!important;
+  box-shadow:0 0 16px rgba(224,190,90,.12),inset 0 1px rgba(255,255,255,.06)!important;
+}
+#modal .gb-outcome.draw .gb-outcome-inner{
+  border-color:#6f7d74!important;
+  box-shadow:0 0 55px rgba(187,205,193,.18)!important;
+}
+#modal .gb-outcome.draw strong{
+  color:#d6d8d3!important;
+}
