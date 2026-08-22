@@ -284,7 +284,7 @@
 .real-roulette{max-width:700px;margin:auto;text-align:center}.real-wheel-wrap{height:320px;position:relative;display:grid;place-items:center}
 .real-wheel{width:276px;height:276px;position:relative;border-radius:50%;border:12px solid #c9aa58;background:radial-gradient(circle,#b99543 0 10%,#17191b 10.5% 17%,transparent 17.5%),repeating-conic-gradient(#9c2732 0 9.729deg,#16181a 9.729deg 19.458deg);box-shadow:0 12px 40px #000,inset 0 0 0 7px #211c11;transform-origin:center}
 .real-pocket{position:absolute;left:50%;top:50%;width:28px;height:128px;margin-left:-14px;margin-top:-128px;transform-origin:14px 128px;transform:rotate(calc((var(--i) + 0.5)*9.7297297297deg));display:flex;justify-content:center;align-items:flex-start;padding-top:12px;box-sizing:border-box;z-index:2}
-.real-pocket span{font:800 8px/1 Orbitron;color:#f7e9bc;transform:rotate(calc((var(--i) + 0.5)*-9.7297297297deg))}.real-pocket.green span{color:#70f09a}
+.real-pocket span{font:800 8px/1 Orbitron;color:#f7e9bc;transform:rotate(calc((var(--i) + 0.5)*-9.7297297297deg)) translateX(0)}.real-pocket.green span{color:#70f09a}
 .real-pointer{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:20;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:25px solid #f5f5f2;filter:drop-shadow(0 2px 3px #000)}
 .real-hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:linear-gradient(#d8b966,#a57b27);border:5px solid #f1d989;display:grid;place-items:center;color:#17130b;font:900 12px Orbitron;z-index:8}
 .real-ball{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;transform-origin:0 101px;z-index:10}
@@ -1581,3 +1581,24 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   background:#58d89c!important;box-shadow:0 0 9px #58d89c!important;
 }
 .profile-system-btn b{font:900 9px Orbitron,sans-serif!important;color:#d9bd63!important}
+
+/* 4.7.62 — number glyph alignment: exact radial center of each pocket */
+.real-pocket{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  padding-top:10px!important;
+  box-sizing:border-box!important;
+}
+.real-pocket > span{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  line-height:1!important;
+  transform:rotate(calc((var(--i) + 0.5)*-9.7297297297deg))!important;
+  transform-origin:50% 50%!important;
+  position:relative!important;
+  left:0!important;
+  top:0!important;
+  margin:0!important;
+}
