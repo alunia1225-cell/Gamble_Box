@@ -21,28 +21,69 @@ window.__GB_DEBUG_LINES=window.__GB_DEBUG_LINES||[];
 window.__GB_DEBUG_COUNT=window.__GB_DEBUG_COUNT||0;
 function debugLog(level,msg,data){
   try{
-    const time=new Date().toLocaleTimeString();
-    const extra=data===undefined?"":(" "+JSON.stringify(data));
+    const now=new Date();
+    const time=now.toLocaleTimeString();
+    let extra="";
+    try{extra=data===undefined?"":" "+JSON.stringify(data)}catch(e){extra=" {data_serialization_error:"+String(e)+"}";}
     const line=`[${time}] [${level}] ${msg}${extra}`;
+    if(!Array.isArray(window.__GB_DEBUG_LINES))window.__GB_DEBUG_LINES=[];
     window.__GB_DEBUG_LINES.push(line);
-    if(window.__GB_DEBUG_LINES.length>500)window.__GB_DEBUG_LINES.shift();
-    window.__GB_DEBUG_COUNT++;
-    const body=document.getElementById("debugBody");if(body)body.textContent=window.__GB_DEBUG_LINES.join("\n");
-    const count=document.getElementById("debugCount");if(count)count.textContent=window.__GB_DEBUG_COUNT;
-    const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT;
-    const err=document.getElementById("dbgErrors");if(err&&level==="ERROR")err.textContent=Number(err.textContent||0)+1;
-    console.log("[GAMBLE BOX]",line);
-  }catch(e){console.error(e)}
+    if(window.__GB_DEBUG_LINES.length>2000)window.__GB_DEBUG_LINES.splice(0,window.__GB_DEBUG_LINES.length-2000);
+    window.__GB_DEBUG_COUNT=window.__GB_DEBUG_LINES.length;
+    try{localStorage.setItem("GB_DEBUG_LOG",window.__GB_DEBUG_LINES.join("\n"));}catch(e){}
+    try{
+      const body=document.getElementById("debugBody");if(body)body.textContent=window.__GB_DEBUG_LINES.join("\n");
+      const count=document.getElementById("debugCount");if(count)count.textContent=window.__GB_DEBUG_COUNT;
+      const ev=document.getElementById("dbgEvents");if(ev)ev.textContent=window.__GB_DEBUG_COUNT; const lc=document.getElementById("debugCountLobby");if(lc)lc.textContent=window.__GB_DEBUG_COUNT;
+      const err=document.getElementById("dbgErrors");if(err&&level==="ERROR")err.textContent=Number(err.textContent||0)+1;
+    }catch(uiErr){try{console.error("[GAMBLE BOX][DEBUG UI ERROR]",uiErr)}catch(e){}}
+    try{console.log("[GAMBLE BOX]",line)}catch(e){}
+  }catch(e){try{console.error("[GAMBLE BOX][LOGGER FAILURE]",e)}catch(x){}}
 }
+
+/* 4.7.37 PERSISTENT DIAGNOSTICS — capture failures before game code can swallow them */
+window.addEventListener("error",function(ev){
+  debugLog("ERROR","UNCAUGHT ERROR",{
+    message:ev.message||"unknown",
+    source:ev.filename||"",
+    line:ev.lineno||0,
+    col:ev.colno||0,
+    stack:ev.error&&ev.error.stack?ev.error.stack:""
+  });
+});
+window.addEventListener("unhandledrejection",function(ev){
+  const reason=ev.reason;
+  debugLog("ERROR","UNHANDLED PROMISE REJECTION",{
+    message:reason&&reason.message?reason.message:String(reason),
+    stack:reason&&reason.stack?reason.stack:""
+  });
+});
+window.addEventListener("beforeunload",function(){
+  try{localStorage.setItem("GB_DEBUG_LOG",window.__GB_DEBUG_LINES.join("\n"));}catch(e){}
+});
+try{
+  const old=localStorage.getItem("GB_DEBUG_LOG");
+  if(old)window.__GB_DEBUG_LINES=old.split("\n").filter(Boolean);
+}catch(e){}
+
 function toggleDebug(){const p=document.getElementById("debugPanel");if(p)p.classList.toggle("hidden")}
-function clearDebug(){window.__GB_DEBUG_LINES=[];window.__GB_DEBUG_COUNT=0;const b=document.getElementById("debugBody");if(b)b.textContent="";const n=document.getElementById("debugCount");if(n)n.textContent="0"}
+function clearDebug(){
+  window.__GB_DEBUG_LINES=[];
+  window.__GB_DEBUG_COUNT=0;
+  try{localStorage.removeItem("GB_DEBUG_LOG")}catch(e){}
+  const b=document.getElementById("debugBody");if(b)b.textContent="";
+  const n=document.getElementById("debugCount");if(n)n.textContent="0";
+  const e=document.getElementById("dbgErrors");if(e)e.textContent="0";
+  const g=document.getElementById("dbgGames");if(g)g.textContent="0";
+  const ev=document.getElementById("dbgEvents");if(ev)ev.textContent="0";
+}
 async function copyDebug(){const text=(window.__GB_DEBUG_LINES||[]).join("\n")||"NO DEBUG LOGS";try{await navigator.clipboard.writeText(text);debugLog("SYSTEM","DEBUG COPIED")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();}}
 window.addEventListener("error",e=>debugLog("ERROR","UNCAUGHT ERROR",{message:e.message,source:e.filename,line:e.lineno,col:e.colno,stack:e.error&&e.error.stack}));
 window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROMISE",{reason:String(e.reason),stack:e.reason&&e.reason.stack}));
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.19"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.72"});
 });
 
 const KEY="gb3_save";
@@ -50,6 +91,21 @@ const S=JSON.parse(localStorage.getItem(KEY)||'{"coins":9999,"wagered":0,"profit
 // BASE RESET: test balance remains 9999; dashboard statistics start clean.
 S.coins=9999; S.wagered=0; S.profit=0; S.wins=0; S.maxwin=0; S.history=[];
 const $=id=>document.getElementById(id); let audioCtx=null,lastBet=0,timer=null,multi=1;
+const ROULETTE_HISTORY_KEY="gb_roulette_history_v1";
+let rouletteHistory=[];
+try{rouletteHistory=JSON.parse(localStorage.getItem(ROULETTE_HISTORY_KEY)||"[]");if(!Array.isArray(rouletteHistory))rouletteHistory=[]}catch(e){rouletteHistory=[]}
+function saveRouletteHistory(){try{localStorage.setItem(ROULETTE_HISTORY_KEY,JSON.stringify(rouletteHistory.slice(0,20)))}catch(e){}}
+function rouletteHistoryColor(n){
+ const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+ return n===0?"green":red.includes(Number(n))?"red":"black";
+}
+function renderRouletteHistory(){
+ const el=$("rouletteHistory");if(!el)return;
+ const list=rouletteHistory.slice(0,10);
+ el.innerHTML=list.length
+   ? list.map((x,i)=>`<span class="roulette-history-number ${rouletteHistoryColor(x)}" title="${x}">${x}</span>`).join("")
+   : `<small>NO HISTORY</small>`;
+}
 
 
 function gbPlay(name){
@@ -98,26 +154,23 @@ function crashStart(){
  const b=wager($("bet")?.value);if(!b)return;
  const token=GB_GAME_TOKEN,path=$("crashLine"),area=$("crashArea"),dot=$("crashDot"),xEl=$("crashX"),res=$("res"),chart=$("crashChart");
  if(!path||!area||!dot||!xEl||!res||!chart){debugLog("ERROR","CRASH DOM MISSING",{path:!!path,area:!!area,dot:!!dot,x:!!xEl});return;}
- CRASH={running:true,x:1,bet:b,t:0,raf:null,token,crashPoint:crashPickPoint(),points:[]};
+ CRASH={running:true,x:1,bet:b,t:0,raf:null,token,crashPoint:crashPickPoint(),points:[],seed:Math.random()*1000};
  path.setAttribute("d","");area.setAttribute("d","");xEl.textContent="1.00x";res.textContent="FLYING…";chart.classList.remove("crash-hit","crash-cashed");sfx("click");
- // The visible curve is driven by time, not by the hidden crash point. This prevents the curve shape from revealing the outcome.
- const start=performance.now(),curveSpeed=.82;
+ const start=performance.now(),curveSpeed=.82,shape=Math.random()*.75+.72;
  const draw=now=>{
    if(!CRASH.running||!gbAlive(token)||CRASH.token!==token)return;
    const elapsed=(now-start)/1000;CRASH.t=elapsed;
-   const visibleX=1+Math.pow(Math.E,curveSpeed*elapsed)-1;
-   CRASH.x=Math.min(CRASH.crashPoint,visibleX);
-   xEl.textContent=CRASH.x.toFixed(2)+"x";
+   const visibleX=1+Math.exp(curveSpeed*elapsed)-1;
+   CRASH.x=Math.min(CRASH.crashPoint,visibleX);xEl.textContent=CRASH.x.toFixed(2)+"x";
    const W=620,H=300,L=18,R=12,T=18,B=22,uw=W-L-R,uh=H-T-B;
-   // Always originate exactly at the lower-left corner and rise monotonically.
    const px=L+uw*Math.min(.995,elapsed/8.5);
-   const ratio=Math.max(0,(CRASH.x-1)/Math.max(.01,CRASH.crashPoint-1));
-   const py=H-B-uh*Math.min(.96,Math.pow(ratio,.86));
+   const progress=1-Math.exp(-shape*elapsed/4.5);
+   const noise=Math.sin(CRASH.seed+elapsed*2.1)*5+Math.sin(CRASH.seed*.43+elapsed*3.7)*3;
+   const py=Math.max(T,H-B-uh*Math.min(.94,progress*.94)+noise);
    CRASH.points.push([px,py]);
    let d=`M ${CRASH.points[0][0].toFixed(1)} ${CRASH.points[0][1].toFixed(1)}`;
    for(let i=1;i<CRASH.points.length;i++)d+=` L ${CRASH.points[i][0].toFixed(1)} ${CRASH.points[i][1].toFixed(1)}`;
-   path.setAttribute("d",d);area.setAttribute("d",d+` L ${px.toFixed(1)} ${H-B} L ${L} ${H-B} Z`);
-   dot.setAttribute("cx",px);dot.setAttribute("cy",py);
+   path.setAttribute("d",d);area.setAttribute("d",d+` L ${px.toFixed(1)} ${H-B} L ${L} ${H-B} Z`);dot.setAttribute("cx",px);dot.setAttribute("cy",py);
    if(CRASH.x>=CRASH.crashPoint-.0001){
      CRASH.running=false;res.textContent=`CRASHED @ ${CRASH.x.toFixed(2)}x`;chart.classList.add("crash-hit");settle(b,0,"CRASH");sfx("crash");return;
    }
@@ -160,32 +213,55 @@ function audioFile(name){
 }
 
 function sfx(name){if(!S.sound)return; const fileMap={click:"click.wav",chip:"chip.wav",card:"card.wav",win:"win.wav",lose:"lose.wav",spin:"spin.wav",dice:"dice.wav",roulette:"roulette.wav",crash:"crash.wav",jackpot:"jackpot.wav",flip:"flip.wav",deal:"card.wav"}; if(fileMap[name]) audioFile(fileMap[name]);
- const sets={click:[[180,.05]],chip:[[450,.05,"square"]],card:[[850,.045,"triangle"]],win:[[523,.08],[659,.08],[784,.16]],lose:[[180,.15],[120,.18]],spin:[[180,.05],[220,.05],[280,.05]],dice:[[220,.05],[330,.05],[180,.07]],roulette:[[260,.04],[320,.04],[390,.04],[460,.05]],crash:[[180,.15,"sawtooth"],[80,.35,"sawtooth"]],jackpot:[[392,.1],[523,.1],[659,.1],[1046,.3]],flip:[[600,.08],[400,.08]],deal:[[700,.05],[900,.05]]};
+ const sets={click:[[180,.05]],chip:[[450,.05,"square"]],card:[[850,.045,"triangle"]],win:[[523,.08],[659,.08],[784,.16]],lose:[[180,.15],[120,.18]],spin:[[180,.05],[220,.05],[280,.05]],dice:[[220,.05],[330,.05],[180,.07]],roulette:[[260,.04],[320,.04],[390,.04],[460,.05]],crash:[[180,.15,"sawtooth"],[80,.35,"sawtooth"]],jackpot:[[392,.1],[523,.1],[659,.1],[1046,.3]],draw:[[392,.12],[392,.12],[330,.18]],flip:[[600,.08],[400,.08]],deal:[[700,.05],[900,.05]]};
  (sets[name]||sets.click).forEach((x,i)=>tone(x[0],x[1],x[2]||"sine",.035,i*.06));
 }
 function wager(v){v=Number(v);if(!Number.isFinite(v)||v<1||v>S.coins)return 0;lastBet=v;S.coins-=v;S.wagered+=v;lastBet=v;sfx("chip");return v}
-function showOutcome(kind,game,net){
+function showOutcome(kind,game,amount,multiplier,net){
  const root=document.getElementById("modalContent");if(!root)return;
  const old=document.getElementById("gbOutcome");if(old)old.remove();
- const el=document.createElement("div");el.id="gbOutcome";el.className=`gb-outcome ${kind==="BIG WIN"?"big":kind.toLowerCase().replace(/\s+/g,"-")}`;
- el.innerHTML=`<div class="gb-outcome-inner"><small>${game}</small><strong>${kind}</strong><b>${net>0?"+":""}${fmt(net)} COIN</b></div>`;
+ const el=document.createElement("div");el.id="gbOutcome";el.className=`gb-outcome ${kind==="BIG WIN"?"big":kind==="DRAW"?"draw":kind.toLowerCase().replace(/\s+/g,"-")}`;
+ const gross=Number(amount)||0, m=Number(multiplier)||0, n=Number(net)||0;
+ const grossText=gross>0?`+${fmt(gross)} COIN RETURN`:`${fmt(Math.abs(gross))} COIN`;
+ const multText=m>0?`×${m.toFixed(2).replace(/\.00$/,"")} PAYOUT`:"";
+ const netText=n!==0?`NET ${n>0?"+":""}${fmt(n)}`:"NET ±0";
+ el.innerHTML=`<div class="gb-outcome-inner"><small>${game}</small><strong>${kind}</strong><b>${grossText}</b><i class="gb-outcome-mult">${multText}</i><em class="gb-outcome-net">${netText}</em></div>`;
  root.appendChild(el);
  requestAnimationFrame(()=>el.classList.add("show"));
  setTimeout(()=>{el.classList.remove("show");setTimeout(()=>el.remove(),300)},1250);
 }
+function settleDraw(b,g){
+ S.coins+=b;
+ S.profit+=0;
+ S.history.unshift({g,net:0,t:new Date().toLocaleTimeString()});
+ S.history=S.history.slice(0,20);
+ save();
+ showOutcome("DRAW",g,b,1,0);
+ sfx("draw");
+ return 0;
+}
 function settle(b,p,g){
  let net=p-b;S.coins+=p;S.profit+=net;
- if(p>b){S.wins++;S.maxwin=Math.max(S.maxwin,net);showOutcome(p>=b*5?"BIG WIN":"WIN",g,net)}
- else if(p===0){showOutcome("LOSE",g,-b)}
+ if(p>b){
+   S.wins++;
+   S.maxwin=Math.max(S.maxwin,net);
+   const mult=b>0?p/b:0;
+   showOutcome(p>=b*5?"BIG WIN":"WIN",g,p,mult,net);
+ } else if(p===0){
+   showOutcome("LOSE",g,0,0,-b);
+ }
  S.history.unshift({g,net,t:new Date().toLocaleTimeString()});S.history=S.history.slice(0,20);save();return net;
 }
-function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join(""):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("")}
+function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);if($("welcomeCoins"))$("welcomeCoins").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join(""):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("")}
 
 let GB_GAME_TOKEN=0;
 function gbAlive(t){return t===GB_GAME_TOKEN&&window.GB_RUNTIME&&window.GB_RUNTIME.active}
 function openGame(g){
  debugLog("GAME","Launch requested",{game:g});
- GB_GAME_TOKEN++;window.GB_stopGameRuntime();window.GB_startGameRuntime(g);
+ GB_GAME_TOKEN++;
+ const lobby=document.getElementById("appLobby");
+ if(lobby)lobby.classList.add("hidden");
+ window.GB_stopGameRuntime();window.GB_startGameRuntime(g);
  const token=GB_GAME_TOKEN;
  const title={slot:"ULTIMATE SLOTS",dice:"HIGH DICE",blackjack:"BLACKJACK",holdem:"TEXAS HOLD'EM",roulette:"ROULETTE",highlow:"HIGH & LOW",chohan:"丁半",coin:"COIN FLIP",lottery:"LOTTERY",multiplier:"CRASH ×",daily:"DAILY VAULT",shop:"CHIP SHOP"}[g]||g.toUpperCase();
  $("modalContent").innerHTML=`<div class="game"><div class="jackpot">GAMBLE BOX / ${title}</div><h2>${title}</h2><div id="gameBody"></div></div>`;
@@ -193,15 +269,15 @@ function openGame(g){
  try{if(typeof games[g]!=="function")throw new Error("Unknown game: "+g);games[g]();debugLog("GAME","Launch success",{game:g,token})}
  catch(e){debugLog("ERROR","Game launch failed",{game:g,error:String(e),stack:e.stack});$("modalContent").innerHTML=`<div class="game"><h2>GAME ERROR</h2><pre class="debug-error">${String(e.stack||e)}</pre></div>`}
 }
-function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:GB_RUNTIME.game});window.GB_stopGameRuntime();$("modal").classList.add("hidden");sfx("click")}
-function betbox(min=100){
+function closeGame(){GB_GAME_TOKEN++;debugLog("RUNTIME","STOP",{game:GB_RUNTIME.game});window.GB_stopGameRuntime();$("modal").classList.add("hidden");const lobby=document.getElementById("appLobby");if(lobby)lobby.classList.remove("hidden");sfx("click")}
+function betbox(min=100,hideMax=false){
   const max=Math.max(min,S.coins||0);
   const step=max<=1000?10:max<=10000?100:500;
   const value=Math.min(max,Math.max(min,lastBet||min));
-  return `<div class="bet-control">
+  return `<div class="bet-control${hideMax?" roulette-bet-control":""}">
     <div class="bet-control-head"><span>BET AMOUNT</span><strong id="betValue">${fmt(value)}</strong><small>COIN</small></div>
     <input id="bet" class="bet-slider" type="range" min="${Math.min(min,max)}" max="${Math.max(min,max)}" step="${step}" value="${value}" oninput="updateBetSlider(this.value)">
-    <div class="bet-scale"><span>${fmt(Math.min(min,max))}</span><span>${fmt(max)}</span></div>
+    <div class="bet-scale"><span>${fmt(Math.min(min,max))}</span><span class="bet-max-label">${fmt(max)}</span></div>
   </div>`;
 }
 function updateBetSlider(v){
@@ -231,9 +307,33 @@ function buy(name,cost){
 }
 const games={
 slot(){
- $("gameBody").innerHTML=betbox()+`<div class="anim-game slot-game"><div class="anim-title">GOLDEN REEL</div><div class="slot-machine"><div class="slot-top">★ JACKPOT ★</div><div class="slot-body"><div class="reels" id="slotReels"><div class="reel-window"><div id="reel1" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell cherry" aria-label="CHERRY"><i></i><b></b></div></div></div><div class="reel-window"><div id="reel2" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell replay" aria-label="REPLAY"><i>↻</i><b>REPLAY</b></div><div class="slot-cell bell">BELL</div></div></div><div class="reel-window"><div id="reel3" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell lemon" aria-label="LEMON"><i></i><b></b></div></div></div><div class="payline horizontal"></div><div class="payline diagonal down"></div><div class="payline diagonal up"></div></div><div class="slot-lever-wrap"><button id="slotLever" class="slot-lever" onclick="spinSlot()"><span class="lever-knob"></span><span class="lever-shaft"></span></button><small>PULL</small></div></div><button id="slotSpinBtn" class="slot-spin" onclick="spinSlot()">PULL LEVER</button></div><div id="res" class="result">PLACE YOUR BET</div></div>`;
+ $("gameBody").innerHTML=betbox()+`<div class="anim-game slot-game">
+  <div class="anim-title">GOLDEN REEL</div>
+  <div class="slot-machine">
+   <div class="slot-top">★ JACKPOT ★</div>
+   <div class="slot-body">
+    <div class="reels" id="slotReels">
+     <div class="reel-window"><div id="reel1" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell cherry">●●</div></div></div>
+     <div class="reel-window"><div id="reel2" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell diamond">◆</div><div class="slot-cell bell">◉</div></div></div>
+     <div class="reel-window"><div id="reel3" class="reel"><div class="slot-cell seven">7</div><div class="slot-cell bar">BAR</div><div class="slot-cell lemon">●</div></div></div>
+     <div class="payline horizontal"></div><div class="payline diagonal down"></div><div class="payline diagonal up"></div>
+    </div>
+    <div class="slot-lever-wrap"><button id="slotLever" class="slot-lever" onclick="spinSlot()"><span class="lever-knob"></span><span class="lever-shaft"></span></button><small>PULL</small></div>
+   </div>
+   <button id="slotSpinBtn" class="slot-spin" onclick="spinSlot()">PULL LEVER</button>
+  </div>
+  <div class="slot-paytable">
+   <div class="slot-paytitle">PAYOUT TABLE</div>
+   <div class="slot-paygrid">
+    <div><b>7</b><span>×50</span></div><div><b>BAR</b><span>×12</span></div>
+    <div><b>◆</b><span>×8</span></div><div><b>◉</b><span>×5</span></div>
+    <div><b>●●</b><span>×5</span></div><div><b>●</b><span>×5</span></div>
+   </div>
+  </div>
+  <div id="res" class="result">PLACE YOUR BET</div>
+ </div>`;
 },
-dice(){$("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
+dice(){$("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×2</button><button onclick="dice('low')">LOW ×2</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
 blackjack(){
   document.getElementById("gameBody").innerHTML=betbox(100)+`
   <div class="felt bj-felt">
@@ -241,12 +341,51 @@ blackjack(){
     <div class="bj-zone"><div class="bj-label">DEALER <span id="bjDealerValue">0</span></div><div id="dealer" class="holdem-row"></div></div>
     <div class="pot">BET <span id="bjbet">0</span></div>
     <div class="bj-zone"><div class="bj-label">YOU <span id="bjPlayerValue">0</span></div><div id="player" class="holdem-row"></div></div>
-    <div class="actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button></div>
-    <div id="bjres" class="result"></div><div id="bjNext" class="bj-next hidden"><span>ROUND FINISHED</span><button onclick="bjJoinNext()">JOIN NEXT HAND</button></div>
+    <div class="actions bj-actions"><button id="bjdeal" onclick="bjDeal()">DEAL</button><button id="bjhit" onclick="bjHit()" disabled>HIT</button><button id="bjstand" onclick="bjStand()" disabled>STAND</button><button id="bjdouble" onclick="bjDouble()" disabled>DOUBLE</button></div>
   </div>`;
 },
 holdem(){holdemInit()},
-roulette(){$("gameBody").innerHTML=betbox()+`<div class="real-roulette"><div class="real-wheel-wrap"><div class="real-pointer"></div><div id="rouletteWheel" class="real-wheel"><div class="real-pocket green" style="--i:0"><span>0</span></div><div class="real-pocket red" style="--i:1"><span>32</span></div><div class="real-pocket black" style="--i:2"><span>15</span></div><div class="real-pocket red" style="--i:3"><span>19</span></div><div class="real-pocket black" style="--i:4"><span>4</span></div><div class="real-pocket red" style="--i:5"><span>21</span></div><div class="real-pocket black" style="--i:6"><span>2</span></div><div class="real-pocket red" style="--i:7"><span>25</span></div><div class="real-pocket black" style="--i:8"><span>17</span></div><div class="real-pocket red" style="--i:9"><span>34</span></div><div class="real-pocket black" style="--i:10"><span>6</span></div><div class="real-pocket red" style="--i:11"><span>27</span></div><div class="real-pocket black" style="--i:12"><span>13</span></div><div class="real-pocket red" style="--i:13"><span>36</span></div><div class="real-pocket black" style="--i:14"><span>11</span></div><div class="real-pocket red" style="--i:15"><span>30</span></div><div class="real-pocket black" style="--i:16"><span>8</span></div><div class="real-pocket red" style="--i:17"><span>23</span></div><div class="real-pocket black" style="--i:18"><span>10</span></div><div class="real-pocket red" style="--i:19"><span>5</span></div><div class="real-pocket black" style="--i:20"><span>24</span></div><div class="real-pocket red" style="--i:21"><span>16</span></div><div class="real-pocket black" style="--i:22"><span>33</span></div><div class="real-pocket red" style="--i:23"><span>1</span></div><div class="real-pocket black" style="--i:24"><span>20</span></div><div class="real-pocket red" style="--i:25"><span>14</span></div><div class="real-pocket black" style="--i:26"><span>31</span></div><div class="real-pocket red" style="--i:27"><span>9</span></div><div class="real-pocket black" style="--i:28"><span>22</span></div><div class="real-pocket red" style="--i:29"><span>18</span></div><div class="real-pocket black" style="--i:30"><span>29</span></div><div class="real-pocket red" style="--i:31"><span>7</span></div><div class="real-pocket black" style="--i:32"><span>28</span></div><div class="real-pocket red" style="--i:33"><span>12</span></div><div class="real-pocket black" style="--i:34"><span>35</span></div><div class="real-pocket red" style="--i:35"><span>3</span></div><div class="real-pocket black" style="--i:36"><span>26</span></div><div id="rouletteBall" class="real-ball"></div><div class="real-hub">GB</div></div></div><div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">WAITING</small></div><div class="choices"><button onclick="rouletteSpin('red')">🔴 RED ×2</button><button onclick="rouletteSpin('black')">⚫ BLACK ×2</button><button onclick="rouletteSpin('green')">🟢 ZERO ×14</button></div><div class="roulette-payouts"><div><b>RED</b><small>2× RETURN</small></div><div><b>BLACK</b><small>2× RETURN</small></div><div><b>ZERO</b><small>14× RETURN</small></div></div><div id="res" class="result">PLACE YOUR BET</div></div>`},highlow(){
+roulette(){
+ const nums=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+ const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+ const cols=nums.map(n=>n===0?'green':red.includes(n)?'red':'black');
+ window.ROULETTE_BET=null;
+ const gridCols=[[3,6,9,12,15,18,21,24,27,30,33,36],[2,5,8,11,14,17,20,23,26,29,32,35],[1,4,7,10,13,16,19,22,25,28,31,34]];
+ const cells=gridCols.flatMap(col=>col.map(n=>`<button type="button" class="roulette-cell ${red.includes(n)?'red':'black'}" onclick="rouletteNumberBet(${n})" aria-label="Bet ${n}"><span>${n}</span></button>`)).join('');
+ const wheel=nums.map((n,i)=>`<button type="button" class="real-pocket ${cols[i]}" data-index="${i}" data-number="${n}" style="--i:${i};--a:${(i+0.5)*360/37}deg" aria-label="Bet ${n}" onclick="rouletteNumberBet(${n})"></button>`).join('');
+ const wheelLabels=nums.map((n,i)=>`<span class="roulette-wheel-label ${cols[i]}" data-number="${n}" style="--i:${i};--a:${(i+0.5)*360/37}deg">${n}</span>`).join('');
+ $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
+  <section class="roulette-wheel-card">
+   <div class="roulette-wheel-title">
+    <span>EUROPEAN WHEEL</span>
+    <div class="roulette-history-box"><b>HISTORY</b><div id="rouletteHistory"></div></div>
+   </div>
+   <div class="real-wheel-wrap"><div id="rouletteWheel" class="real-wheel">${wheel}<div class="roulette-wheel-labels">${wheelLabels}</div><div class="real-hub">GB</div><div id="rouletteBall" class="real-ball"></div></div></div>
+   <div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">SELECT BET</small></div>
+  </section>
+  <section class="roulette-table-card">
+   <div class="roulette-table-head"><b>ROULETTE TABLE</b><span>SELECT A BET</span></div>
+   <div class="roulette-zero-row"><button type="button" class="roulette-zero-cell" onclick="rouletteTableBet('green')"><span>0</span><small>14×</small></button></div>
+   <div class="roulette-grid">${cells}</div>
+   <div class="roulette-outside">
+    <button onclick="rouletteTableBet('low')"><b>1–18</b><span>2×</span></button>
+    <button onclick="rouletteTableBet('even')"><b>EVEN</b><span>2×</span></button>
+    <button onclick="rouletteTableBet('red')" class="red"><b>RED</b><span>2×</span></button>
+    <button onclick="rouletteTableBet('black')" class="black"><b>BLACK</b><span>2×</span></button>
+    <button onclick="rouletteTableBet('odd')"><b>ODD</b><span>2×</span></button>
+    <button onclick="rouletteTableBet('high')"><b>19–36</b><span>2×</span></button>
+   </div>
+   <div class="roulette-dozens">
+    <button onclick="rouletteTableBet('dozen1')"><b>1st 12</b><span>3×</span></button>
+    <button onclick="rouletteTableBet('dozen2')"><b>2nd 12</b><span>3×</span></button>
+    <button onclick="rouletteTableBet('dozen3')"><b>3rd 12</b><span>3×</span></button>
+   </div>
+  </section>
+  <div class="roulette-action"><div><span id="rouletteBetLabel">NO BET</span><small>BET AMOUNT <span id="rouletteBetAmount">100</span></small></div><button id="rouletteNumberSpin" onclick="rouletteSpin(window.ROULETTE_BET)" disabled>SPIN <span id="rouletteSpinPayout">SELECT BET</span></button></div>
+  <div id="rouletteBetPicker" class="roulette-bet-picker hidden"><div class="roulette-bet-picker-card"><div class="roulette-picker-title">SET YOUR BET</div>${betbox(100,true)}<button type="button" class="roulette-picker-confirm" onclick="rouletteConfirmBet()">BET SET</button></div></div>
+ </div>`;
+ renderRouletteHistory();
+},highlow(){
  $("gameBody").innerHTML=betbox()+`<div class="hl-game">
    <div class="hl-head"><span>HIGH</span><b id="hlValue">—</b><span>LOW</span></div>
    <div class="hl-axis"><span>HIGH ZONE</span><span>LOW ZONE</span></div>
@@ -294,10 +433,10 @@ let SLOT_BUSY=false;
 const SLOT_SYMBOLS=[
  {id:"seven",html:'<span class="slot-cell seven">7</span>'},
  {id:"bar",html:'<span class="slot-cell bar">BAR</span>'},
- {id:"cherry",html:'<span class="slot-cell cherry" aria-label="CHERRY"><i></i><b></b></span>'},
- {id:"replay",html:'<span class="slot-cell replay" aria-label="REPLAY"><i>↻</i><b>REPLAY</b></span>'},
- {id:"bell",html:'<span class="slot-cell bell">BELL</span>'},
- {id:"lemon",html:'<span class="slot-cell lemon" aria-label="LEMON"><i></i><b></b></span>'}
+ {id:"cherry",html:'<span class="slot-cell cherry">●●</span>'},
+ {id:"diamond",html:'<span class="slot-cell diamond">◆</span>'},
+ {id:"bell",html:'<span class="slot-cell bell">◉</span>'},
+ {id:"lemon",html:'<span class="slot-cell lemon">●</span>'}
 ];
 function slotSetReel(el,rows){if(!el)return;el.innerHTML=rows.map(x=>SLOT_SYMBOLS.find(s=>s.id===x)?.html||SLOT_SYMBOLS[0].html).join("")}
 function slotPick(){return SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)].id}
@@ -354,7 +493,7 @@ function spinSlot(){
        paths.forEach((path,idx)=>{const ids=path.map((row,col)=>final[col][row]);if(ids[0]===ids[1]&&ids[1]===ids[2])lines.push(idx)});
        slotMarkLines(lines);
        let mult=0,hitName="";
-       for(const li of lines){const ids=paths[li];const id=final[0][ids[0]];const v=id==="seven"?50:id==="bar"?12:id==="replay"?8:5;if(v>mult){mult=v;hitName=id==="replay"?"REPLAY":id.toUpperCase()}}
+       for(const li of lines){const ids=paths[li];const id=final[0][ids[0]];const v=id==="seven"?50:id==="bar"?12:id==="diamond"?8:5;if(v>mult){mult=v;hitName=id.toUpperCase()}}
        const winLines=lines.length;
        if(winLines){mult*=winLines>1?1.5:1;mult=Math.floor(mult);}
        SLOT_BUSY=false;if(btn)btn.disabled=false;
@@ -373,40 +512,38 @@ function hl(choice){
  HL_BUSY=true;const token=GB_GAME_TOKEN;
  const line=$("hlLine"),area=$("hlArea"),dot=$("hlDot"),vEl=$("hlValue"),res=$("res"),chart=$("hlChart");
  if(!line||!area||!dot||!vEl||!res||!chart){HL_BUSY=false;return}
- // Outcome is locked on the initial tap, but the path is deliberately noisy and unpredictable.
- const finalHigh=Math.random()<.5,start=performance.now(),duration=6000,seed=Math.random()*1000;
- let points=[[12,214]],lastY=214,nextShock=0;
+ const finalHigh=Math.random()<.5,start=performance.now(),duration=10000,seed=Math.random()*1000;
+ let points=[[12,214]],lastY=214,nextShock=start+1600;
  res.textContent="LIVE…";vEl.textContent="1.00";chart.classList.remove("hl-high","hl-low","hl-wild");sfx("click");
  const tick=now=>{
    if(!gbAlive(token)){HL_BUSY=false;return}
    const p=Math.min(1,(now-start)/duration),x=12+596*p;
-   // Random walk + occasional direction changes. Only the final phase converges to the committed result.
-   const wave=Math.sin(seed+p*18)*8+Math.sin(seed*.37+p*43)*5;
-   const volatility=26*(1-p*.25);
-   let target=lastY+(Math.random()-.5)*volatility+wave*.15;
-   if(p>0.12 && p<0.88 && now>=nextShock){
-     nextShock=now+450+Math.random()*850;
-     if(Math.random()<.72)target += (Math.random()<.5?-1:1)*(28+Math.random()*65);
-     chart.classList.add("hl-wild");setTimeout(()=>chart.classList.remove("hl-wild"),180);
+   const wave=Math.sin(seed+p*10)*2.3+Math.sin(seed*.31+p*18)*1.5;
+   const volatility=9*(1-p*.20);
+   let y=lastY+(Math.random()-.5)*volatility+wave;
+   if(p>.18&&p<.86&&now>=nextShock){
+     nextShock=now+1400+Math.random()*1300;
+     if(Math.random()<.45)y+=(Math.random()<.5?-1:1)*(14+Math.random()*28);
    }
-   const finalStart=.80,blend=p>finalStart?Math.min(1,(p-finalStart)/(1-finalStart)):0;
+   const finalStart=.83,blend=p>finalStart?Math.min(1,(p-finalStart)/(1-finalStart)):0;
    const targetY=finalHigh?34:220;
-   let y=target*(1-blend)+targetY*blend;
-   y=Math.max(24,Math.min(224,y));
-   lastY=y;points.push([x,y]);dot.setAttribute("cx",x);dot.setAttribute("cy",y);
-   vEl.textContent=(finalHigh?(1.05+p*8.8):(8.8-p*8.3)).toFixed(2);
+   y=y*(1-blend)+targetY*blend;
+   y=Math.max(24,Math.min(224,y));lastY=y;
+   points.push([x,y]);dot.setAttribute("cx",x);dot.setAttribute("cy",y);
+   const liveVal=finalHigh?(1.05+p*8.8):(8.8-p*8.3);vEl.textContent=liveVal.toFixed(2);
    let d=`M ${points[0][0]} ${points[0][1]}`;for(let i=1;i<points.length;i++)d+=` L ${points[i][0].toFixed(1)} ${points[i][1].toFixed(1)}`;
    line.setAttribute("d",d);area.setAttribute("d",d+` L ${x.toFixed(1)} 125 L 12 125 Z`);
    if(p>=1){
      HL_BUSY=false;chart.classList.remove("hl-wild");chart.classList.add(finalHigh?"hl-high":"hl-low");
      const win=(choice==="high")===finalHigh;vEl.textContent=finalHigh?"9.80":"0.45";
-     res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");sfx(win?"win":"lose");return;
+     res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;
+     settle(b,win?Math.floor(b*2):0,"HIGH & LOW");sfx(win?"win":"lose");return;
    }
    requestAnimationFrame(tick);
  };
  requestAnimationFrame(tick);
 }
-function dice(c){let b=wager($("bet").value);if(!b)return;sfx("dice");let d=1+Math.floor(Math.random()*6),ok=c==="exact"?d===6:c==="high"?d>=4:d<=3;$("res").textContent=`🎲 ${d} / ${ok?"WIN":"LOSE"}`;settle(b,ok?Math.floor(b*(c==="exact"?5:1.8)):0,"HIGH DICE");sfx(ok?"win":"lose");window.GB_ACTION_BUSY=false}
+function dice(c){let b=wager($("bet").value);if(!b)return;sfx("dice");let d=1+Math.floor(Math.random()*6),ok=c==="exact"?d===6:c==="high"?d>=4:d<=3;$("res").textContent=`🎲 ${d} / ${ok?"WIN":"LOSE"}`;settle(b,ok?Math.floor(b*(c==="exact"?5:2)):0,"HIGH DICE");sfx(ok?"win":"lose");window.GB_ACTION_BUSY=false}
 function deck(){let suits=["♠","♥","♦","♣"],ranks=["2","3","4","5","6","7","8","9","10","J","Q","K","A"],d=[];for(let s of suits)for(let r of ranks)d.push({s,r});return d.sort(()=>Math.random()-.5)}
 function val(cards){let total=0,aces=0;cards.forEach(c=>{if(["J","Q","K"].includes(c.r))total+=10;else if(c.r==="A"){total+=11;aces++}else total+=+c.r});while(total>21&&aces--)total-=10;return total}
 let BJ={hands:[],active:0,deck:[],d:[],bet:0,reveal:false,over:false,totalBet:0,split:false,splitHands:[]};
@@ -429,20 +566,30 @@ function bjRender(){
  $("bjDealerValue").textContent=BJ.reveal?bjValueText(BJ.d):bjValueText([BJ.d[0]]);
  $("bjbet").textContent=fmt(BJ.bet);
 }
-function bjActions(on){["bjhit","bjstand","bjdouble"].forEach(id=>$(id).disabled=!on);const n=$("bjNext");if(n)n.classList.toggle("hidden",on)}
-function bjJoinNext(){const n=$("bjNext");if(n)n.classList.add("hidden");bjDeal()}
+function bjActions(on){["bjhit","bjstand","bjdouble"].forEach(id=>$(id).disabled=!on)}
 function bjDeal(){
  const b=wager($("bet").value);if(!b)return;
  BJ={deck:deck(),p:[],d:[],bet:b,reveal:false,over:false,split:false,hands:[],active:0,totalBet:b};
  BJ.p=[BJ.deck.pop(),BJ.deck.pop()];BJ.d=[BJ.deck.pop(),BJ.deck.pop()];
  $("bjdeal").disabled=true;bjRender();sfx("deal");
- if(val(BJ.p)===21){BJ.reveal=true;BJ.over=true;bjRender();$("bjres").textContent="BLACKJACK!";settle(BJ.bet,Math.floor(BJ.bet*2.5),"BLACKJACK");sfx("jackpot");puchun();bjActions(false);return}
+ if(val(BJ.p)===21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,Math.floor(BJ.bet*2.5),"BLACKJACK");sfx("jackpot");puchun();bjActions(false);$("bjdeal").disabled=false;return}
  bjActions(true);
 }
-function bjHit(){if(BJ.over)return;const hand=BJ.split?BJ.hands[BJ.active]:BJ.p;hand.push(BJ.deck.pop());sfx("card");bjRender();if(val(hand)>21){BJ.reveal=true;BJ.over=true;bjRender();$("bjres").textContent="BUST";settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false)}else if(val(hand)===21)bjStand()}
+function bjHit(){if(BJ.over)return;const hand=BJ.split?BJ.hands[BJ.active]:BJ.p;hand.push(BJ.deck.pop());sfx("card");bjRender();if(val(hand)>21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);$("bjdeal").disabled=false}else if(val(hand)===21)bjStand()}
 function bjStand(){if(BJ.over)return;BJ.reveal=true;while(val(BJ.d)<17){BJ.d.push(BJ.deck.pop());sfx("card")}BJ.over=true;bjRender();bjResolve()}
-function bjDouble(){if(BJ.over||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.bet*=2;BJ.p.push(BJ.deck.pop());sfx("chip");if(val(BJ.p)>21){BJ.reveal=true;BJ.over=true;bjRender();$("bjres").textContent="DOUBLE BUST";settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);return}bjStand()}
-function bjResolve(){const pv=val(BJ.p),dv=val(BJ.d);let payout=0,msg;if(dv>21||pv>dv){msg="YOU WIN";payout=BJ.bet*2}else if(pv===dv){msg="PUSH";payout=BJ.bet}else msg="DEALER WINS";$("bjres").textContent=`${msg}　YOU ${pv} / DEALER ${dv}`;settle(BJ.bet,payout,"BLACKJACK");sfx(payout>BJ.bet?"win":payout===BJ.bet?"click":"lose");bjActions(false);$("bjdeal").disabled=false}
+function bjDouble(){if(BJ.over||S.coins<BJ.bet)return;S.coins-=BJ.bet;S.wagered+=BJ.bet;BJ.bet*=2;BJ.p.push(BJ.deck.pop());sfx("chip");if(val(BJ.p)>21){BJ.reveal=true;BJ.over=true;bjRender();settle(BJ.bet,0,"BLACKJACK");sfx("lose");bjActions(false);$("bjdeal").disabled=false;return}bjStand()}
+function bjResolve(){
+ const pv=val(BJ.p),dv=val(BJ.d);
+ if(pv===dv){
+   settleDraw(BJ.bet,"BLACKJACK");
+ }else{
+   let payout=0;
+   if(dv>21||pv>dv)payout=BJ.bet*2;
+   settle(BJ.bet,payout,"BLACKJACK");
+   sfx(payout>BJ.bet?"win":"lose");
+ }
+ bjActions(false);$("bjdeal").disabled=false;
+}
 let H={};
 function pokerActionSound(action){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const x=new C(),o=x.createOscillator(),g=x.createGain();o.type=action==="CHECK"?"triangle":"square";o.frequency.value=action==="CHECK"?165:930;g.gain.value=.03;o.connect(g);g.connect(x.destination);o.start();o.stop(x.currentTime+(action==="CHECK"?.11:.07));if(["BET","RAISE","CALL","ALL IN"].includes(action))sfx("chip")}catch(e){}}
 function pokerTurnSound(){try{sfx("click")}catch(e){}}
@@ -453,7 +600,7 @@ function holdemInit(){
  players:holdemNames().map((name,i)=>({name,stack:9999,bet:0,total:0,folded:false,allin:false,cards:[],action:"",
    style:["TAG","LAG","TRICKSTER","CALLING"][i%4],bluff:0.06+(i%4)*0.045,confidence:.45,tilt:0,history:[]})),
  hero:0,button:Math.floor(Math.random()*HE_N),street:0,board:[],deck:deck(),pot:0,currentBet:0,turn:0,pending:new Set(),
- heroRevealed:[false,false],communityRevealed:[],over:false,timerId:null,advanceTimer:null,token:GB_GAME_TOKEN,raiseCount:0,lastRaiseSize:100,streetAggro:0,heroAggro:0};
+ heroRevealed:[false,false],communityRevealed:[],over:false,timerId:null,advanceTimer:null,cpuTimer:null,token:GB_GAME_TOKEN,raiseCount:0,lastRaiseSize:100,streetAggro:0,heroAggro:0};
  document.getElementById("gameBody").innerHTML=`<div class="felt he-clean"><div class="he-head"><span id="heStreet">PRE-FLOP</span><b id="hePot">POT 0</b><span id="heButton"></span></div>
  <div class="he-stage"><div id="hePlayers" class="he-players"></div><div class="he-center"><div class="he-potline">POT <strong id="hePotCenter">0</strong></div><div id="heBoard" class="he-board"></div><div id="heStreetCenter" class="he-street-label">PRE-FLOP</div></div><div id="heHero" class="he-hero"></div></div>
  <div class="he-actions"><button id="heCheck" onclick="heAction('CHECK')">CHECK</button><button id="heBet" onclick="heOpenBet('BET')">BET</button><button id="heCall" onclick="heAction('CALL')">CALL</button><button id="heRaise" onclick="heOpenBet('RAISE')">RAISE</button><button id="heFold" onclick="heAction('FOLD')">FOLD</button></div>
@@ -462,7 +609,7 @@ function holdemInit(){
  heStart();
 }
 function heStart(){
- clearTimeout(H.advanceTimer);cancelAnimationFrame(H.timerId);
+ clearTimeout(H.advanceTimer);clearTimeout(H.cpuTimer);cancelAnimationFrame(H.timerId);H.cpuTimer=null;
  H.street=0;H.board=[];H.deck=deck();H.pot=0;H.currentBet=0;H.over=false;H.heroRevealed=[false,false];H.communityRevealed=[];H.raiseCount=0;H.lastRaiseSize=100;H.streetAggro=0;H.heroAggro=0;
  H.players.forEach(p=>{p.stack=9999;p.bet=0;p.total=0;p.folded=false;p.allin=false;p.action="";p.cards=[H.deck.pop(),H.deck.pop()];p.confidence=.45;p.tilt=Math.max(0,(p.tilt||0)*.8);p.history=[]});
  const sb=(H.button+1)%HE_N,bb=(H.button+2)%HE_N;
@@ -532,7 +679,18 @@ function heAction(action,amount=0){
    heResetPending(H.hero);heAfter(p,p.allin?"ALL IN":(action==="BET"&&old===0?"BET":"RAISE"));
  }
 }
-function heCpuLater(){const delay=2300+Math.floor(Math.random()*1500);setTimeout(()=>{if(gbAlive(H.token))heCpu()},delay)}
+function heCpuLater(){
+ clearTimeout(H.cpuTimer);
+ const token=H.token,turn=H.turn;
+ const delay=2300+Math.floor(Math.random()*1500);
+ H.cpuTimer=setTimeout(()=>{
+   H.cpuTimer=null;
+   if(!gbAlive(token)||H.over||H.turn!==turn)return;
+   const p=H.players[turn];
+   if(!p||p.folded||p.allin)return;
+   heCpu();
+ },delay);
+}
 function heRankValue(c){return c.r==="A"?14:c.r==="K"?13:c.r==="Q"?12:c.r==="J"?11:+c.r}
 function hePreflopStrength(p){
  const a=heRankValue(p.cards[0]),b=heRankValue(p.cards[1]),hi=Math.max(a,b),lo=Math.min(a,b);
@@ -593,8 +751,11 @@ function heBluffChance(p,eq,call){
  return Math.min(.32,Math.max(.01,chance));
 }
 function heCpu(){
+ H.cpuTimer=null;
  if(H.over||H.turn===H.hero||!gbAlive(H.token))return;
- const i=H.turn,p=H.players[i],call=Math.max(0,H.currentBet-p.bet),eq=heEquity(p),pressure=call/Math.max(1,p.stack),bluff=heBluffChance(p,eq,call);
+ const i=H.turn,p=H.players[i];
+ if(!p||p.folded||p.allin)return;
+ const call=Math.max(0,H.currentBet-p.bet),eq=heEquity(p),pressure=call/Math.max(1,p.stack),bluff=heBluffChance(p,eq,call);
  let action="CHECK",amount=0;
 
  // Strong hands: value bet / value raise.
@@ -651,11 +812,13 @@ function heCpu(){
  p.action=p.allin?"ALL IN":action;
  p.history.push(action);
  if(action==="FOLD")p.confidence=Math.max(0,p.confidence-.06);
+ if(action==="FOLD")p.folded=true;
  H.pending.delete(i);
  pokerActionSound(p.action);heRender();heCut(`${p.name} • ${p.action}`);
  setTimeout(()=>{if(gbAlive(H.token))heNext()},p.action==="FOLD"||p.action==="ALL IN"?450:2200+Math.floor(Math.random()*1300));
 }
 function heNext(){
+ clearTimeout(H.cpuTimer);H.cpuTimer=null;
  if(H.over||!gbAlive(H.token))return;
  const contenders=H.players.filter(p=>!p.folded);const active=contenders.filter(p=>!p.allin);if(contenders.length<=1){heFinish(`${contenders[0]?.name||"CPU"} WINS`);return}
  if(active.length===0){heShowdown();return}
@@ -664,6 +827,7 @@ function heNext(){
  H.turn=n;heRender();heHero();if(H.turn===H.hero)heTimer();else heCpuLater();
 }
 function heStreet(){
+ clearTimeout(H.cpuTimer);H.cpuTimer=null;
  H.street++;debugLog("POKER","STREET",{street:["","FLOP","TURN","RIVER"][H.street]||"SHOWDOWN",pot:H.pot});H.currentBet=0;H.raiseCount=0;H.lastRaiseSize=100;H.streetAggro=0;H.players.forEach(p=>p.bet=0);
  if(H.street===1)H.board=[H.deck.pop(),H.deck.pop(),H.deck.pop()];else H.board.push(H.deck.pop());
  H.communityRevealed=H.board.map(()=>false);heRender();heCut(["","FLOP","TURN","RIVER"][H.street]);
@@ -686,12 +850,25 @@ function heTimer(){
  H.timerId=requestAnimationFrame(tick);
 }
 function heShowdown(){
+ clearTimeout(H.cpuTimer);H.cpuTimer=null;
  debugLog("POKER","SHOWDOWN",{pot:H.pot});H.over=true;cancelAnimationFrame(H.timerId);H.street=4;H.communityRevealed=H.board.map(()=>true);H.heroRevealed=[true,true];
  const live=H.players.filter(p=>!p.folded),ranked=live.map(p=>({p,r:best5([...p.cards,...H.board])})).sort((a,b)=>b.r.score-a.r.score),best=ranked[0].r.score,winners=ranked.filter(x=>x.r.score===best),share=Math.floor(H.pot/winners.length);
- winners.forEach(x=>x.p.stack+=share);heRender();heHero();heFinishOverlay(winners.some(x=>x.p===H.players[H.hero])?"YOU WIN":"SHOWDOWN");
+ winners.forEach(x=>x.p.stack+=share);
+ heRender();heHero();
+ const heroWin=winners.some(x=>x.p===H.players[H.hero]);
+ if(heroWin&&winners.length>1){
+   heFinishOverlay("DRAW");
+ }else{
+   heFinishOverlay(heroWin?"YOU WIN":"SHOWDOWN");
+ }
 }
-function heFinish(text){H.over=true;cancelAnimationFrame(H.timerId);clearTimeout(H.advanceTimer);heRender();heHero();heFinishOverlay(text)}
-function heFinishOverlay(text){$("heStatus").textContent=text;heCut(text);$("heNext").classList.remove("hidden")}
+function heFinish(text){clearTimeout(H.cpuTimer);H.cpuTimer=null;H.over=true;cancelAnimationFrame(H.timerId);clearTimeout(H.advanceTimer);heRender();heHero();heFinishOverlay(text)}
+function heFinishOverlay(text){
+ $("heStatus").textContent=text;
+ heCut(text);
+ if(text==="DRAW")sfx("draw");
+ $("heNext").classList.remove("hidden")
+}
 function heJoinNext(){H.button=(H.button+1)%HE_N;$("heNext").classList.add("hidden");$("heStatus").textContent="";heStart()}
 function heCut(t){const e=$("heCut");if(!e)return;e.textContent=t;e.classList.remove("hidden");void e.offsetWidth;e.classList.add("show");setTimeout(()=>e.classList.add("hidden"),900)}
 function best5(cards){const out=[];function r(st,a){if(a.length===5){out.push(a.slice());return}for(let i=st;i<cards.length;i++){a.push(cards[i]);r(i+1,a);a.pop()}}r(0,[]);let b=null;for(const x of out){const q=handRank(x);if(!b||q.score>b.score)b=q}return b}
@@ -714,33 +891,183 @@ function handRank(cs){
  return{score:kick.reduce((s,v,j)=>s+v*Math.pow(15,4-j),0),name:"HIGH CARD"};
 }
 let GB_ROULETTE_BUSY=false;
-function rouletteSpin(choice){
+/* 4.7.49 roulette: wheel sectors and labels share the same 37-step coordinate system. */
+function rouletteNumberBet(number){
  if(GB_ROULETTE_BUSY)return;
- const b=wager($("bet")?.value);if(!b)return;
- GB_ROULETTE_BUSY=true;
- const token=GB_GAME_TOKEN,w=$("rouletteWheel"),ball=$("rouletteBall"),res=$("res"),numEl=$("rouletteNumber"),colEl=$("rouletteColor");
- if(!w||!ball||!res){GB_ROULETTE_BUSY=false;debugLog("ERROR","ROULETTE DOM MISSING");return}
- const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
- const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
- const idx=Math.floor(Math.random()*pockets.length),n=pockets[idx],color=n===0?"green":red.includes(n)?"red":"black";
- res.textContent="NO MORE BETS";numEl.textContent="—";colEl.textContent="SPINNING";sfx("roulette");
- const start=performance.now(),duration=5200,finalWheel=360*7-idx*(360/37),finalBall=360*11+idx*(360/37);
- let raf;
- const tick=now=>{
-   if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
-   const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,3);
-   const wheelAngle=360*7*ease-finalWheel*(ease); // starts at 0, ends at exact pocket alignment
-   const ballAngle=360*11*ease+finalBall*ease;
-   w.style.transform=`rotate(${wheelAngle}deg)`;
-   ball.style.transform=`rotate(${ballAngle}deg) translateY(-108px)`;
-   if(p<1){raf=requestAnimationFrame(tick);return}
-   w.style.transform=`rotate(${-idx*(360/37)}deg)`;
-   ball.style.transform=`rotate(${idx*(360/37)}deg) translateY(-108px)`;
-   numEl.textContent=String(n);colEl.textContent=color.toUpperCase();
-   const win=color===choice;res.textContent=`${n} • ${color.toUpperCase()} • ${win?"WIN":"LOSE"}`;
-   settle(b,win?b*(choice==="green"?14:2):0,"ROULETTE");sfx(win?"win":"lose");if(win&&choice==="green")puchun();GB_ROULETTE_BUSY=false;
+ rouletteSelectBet({type:'number',value:Number(number),label:String(number),payout:36});
+}
+function rouletteTableBet(type){
+ if(GB_ROULETTE_BUSY)return;
+ const map={green:['ZERO','green',14],red:['RED','red',2],black:['BLACK','black',2],low:['1–18','low',2],high:['19–36','high',2],even:['EVEN','even',2],odd:['ODD','odd',2],dozen1:['1ST 12','dozen1',3],dozen2:['2ND 12','dozen2',3],dozen3:['3RD 12','dozen3',3]};
+ const m=map[type];if(!m)return;
+ rouletteSelectBet({type:m[1],value:m[1],label:m[0],payout:m[2]});
+}
+function rouletteSelectBet(bet){
+ window.ROULETTE_BET={...bet}; // keep the selected wager for repeat SPINs
+ const all=document.querySelectorAll('.real-pocket,.roulette-wheel-label,.roulette-cell,.roulette-zero-cell,.roulette-outside button,.roulette-dozens button');
+ all.forEach(e=>e.classList.remove('bet-selected','bet-group-selected'));
+
+ const nums=[...document.querySelectorAll('.roulette-cell')];
+ const isRed=n=>[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n);
+ const matchesNumber=n=>{
+   if(bet.type==='number') return n===Number(bet.value);
+   if(bet.type==='red') return isRed(n);
+   if(bet.type==='black') return n>0&&!isRed(n);
+   if(bet.type==='green') return n===0;
+   if(bet.type==='even') return n!==0&&n%2===0;
+   if(bet.type==='odd') return n%2===1;
+   if(bet.type==='low') return n>=1&&n<=18;
+   if(bet.type==='high') return n>=19&&n<=36;
+   if(bet.type==='dozen1') return n>=1&&n<=12;
+   if(bet.type==='dozen2') return n>=13&&n<=24;
+   if(bet.type==='dozen3') return n>=25&&n<=36;
+   return false;
  };
- raf=requestAnimationFrame(tick);
+
+ // Highlight every covered number in the numbered betting table.
+ nums.forEach(el=>{
+   const n=Number(el.getAttribute('aria-label')?.replace('Bet ',''));
+   if(Number.isFinite(n)&&matchesNumber(n))el.classList.add('bet-selected');
+ });
+
+ // Bet selection is visualized ONLY on the betting-table buttons/cells.
+ const outsideSelector=`[onclick="rouletteTableBet('${bet.type}')"]`;
+ if(bet.type==='number'){
+   document.querySelectorAll(`[aria-label="Bet ${bet.value}"]`).forEach(e=>e.classList.add('bet-selected'));
+ }else{
+   document.querySelectorAll(outsideSelector).forEach(e=>e.classList.add('bet-selected'));
+   if(bet.type==='green')document.querySelectorAll('.roulette-zero-cell').forEach(e=>e.classList.add('bet-selected'));
+ }
+
+ const label=$('rouletteBetLabel'),pay=$('rouletteSpinPayout'),nr=$('rouletteNumber'),cr=$('rouletteColor'),spin=$('rouletteNumberSpin');
+ if(label)label.textContent=bet.type==='number'?`NUMBER ${bet.value}`:bet.label;
+ if(pay)pay.textContent=`${Number(bet.payout).toFixed(2).replace(/\.00$/,'')}× RETURN`;
+ if(nr)nr.textContent=bet.type==='number'?String(bet.value):'—';
+ if(cr)cr.textContent=bet.type==='number'?'STRAIGHT UP':bet.label;
+ const amount=$('rouletteBetAmount');if(amount)amount.textContent=fmt(lastBet||100);
+ if(spin)spin.disabled=false;
+
+ // Bet amount picker is only needed the first time; once the bet is confirmed,
+ // the same selection remains active and the player can press SPIN repeatedly.
+ const picker=$('rouletteBetPicker');
+ if(picker && picker.classList.contains('hidden')===false) {
+   // already open: keep it open until BET SET
+ } else if(picker && !window.ROULETTE_BET_CONFIRMED){
+   picker.classList.remove('hidden');
+ }
+ window.ROULETTE_BET_CONFIRMED=false;
+ debugLog('ROULETTE','BET SELECTED',bet);sfx('click');
+}
+
+function rouletteConfirmBet(){
+ const picker=$('rouletteBetPicker');
+ const amount=$('rouletteBetAmount');
+ if(amount)amount.textContent=fmt(lastBet||100);
+ if(picker)picker.classList.add('hidden');
+ window.ROULETTE_BET_CONFIRMED=true;
+ const spin=$('rouletteNumberSpin');if(spin&&window.ROULETTE_BET)spin.disabled=false;
+ debugLog('ROULETTE','BET AMOUNT CONFIRMED',{amount:lastBet||100,bet:window.ROULETTE_BET});
+ sfx('click');
+}
+
+function rouletteSpin(choice){
+ try{
+  if(GB_ROULETTE_BUSY){debugLog('ROULETTE','SPIN IGNORED',{reason:'BUSY'});return}
+  const bet=choice&&typeof choice==='object'?choice:null;
+  if(!bet){debugLog('ROULETTE','SPIN BLOCKED',{reason:'NO_BET'});return}
+  const betEl=$('bet'),rawBet=betEl?Number(betEl.value):Number(lastBet||100),b=wager(rawBet);
+  if(!b){debugLog('ROULETTE','SPIN BLOCKED',{reason:'INVALID_BET',rawBet,coins:S.coins});return}
+  GB_ROULETTE_BUSY=true;
+  const token=GB_GAME_TOKEN,w=$('rouletteWheel'),ball=$('rouletteBall'),numEl=$('rouletteNumber'),colEl=$('rouletteColor');
+  if(!w||!ball){GB_ROULETTE_BUSY=false;debugLog('ERROR','ROULETTE DOM MISSING');return}
+
+  // European wheel order. The ball is locked to the same 37-position coordinate
+  // system as the pockets, so the visual stop and the reported number can never diverge.
+  const pockets=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+  const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+  const step=360/37;
+  const idx=Math.floor(Math.random()*pockets.length);
+  const n=pockets[idx];
+  const color=n===0?'green':red.includes(n)?'red':'black';
+  const currentWheel=Number(w.dataset.angle||0);
+  const currentBall=Number(ball.dataset.angle||0);
+  const norm=a=>((a%360)+360)%360;
+
+  // Give every spin a different physical path. Wheel and ball use independent
+  // lap counts/directions, then converge on the exact same pocket coordinate.
+  const wheelDir=Math.random()<0.5?-1:1;
+  const ballDir=Math.random()<0.5?-1:1;
+  const wheelLaps=5+Math.floor(Math.random()*4); // 5–8 turns
+  const ballLaps=8+Math.floor(Math.random()*5);  // 8–12 turns
+  const wheelTargetMod=norm(-(idx*step));
+  const wheelBase=norm(currentWheel);
+  let wheelDelta=wheelTargetMod-wheelBase;
+  if(wheelDir>0){if(wheelDelta<=0)wheelDelta+=360;}else{if(wheelDelta>=0)wheelDelta-=360;}
+  const finalWheel=currentWheel + wheelDir*360*wheelLaps + wheelDelta;
+
+  // Ball absolute angle must equal wheel angle + pocket angle at rest.
+  // IMPORTANT: #rouletteBall is a child of #rouletteWheel.
+  // Its angle is therefore LOCAL to the wheel. The selected pocket is at idx*step.
+  const desiredBallMod=norm((idx+0.5)*step);
+  let ballDelta=desiredBallMod-norm(currentBall);
+  if(ballDir>0){if(ballDelta<=0)ballDelta+=360;}else{if(ballDelta>=0)ballDelta-=360;}
+  const finalBall=currentBall + ballDir*360*ballLaps + ballDelta;
+
+  if(numEl)numEl.textContent='—';
+  if(colEl)colEl.textContent='SPINNING';
+  const spin=$('rouletteNumberSpin');if(spin)spin.disabled=true;
+  sfx('roulette');
+  const radius=getComputedStyle(w).getPropertyValue('--ball-radius').trim()||'76px';
+  const start=performance.now(),duration=6800+Math.floor(Math.random()*900);
+  const tick=now=>{
+   if(!gbAlive(token)){GB_ROULETTE_BUSY=false;return}
+   const p=Math.min(1,(now-start)/duration);
+   // Smooth deceleration with a tiny natural ease-out variation per spin.
+   const ease=1-Math.pow(1-p,4);
+   const wheelAngle=currentWheel+(finalWheel-currentWheel)*ease;
+   const ballAngle=currentBall+(finalBall-currentBall)*ease;
+   w.style.setProperty('transform',`translate(-50%,-50%) rotate(${wheelAngle}deg)`,'important');
+   ball.style.setProperty('transform',`rotate(${ballAngle}deg) translateY(calc(-1 * ${radius}))`,'important');
+   if(p<1){requestAnimationFrame(tick);return}
+
+   // Final correction is calculated from the same wheel angle/idx pair.
+   w.style.setProperty('transform',`translate(-50%,-50%) rotate(${finalWheel}deg)`,'important');
+   // Local ball angle must equal the selected pocket angle.
+   // Parent-wheel rotation then places both at the same physical pocket.
+   const exactBall=(idx+0.5)*step;
+   ball.style.setProperty('transform',`rotate(${exactBall}deg) translateY(calc(-1 * ${radius}))`,'important');
+   w.dataset.angle=String(finalWheel);
+   ball.dataset.angle=String(exactBall);
+
+   if(numEl)numEl.textContent=String(n);
+   if(colEl)colEl.textContent=color.toUpperCase();
+   let win=false,payout=bet.payout;
+   if(bet.type==='number')win=n===bet.value;
+   else if(bet.type==='red'||bet.type==='black'||bet.type==='green')win=color===bet.type;
+   else if(bet.type==='low')win=n>=1&&n<=18;
+   else if(bet.type==='high')win=n>=19&&n<=36;
+   else if(bet.type==='even')win=n!==0&&n%2===0;
+   else if(bet.type==='odd')win=n%2===1;
+   else if(bet.type==='dozen1')win=n>=1&&n<=12;
+   else if(bet.type==='dozen2')win=n>=13&&n<=24;
+   else if(bet.type==='dozen3')win=n>=25&&n<=36;
+   debugLog('ROULETTE','SPIN RESULT',{
+ number:n,color,bet,amount:b,win,payout,pocketIndex:idx,
+ pocketAngle:(idx+0.5)*step,wheelStopAngle:finalWheel,
+ ballLocalAngle:exactBall,visualScreenAngle:norm(finalWheel+exactBall)
+});
+   rouletteHistory.unshift(n);
+   rouletteHistory=rouletteHistory.slice(0,20);
+   saveRouletteHistory();
+   renderRouletteHistory();
+   settle(b,win?b*payout:0,'ROULETTE');
+   sfx(win?'win':'lose');
+   if(win&&color==='green')puchun();
+   GB_ROULETTE_BUSY=false;
+   const spinAgain=$('rouletteNumberSpin');if(spinAgain&&window.ROULETTE_BET)spinAgain.disabled=false;
+  };
+  requestAnimationFrame(tick);
+ }catch(err){GB_ROULETTE_BUSY=false;debugLog('ERROR','ROULETTE SPIN FAILED',{error:String(err),stack:err&&err.stack})}
 }
 function roulette(c){return rouletteSpin(c)}
 
@@ -771,3 +1098,29 @@ document.addEventListener("DOMContentLoaded",()=>{
   else{const code=Math.random().toString(36).slice(2,8).toUpperCase(),url=location.origin+location.pathname+'#room='+code;p.innerHTML='<h2>PRIVATE ROOM</h2><p style="color:#777;font-size:10px">Share this URL when the online server is connected.</p><div class="roomCode"><small>ROOM CODE</small><strong>'+code+'</strong></div><div class="socialActions"><button class="primary" id="copyRoom">COPY URL</button><button id="closeR">CLOSE</button></div>';document.getElementById('copyRoom').onclick=()=>navigator.clipboard?.writeText(url);document.getElementById('closeR').onclick=()=>o.classList.add('hidden')}}
   document.addEventListener('DOMContentLoaded',()=>{document.getElementById('tapStart')?.addEventListener('click',start);document.getElementById('profileBtn')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('profileCard')?.addEventListener('click',()=>openSocial('profile'));document.getElementById('friendsBtn')?.addEventListener('click',()=>openSocial('friends'));document.getElementById('lobbyDebugBtn')?.addEventListener('click',toggleDebug);document.getElementById('roomBtn')?.addEventListener('click',()=>openSocial('room'));document.querySelectorAll('.lobbyGrid button').forEach(b=>b.addEventListener('click',()=>{const p=prof();p.games=(p.games||0)+1;saveProf(p);renderProfile();document.getElementById('appLobby').classList.add('hidden');openGame(b.dataset.game)}));document.querySelectorAll('#lobbyTabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#lobbyTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.lobbyGrid button').forEach(g=>g.style.display=b.dataset.cat==='all'||g.dataset.cat===b.dataset.cat?'flex':'none')}));});
 })();
+
+(function(){
+  function syncEmergency(){
+    var body=document.getElementById("debugEmergencyBody");
+    if(body)body.textContent=(window.__GB_DEBUG_LINES||[]).join("\n");
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    var b=document.getElementById("debugEmergency");
+    var p=document.getElementById("debugEmergencyPanel");
+    if(b)b.addEventListener("click",function(){syncEmergency();if(p)p.classList.remove("hidden");});
+  });
+})();
+
+document.addEventListener("DOMContentLoaded",function(){
+  const lb=document.getElementById("lobbyDebugBtn");
+  const panel=document.getElementById("debugPanel");
+  if(lb){
+    lb.addEventListener("click",function(){
+      if(panel)panel.classList.remove("hidden");
+      try{
+        const body=document.getElementById("debugBody");
+        if(body)body.textContent=(window.__GB_DEBUG_LINES||[]).join("\n");
+      }catch(e){}
+    });
+  }
+});

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Noto+Sans+JP:wght@400;700;900&display=swap');
-*{box-sizing:border-box}body{margin:0;background:#050609;color:#f4f4f5;font-family:"Noto Sans JP",system-ui,sans-serif}header{height:70px;background:#08090deF;border-bottom:1px solid #302d24;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}.logo{font-family:Orbitron;font-weight:900;letter-spacing:3px}.logo span{font-weight:400}.logo small{color:#d1ae55;margin-left:8px}.topstats{display:flex;gap:14px;align-items:center;font-family:Orbitron}.topstats span{font-size:9px;color:#6be39b}.topstats b{padding:9px 15px;background:#15150f;border:1px solid #494128}.topstats em{font-style:normal;color:#e0c067}.topstats button{background:#15161a;color:#fff;border:1px solid #333;padding:8px}.ticker{height:30px;background:#11120f;border-bottom:1px solid #29271f;display:flex;align-items:center;overflow:hidden;font:9px Orbitron;color:#888}.ticker span{background:#b39442;color:#080806;padding:8px 14px}.ticker div{white-space:nowrap;animation:marquee 22s linear infinite}@keyframes marquee{to{transform:translateX(-40%)}}main{max-width:1220px;margin:auto;padding:25px 18px 70px}.hero{min-height:360px;border:1px solid #302d24;background:radial-gradient(circle at 78% 50%,#6e582014,transparent 30%),linear-gradient(135deg,#12120f,#08090b);display:flex;align-items:center;justify-content:space-between;padding:50px 7%;overflow:hidden}.eyebrow{font:10px Orbitron;color:#a58a47;letter-spacing:4px}.hero h1{font-size:52px;margin:15px 0}.hero h1 strong{color:#d9b85e}.hero p{color:#8f9198}.heroBtns{display:flex;gap:10px;margin-top:25px}.hero button,.gamecard button,.game button{cursor:pointer;border:1px solid #4a4638;background:#161713;color:#ddd;padding:12px 18px;border-radius:4px;font-weight:900}.hero .gold,.gamecard button,.game button.primary{background:linear-gradient(#e3c675,#ad8a37);color:#090806;border:0}.heroOrb{width:220px;height:220px;border-radius:50%;border:1px solid #806a3440;background:radial-gradient(circle,#282113,#0a0a09 60%);display:flex;flex-direction:column;align-items:center;justify-content:center}.orb{font:900 48px Orbitron;color:#dfbd5c;text-shadow:0 0 25px #d4ac42}.heroOrb span{font:9px Orbitron;color:#777;letter-spacing:5px}.dash{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:20px 0;background:#2b2a25}.dash>div{background:#0d0e0f;padding:16px 20px}.dash small{display:block;color:#676a70;font:9px Orbitron;letter-spacing:2px}.dash b{font:19px Orbitron;display:block;margin-top:7px}.dash div:first-child b{color:#e2c267}nav{display:flex;gap:5px;border-bottom:1px solid #292a2d;margin-bottom:22px;overflow:auto}nav button{background:transparent;color:#777;border:0;padding:13px 18px;cursor:pointer;font:10px Orbitron;white-space:nowrap}nav button.active{color:#e4c66c;border-bottom:2px solid #d0ae53}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.gamecard{min-height:250px;padding:20px;background:linear-gradient(145deg,#121315,#0b0c0d);border:1px solid #25272b;position:relative}.gamecard:hover{border-color:#65552d}.gamecard .tag{position:absolute;right:12px;top:12px;background:#a23c3c;color:#fff;padding:4px 7px;font:8px Orbitron}.gi{font-size:42px;margin-bottom:12px}.gamecard h2{font:800 15px Orbitron;margin:0 0 7px}.gamecard p{font-size:11px;color:#7f8288;min-height:34px}.odds{font:9px Orbitron;color:#666;margin:12px 0}.odds b{color:#d2b25d}.gamecard button{width:100%;font-size:10px}.lower{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.panel{background:#0d0e10;border:1px solid #24262a;padding:20px}.panelhead{display:flex;justify-content:space-between;border-bottom:1px solid #24262a;padding-bottom:12px}.panelhead h2{font:11px Orbitron}.panelhead span{font:8px Orbitron;color:#6be49b}.rank-row,.history-row{display:grid;grid-template-columns:1fr auto auto;gap:15px;padding:10px 0;border-bottom:1px solid #1e2024;font-size:11px;color:#9a9da3}.rank-row b{color:#d8ba61}.win{color:#72e6a1}.lose{color:#e77d86}footer{text-align:center;padding:28px;color:#4e5055;font:8px Orbitron;letter-spacing:2px}.modal{position:fixed;inset:0;background:#000d;z-index:50;display:flex;align-items:center;justify-content:center;padding:15px;backdrop-filter:blur(7px)}.hidden{display:none!important}.tabletop{width:min(820px,100%);max-height:94vh;overflow:auto;background:radial-gradient(circle at 50% 0,#292315,#0c0d0d 45%);border:1px solid #65562f;box-shadow:0 30px 100px #000;border-radius:6px;padding:32px;position:relative}.close{position:absolute;right:12px;top:8px;background:none;border:0;color:#aaa;font-size:27px}.game{text-align:center}.game h2{font:800 25px Orbitron;color:#e0c269}.betrow{display:flex;justify-content:center;gap:7px;margin:15px}.betrow input{width:145px;background:#090a0b;border:1px solid #45402f;color:#fff;padding:11px}.choices{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.result{font:800 35px Orbitron;margin:22px 0;min-height:44px}.reels{display:flex;justify-content:center;gap:8px;margin:20px}.reel{width:100px;height:110px;background:linear-gradient(#eee,#aaa);color:#111;display:flex;align-items:center;justify-content:center;font-size:53px;border-radius:4px}.meter{height:5px;background:#20211f;margin:20px}.meter i{display:block;height:100%;width:0;background:#d6b85e}.cards{font-size:44px;letter-spacing:4px;margin:20px}.felt{background:radial-gradient(circle,#175a3b,#073b25);border:1px solid #376c52;padding:22px;border-radius:8px}.holdem-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.card{width:58px;height:82px;background:#f4f4f0;color:#111;border-radius:5px;display:flex;align-items:center;justify-content:center;font:900 23px serif;box-shadow:0 5px 10px #0008}.card.red{color:#b31e2b}.card.back{background:repeating-linear-gradient(45deg,#23355e 0 5px,#172440 5px 10px);color:#eee}.pot{font:900 16px Orbitron;color:#f0d77f;margin:14px}.street{font:9px Orbitron;color:#a8d5bc;letter-spacing:3px}.actions{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:18px}.actions button{min-width:95px}.raisebox{display:flex;justify-content:center;gap:5px;margin-top:10px}.raisebox input{width:120px;background:#09100c;color:#fff;border:1px solid #62836f;padding:9px}.shop-item{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #28291f}.shop-item button{background:#171816;color:#d8bb65;border:1px solid #51482d}#blackout{position:fixed;inset:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center}}@keyframes deal{from{transform:translateY(-30px) scale(.8);opacity:0}to{transform:none;opacity:1}}.dealt{animation:deal .35s ease-out}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.heroOrb{width:180px;height:180px}.hero h1{font-size:42px}}@media(max-width:600px){header{padding:0 12px}.topstats span{display:none}.hero{padding:35px 25px}.heroOrb{display:none}.hero h1{font-size:36px}.grid,.lower{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}.tabletop{padding:25px 12px}.card{width:48px;height:70px;font-size:19px}}
+*{box-sizing:border-box}body{margin:0;background:#050609;color:#f4f4f5;font-family:"Noto Sans JP",system-ui,sans-serif}header{height:70px;background:#08090deF;border-bottom:1px solid #302d24;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:20;font-weight:900;letter-spacing:3px}.logo span{font-weight:400}.logo small{color:#d1ae55;margin-left:8px}.topstats{display:flex;gap:14px;align-items:center;font-family:Orbitron}.topstats span{font-size:9px;color:#6be39b}.topstats b{padding:9px 15px;background:#15150f;border:1px solid #494128}.topstats em{font-style:normal;color:#e0c067}.topstats button{background:#15161a;color:#fff;border:1px solid #333;padding:8px}.ticker{height:30px;background:#11120f;border-bottom:1px solid #29271f;display:flex;align-items:center;overflow:hidden;font:9px Orbitron;color:#888}.ticker span{background:#b39442;color:#080806;padding:8px 14px}.ticker div{white-space:nowrap;animation:marquee 22s linear infinite}@keyframes marquee{to{transform:translateX(-40%)}}main{max-width:1220px;margin:auto;padding:25px 18px 70px}.hero{min-height:360px;border:1px solid #302d24;background:radial-gradient(circle at 78% 50%,#6e582014,transparent 30%),linear-gradient(135deg,#12120f,#08090b);display:flex;align-items:center;justify-content:space-between;padding:50px 7%;overflow:hidden}.eyebrow{font:10px Orbitron;color:#a58a47;letter-spacing:4px}.hero h1{font-size:52px;margin:15px 0}.hero h1 strong{color:#d9b85e}.hero p{color:#8f9198}.heroBtns{display:flex;gap:10px;margin-top:25px}.hero button,.gamecard button,.game button{cursor:pointer;border:1px solid #4a4638;background:#161713;color:#ddd;padding:12px 18px;border-radius:4px;font-weight:900}.hero .gold,.gamecard button,.game button.primary{background:linear-gradient(#e3c675,#ad8a37);color:#090806;border:0}.heroOrb{width:220px;height:220px;border-radius:50%;border:1px solid #806a3440;background:radial-gradient(circle,#282113,#0a0a09 60%);display:flex;flex-direction:column;align-items:center;justify-content:center}.orb{font:900 48px Orbitron;color:#dfbd5c;text-shadow:0 0 25px #d4ac42}.heroOrb span{font:9px Orbitron;color:#777;letter-spacing:5px}.dash{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:20px 0;background:#2b2a25}.dash>div{background:#0d0e0f;padding:16px 20px}.dash small{display:block;color:#676a70;font:9px Orbitron;letter-spacing:2px}.dash b{font:19px Orbitron;display:block;margin-top:7px}.dash div:first-child b{color:#e2c267}nav{display:flex;gap:5px;border-bottom:1px solid #292a2d;margin-bottom:22px;overflow:auto}nav button{background:transparent;color:#777;border:0;padding:13px 18px;cursor:pointer;font:10px Orbitron;white-space:nowrap}nav button.active{color:#e4c66c;border-bottom:2px solid #d0ae53}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.gamecard{min-height:250px;padding:20px;background:linear-gradient(145deg,#121315,#0b0c0d);border:1px solid #25272b;position:relative}.gamecard:hover{border-color:#65552d}.gamecard .tag{position:absolute;right:12px;top:12px;background:#a23c3c;color:#fff;padding:4px 7px;font:8px Orbitron}.gi{font-size:42px;margin-bottom:12px}.gamecard h2{font:800 15px Orbitron;margin:0 0 7px}.gamecard p{font-size:11px;color:#7f8288;min-height:34px}.odds{font:9px Orbitron;color:#666;margin:12px 0}.odds b{color:#d2b25d}.gamecard button{width:100%;font-size:10px}.lower{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.panel{background:#0d0e10;border:1px solid #24262a;padding:20px}.panelhead{display:flex;justify-content:space-between;border-bottom:1px solid #24262a;padding-bottom:12px}.panelhead h2{font:11px Orbitron}.panelhead span{font:8px Orbitron;color:#6be49b}.rank-row,.history-row{display:grid;grid-template-columns:1fr auto auto;gap:15px;padding:10px 0;border-bottom:1px solid #1e2024;font-size:11px;color:#9a9da3}.rank-row b{color:#d8ba61}.win{color:#72e6a1}.lose{color:#e77d86}footer{text-align:center;padding:28px;color:#4e5055;font:8px Orbitron;letter-spacing:2px}.modal{position:fixed;inset:0;background:#000d;z-index:50;display:flex;align-items:center;justify-content:center;padding:15px;max-height:94vh;overflow:auto;background:radial-gradient(circle at 50% 0,#292315,#0c0d0d 45%);border:1px solid #65562f;box-shadow:0 30px 100px #000;border-radius:6px;padding:32px;position:relative}.close{position:absolute;right:12px;top:8px;background:none;border:0;color:#aaa;font-size:27px}.game{text-align:center}.game h2{font:800 25px Orbitron;color:#e0c269}.betrow{display:flex;justify-content:center;gap:7px;margin:15px}.betrow input{width:145px;background:#090a0b;border:1px solid #45402f;color:#fff;padding:11px}.choices{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.result{font:800 35px Orbitron;margin:22px 0;min-height:44px}.reels{display:flex;justify-content:center;gap:8px;margin:20px}.reel{width:100px;height:110px;background:linear-gradient(#eee,#aaa);color:#111;display:flex;align-items:center;justify-content:center;font-size:53px;border-radius:4px}.meter{height:5px;background:#20211f;margin:20px}.meter i{display:block;height:100%;width:0;background:#d6b85e}.cards{font-size:44px;letter-spacing:4px;margin:20px}.felt{background:radial-gradient(circle,#175a3b,#073b25);border:1px solid #376c52;padding:22px;border-radius:8px}.holdem-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.card{width:58px;height:82px;background:#f4f4f0;color:#111;border-radius:5px;display:flex;align-items:center;justify-content:center;font:900 23px serif;box-shadow:0 5px 10px #0008}.card.red{color:#b31e2b}.card.back{background:repeating-linear-gradient(45deg,#23355e 0 5px,#172440 5px 10px);color:#eee}.pot{font:900 16px Orbitron;color:#f0d77f;margin:14px}.street{font:9px Orbitron;color:#a8d5bc;letter-spacing:3px}.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}.actions button{min-width:95px}.bj-actions button{min-height:48px;padding:11px 20px;border:1px solid #6a572c;border-radius:5px;background:linear-gradient(180deg,#1b1c1b 0%,#0b0c0d 100%);color:#e2c36a;font:800 10px Orbitron;letter-spacing:1px;box-shadow:0 4px 12px #0008,inset 0 1px #4a4028;cursor:pointer}.bj-actions button:hover:not(:disabled){border-color:#b18e3e;background:linear-gradient(180deg,#25231d 0%,#0d0e0e 100%);color:#f1d37b}.bj-actions button:active:not(:disabled){transform:translateY(1px)}.bj-actions button:disabled{opacity:.35;cursor:not-allowed}.raisebox{display:flex;justify-content:center;gap:5px;margin-top:10px}.raisebox input{width:120px;background:#09100c;color:#fff;border:1px solid #62836f;padding:9px}.shop-item{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #28291f}.shop-item button{background:#171816;color:#d8bb65;border:1px solid #51482d}#blackout{position:fixed;inset:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center}}@keyframes deal{from{transform:translateY(-30px) scale(.8);opacity:0}to{transform:none;opacity:1}}.dealt{animation:deal .35s ease-out}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.heroOrb{width:180px;height:180px}.hero h1{font-size:42px}}@media(max-width:600px){header{padding:0 12px}.topstats span{display:none}.hero{padding:35px 25px}.heroOrb{display:none}.hero h1{font-size:36px}.grid,.lower{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}.tabletop{padding:25px 12px}.card{width:48px;height:70px;font-size:19px}}
 .bj-label{font:10px Orbitron;color:#b5b9bb;letter-spacing:2px;margin:8px 0}.bj-label span{color:#e1c269;margin-left:10px;font-size:16px}.bj-zone{margin:10px 0 15px}.bj-felt{padding:24px 16px}
 .position-badge{font:8px Orbitron;color:#d6b85f;border:1px solid #5b4d2e;padding:6px 8px;border-radius:3px}.poker-topbar{display:flex;justify-content:space-between;align-items:center}.turn-light{display:inline-block;width:7px;height:7px;border-radius:50%;background:#333;margin-left:5px}.turn-light.on{background:#70e49e;box-shadow:0 0 12px #70e49e}.dealer-seat,.hero-seat{padding:10px 0}.seat-title{font:10px Orbitron;color:#bbb;letter-spacing:2px}.stackline{font:8px Orbitron;color:#686d70;margin-top:6px}.stackline b{color:#d6b85f}.chip-tray{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:13px 0 7px}.chip-tray button{background:linear-gradient(#27282a,#111214);border:1px solid #5b4c2f;color:#e2c36c;padding:10px 12px;border-radius:4px;font:9px Orbitron;box-shadow:0 3px 10px #0008}.chip-stack-mini{font-size:10px;color:#d5b75e;letter-spacing:-2px;margin-right:7px}
 .poker-flip{width:58px;height:82px;perspective:800px;position:relative;background:#f4f4f0;border-radius:5px;box-shadow:0 5px 12px #0008;animation:dealCard .4s ease-out}.poker-flip .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:5px;background:#f4f4f0;color:#111;font:900 23px serif;transform-origin:center;backface-visibility:hidden}.poker-flip .card-front.red{color:#b31e2b}
@@ -100,10 +100,7 @@
  position:fixed;right:14px;bottom:62px;z-index:9999;width:min(720px,calc(100vw - 28px));height:min(510px,68vh);
  display:flex;flex-direction:column;overflow:hidden;border:1px solid #5d4d2b;border-radius:10px;
  background:linear-gradient(145deg,#0b0d0ff7,#030405f7);box-shadow:0 30px 100px #000,0 0 60px #b3914014;
- backdrop-filter:blur(18px)
-}
-.debug-panel.hidden{display:none!important}
-.dbg-header{height:64px;flex:0 0 64px;padding:0 12px 0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #272a2c;background:linear-gradient(90deg,#121416,#08090a)}
+ flex:0 0 64px;padding:0 12px 0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #272a2c;background:linear-gradient(90deg,#121416,#08090a)}
 .dbg-brand{display:flex;align-items:center;gap:10px}.dbg-brand strong{display:block;color:#dfc16c;font:800 10px Orbitron,sans-serif;letter-spacing:1px}.dbg-brand small{display:block;color:#5f666a;font:7px Orbitron,sans-serif;letter-spacing:1.5px;margin-top:4px}
 .dbg-actions{display:flex;gap:5px}.dbg-actions button{height:29px;padding:0 9px;background:#151719;border:1px solid #383b3d;border-radius:4px;color:#cfd3d5;font:800 7px Orbitron,sans-serif;letter-spacing:.8px}
 .dbg-metrics{height:52px;flex:0 0 52px;display:flex;align-items:center;gap:20px;padding:0 15px;border-bottom:1px solid #202325;background:#090b0c}
@@ -286,11 +283,11 @@
 /* ===== 4.7.12 REALITY PASS ===== */
 .real-roulette{max-width:700px;margin:auto;text-align:center}.real-wheel-wrap{height:320px;position:relative;display:grid;place-items:center}
 .real-wheel{width:276px;height:276px;position:relative;border-radius:50%;border:12px solid #c9aa58;background:radial-gradient(circle,#b99543 0 10%,#17191b 10.5% 17%,transparent 17.5%),repeating-conic-gradient(#9c2732 0 9.729deg,#16181a 9.729deg 19.458deg);box-shadow:0 12px 40px #000,inset 0 0 0 7px #211c11;transform-origin:center}
-.real-pocket{position:absolute;left:50%;top:50%;width:28px;height:128px;margin-left:-14px;margin-top:-128px;transform-origin:14px 128px;transform:rotate(calc(var(--i)*9.72973deg));display:flex;justify-content:center;align-items:flex-start;padding-top:7px;box-sizing:border-box;z-index:2}
-.real-pocket span{font:800 8px/1 Orbitron;color:#f7e9bc;transform:rotate(calc(var(--i)*-9.72973deg))}.real-pocket.green span{color:#70f09a}
+.real-pocket{position:absolute;left:50%;top:50%;width:28px;height:128px;margin-left:-14px;margin-top:-128px;transform-origin:14px 128px;transform:rotate(calc((var(--i) + 0.5)*9.7297297297deg));display:flex;justify-content:center;align-items:flex-start;padding-top:12px;box-sizing:border-box;z-index:2}
+.real-pocket span{font:800 8px/1 Orbitron;color:#f7e9bc;transform:rotate(calc((var(--i) + 0.5)*-9.7297297297deg)) translateX(0)}.real-pocket.green span{color:#70f09a}
 .real-pointer{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:20;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:25px solid #f5f5f2;filter:drop-shadow(0 2px 3px #000)}
 .real-hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:linear-gradient(#d8b966,#a57b27);border:5px solid #f1d989;display:grid;place-items:center;color:#17130b;font:900 12px Orbitron;z-index:8}
-.real-ball{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;transform-origin:0 108px;z-index:10}
+.real-ball{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;transform-origin:0 101px;z-index:10}
 .real-wheel-spin{animation:realWheelSpin 5.6s cubic-bezier(.08,.66,.12,1) forwards}.real-ball-spin{animation:realBallSpin 5.6s cubic-bezier(.04,.72,.10,1) forwards}
 @keyframes realWheelSpin{to{transform:rotate(var(--wheel-stop))}}@keyframes realBallSpin{to{transform:rotate(var(--ball-stop))}}
 .roulette-readout{display:flex;justify-content:center;align-items:baseline;gap:12px;margin:-2px 0 8px}.roulette-readout span{font:900 28px Orbitron;color:#f3d77e}.roulette-readout small{font:800 9px Orbitron;color:#8e9699}
@@ -308,7 +305,7 @@
 .hl-chart{height:300px!important;background:linear-gradient(#0e1616,#0a0d10)!important}.hl-zone{position:absolute;left:0;right:0;height:50%;pointer-events:none}.hl-zone.high-zone{top:0;background:linear-gradient(180deg,rgba(55,180,118,.06),transparent)}.hl-zone.low-zone{bottom:0;background:linear-gradient(0deg,rgba(219,80,91,.08),transparent)}.hl-center-line{position:absolute;left:0;right:0;top:50%;border-top:1px dashed rgba(255,255,255,.16)}.hl-live{position:absolute;right:10px;top:9px;color:#5f686b;font:800 7px Orbitron;letter-spacing:1.5px}.hl-chart.hl-wild{box-shadow:inset 0 0 45px rgba(212,184,93,.13),0 0 18px rgba(212,184,93,.09)}.hl-chart.hl-high{box-shadow:inset 0 0 55px rgba(83,228,147,.16),0 0 22px rgba(83,228,147,.14)}.hl-chart.hl-low{box-shadow:inset 0 0 55px rgba(228,80,91,.16),0 0 22px rgba(228,80,91,.12)}
 .hl-chart.hl-high #hlDot{fill:#67e7a1}.hl-chart.hl-low #hlDot{fill:#e67a83}
 
-.he-betbox{position:sticky!important;bottom:8px!important;z-index:80!important;backdrop-filter:blur(10px)}.he-actions{position:sticky!important;bottom:0!important;z-index:79!important}
+.he-betbox{position:sticky!important;bottom:8px!important;z-index:80!important;bottom:0!important;z-index:79!important}
 .he-cut.show{animation:hePulseCut .95s ease-out}@keyframes hePulseCut{0%{opacity:0;transform:translate(-50%,-50%) scale(1.35)}20%{opacity:1;transform:translate(-50%,-50%) scale(1)}60%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(.96)}}
 
 /* Win / loss burst */
@@ -325,13 +322,13 @@
 }
 
 /* APP TITLE + LOBBY */
-.appSplash{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#292113 0,#0d0e0e 35%,#030405 75%);color:#f5f3ed;text-align:center;overflow:hidden;transition:opacity .45s,visibility .45s}.appSplash.hide{opacity:0;visibility:hidden;pointer-events:none}.splashGlow{position:absolute;width:70vw;height:70vw;max-width:500px;max-height:500px;border-radius:50%;background:radial-gradient(circle,rgba(220,183,82,.13),transparent 65%);filter:blur(10px)}.splashLogo{position:relative;width:76px;height:76px;border:1px solid #a9853b;border-radius:50%;display:grid;place-items:center;background:#0b0c0c;box-shadow:0 0 50px rgba(220,183,82,.15)}.splashLogo span{font:900 25px Orbitron;color:#e1c26b}.appSplash .splashKicker{position:relative;margin-top:18px;font:800 9px Orbitron;letter-spacing:5px;color:#a58d5a}.appSplash h1{position:relative;margin:10px 0 0;font:900 clamp(42px,12vw,68px)/.9 Orbitron;letter-spacing:-3px}.appSplash h1 em{color:#e1c26b;font-style:normal}.appSplash p{position:relative;margin:15px 0;color:#656b6e;font:800 7px Orbitron;letter-spacing:3px}.appSplash button{position:relative;width:min(360px,82vw);min-height:58px;margin-top:30px;border:0;border-radius:8px;background:linear-gradient(135deg,#ead18a,#aa8131);color:#080806;font:900 12px Orbitron;box-shadow:0 14px 40px rgba(220,183,82,.18)}.loadBox{position:relative;width:min(360px,82vw);margin-top:26px;text-align:left}.loadBox>div:first-child{display:flex;justify-content:space-between;font:800 7px Orbitron;color:#8c9294}.loadBox strong{color:#e0c36d}.loadTrack{height:6px;margin-top:8px;background:#17191b;border-radius:10px;overflow:hidden}.loadTrack i{display:block;width:0;height:100%;background:linear-gradient(90deg,#85601f,#f0d47d);transition:width .15s}.loadBox small{display:block;margin-top:8px;color:#555b5e;font:700 7px Orbitron}.appSplash footer{position:absolute;bottom:18px;color:#4e5457;font:700 7px Orbitron;letter-spacing:1px}.appLobby{position:fixed;inset:0;z-index:9000;overflow:auto;background:#030405;color:#eee;padding:env(safe-area-inset-top) 12px calc(20px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}.lobbyBar{height:58px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}.lobbyBar b{font:900 12px Orbitron;letter-spacing:2px;text-align:center}.lobbyBar b span{color:#dfc06a;font-weight:500}.lobbyBar b small{display:block;color:#5f6466;font:700 6px Orbitron;letter-spacing:2px;margin-top:3px}.lobbyBar button{min-height:36px;background:#0c0e10;border:1px solid #292d31;border-radius:7px;color:#c7c9ca;font:800 7px Orbitron}.lobbyBar button:last-child{justify-self:end}.welcome{max-width:720px;margin:auto;display:grid;grid-template-columns:1fr 92px;gap:20px;align-items:center;padding:22px 4px;border-bottom:1px solid #222528}.welcome>div>small{color:#a5894c;font:800 7px Orbitron;letter-spacing:2px}.welcome h2{margin:7px 0;font:900 clamp(28px,8vw,48px)/.95 Orbitron;letter-spacing:-2px}.welcome h2 em{font-style:normal;color:#dfc16b}.welcome p{color:#6c7275;font-size:10px}.avatar{width:90px;height:90px;border:1px solid #68552c;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,#272114,#090a0b 68%)}.avatar span{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid #9a7c3c;color:#e4c771;font:900 11px Orbitron}.avatar b{font:800 7px Orbitron;margin-top:5px}.avatar small{font:700 6px Orbitron;color:#63dc91;margin-top:4px}.appLobby nav{max-width:720px;margin:0 auto 12px;display:flex;overflow:auto;border:0;padding:10px 0;gap:5px}.appLobby nav button{flex:0 0 auto;background:#0a0c0e;border:1px solid #25282b;border-radius:7px;color:#666c70;padding:9px 12px;font:800 7px Orbitron}.appLobby nav button.active{color:#e2c46e;border-color:#735c2e}.lobbyGrid{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.lobbyGrid button{min-height:145px;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:14px;text-align:left;border:1px solid #22262a;border-radius:9px;background:linear-gradient(145deg,#111315,#090a0b);color:#eee;overflow:hidden}.lobbyGrid button:before{content:"";position:absolute;inset:-50% 25% 40% -30%;background:radial-gradient(circle,rgba(224,191,101,.1),transparent 68%)}.lobbyGrid button i{font:900 38px Orbitron;color:#dfc16b;font-style:normal;line-height:1;margin-bottom:auto;position:relative}.lobbyGrid button b,.lobbyGrid button small,.lobbyGrid button em{position:relative}.lobbyGrid button b{font:900 10px Orbitron}.lobbyGrid button small{margin-top:5px;color:#666c70;font:700 6px Orbitron}.lobbyGrid button em{margin-top:10px;color:#dfc16b;font:800 7px Orbitron;font-style:normal}.lobbyTools{max-width:720px;margin:9px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:8px}.lobbyTools button{min-height:85px;padding:12px;text-align:left;background:#0b0d0f;border:1px solid #25292c;border-radius:8px;color:#eee}.lobbyTools small,.lobbyTools span{display:block;color:#656b6e;font:700 6px Orbitron}.lobbyTools b{display:block;margin:7px 0;font:800 9px Orbitron}.socialOverlay{position:fixed;inset:0;z-index:12000;background:#000b;backdrop-filter:blur(8px);display:grid;place-items:center;padding:15px}.socialPanel{width:min(500px,100%);background:#11110e;border:1px solid #6b5730;border-radius:10px;padding:18px}.socialPanel h2{font:900 19px Orbitron;color:#e0c36d}.socialPanel label{display:block;color:#666c70;font:700 7px Orbitron;margin:12px 0 5px}.socialPanel input{width:100%;min-height:44px;background:#080a0c;border:1px solid #303439;border-radius:6px;color:#eee;padding:9px}.socialActions{display:flex;gap:7px;margin-top:12px}.socialActions button{flex:1;min-height:44px;border:1px solid #4d4026;border-radius:7px;background:#15130d;color:#dfc16b;font:800 8px Orbitron}.socialActions .primary{background:linear-gradient(#e4c879,#ae8635);color:#090806;border:0}.roomCode{margin:14px 0;padding:16px;border:1px dashed #6d5830;border-radius:8px;text-align:center}.roomCode strong{display:block;color:#e7cd79;font:900 22px Orbitron;letter-spacing:4px}.roomCode small{color:#666d70;font:700 6px Orbitron}
+.appSplash{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#292113 0,#0d0e0e 35%,#030405 75%);color:#f5f3ed;text-align:center;overflow:hidden;transition:opacity .45s,visibility .45s}.appSplash.hide{opacity:0;visibility:hidden;pointer-events:none}.splashGlow{position:absolute;width:70vw;height:70vw;max-width:500px;max-height:500px;border-radius:50%;background:radial-gradient(circle,rgba(220,183,82,.13),transparent 65%);filter:blur(10px)}.splashLogo{position:relative;width:76px;height:76px;border:1px solid #a9853b;border-radius:50%;display:grid;place-items:center;background:#0b0c0c;box-shadow:0 0 50px rgba(220,183,82,.15)}.splashLogo span{font:900 25px Orbitron;color:#e1c26b}.appSplash .splashKicker{position:relative;margin-top:18px;font:800 9px Orbitron;letter-spacing:5px;color:#a58d5a}.appSplash h1{position:relative;margin:10px 0 0;font:900 clamp(42px,12vw,68px)/.9 Orbitron;letter-spacing:-3px}.appSplash h1 em{color:#e1c26b;font-style:normal}.appSplash p{position:relative;margin:15px 0;color:#656b6e;font:800 7px Orbitron;letter-spacing:3px}.appSplash button{position:relative;width:min(360px,82vw);min-height:58px;margin-top:30px;border:0;border-radius:8px;background:linear-gradient(135deg,#ead18a,#aa8131);color:#080806;font:900 12px Orbitron;box-shadow:0 14px 40px rgba(220,183,82,.18)}.loadBox{position:relative;width:min(360px,82vw);margin-top:26px;text-align:left}.loadBox>div:first-child{display:flex;justify-content:space-between;font:800 7px Orbitron;color:#8c9294}.loadBox strong{color:#e0c36d}.loadTrack{height:6px;margin-top:8px;background:#17191b;border-radius:10px;overflow:hidden}.loadTrack i{display:block;width:0;height:100%;background:linear-gradient(90deg,#85601f,#f0d47d);transition:width .15s}.loadBox small{display:block;margin-top:8px;color:#555b5e;font:700 7px Orbitron}.appSplash footer{position:absolute;bottom:18px;color:#4e5457;font:700 7px Orbitron;letter-spacing:1px}.appLobby{position:fixed;inset:0;z-index:9000;overflow:auto;background:#030405;color:#eee;padding:env(safe-area-inset-top) 12px calc(20px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}.lobbyBar{height:58px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}.lobbyBar b{font:900 12px Orbitron;letter-spacing:2px;text-align:center}.lobbyBar b span{color:#dfc06a;font-weight:500}.lobbyBar b small{display:block;color:#5f6466;font:700 6px Orbitron;letter-spacing:2px;margin-top:3px}.lobbyBar button{min-height:36px;background:#0c0e10;border:1px solid #292d31;border-radius:7px;color:#c7c9ca;font:800 7px Orbitron}.lobbyBar button:last-child{justify-self:end}.welcome{max-width:720px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) auto 92px;gap:18px;align-items:center;padding:22px 4px;border-bottom:1px solid #222528}.welcomeBalance{min-width:126px;padding:11px 14px;border:1px solid #6b5730;border-radius:10px;background:linear-gradient(145deg,#14130f,#08090a);box-shadow:0 8px 24px rgba(0,0,0,.28);text-align:center}.welcomeBalance small{display:block;color:#77716a;font:800 6px Orbitron;letter-spacing:2px}.welcomeBalance b{display:block;margin-top:4px;color:#e7ca72;font:900 15px Orbitron;white-space:nowrap}.welcomeBalance em{display:block;margin-top:3px;color:#555b5e;font:700 6px Orbitron;font-style:normal;letter-spacing:2px}.welcome>div>small{color:#a5894c;font:800 7px Orbitron;letter-spacing:2px}.welcome h2{margin:7px 0;font:900 clamp(28px,8vw,48px)/.95 Orbitron;letter-spacing:-2px}.welcome h2 em{font-style:normal;color:#dfc16b}.welcome p{color:#6c7275;font-size:10px}.avatar{width:90px;height:90px;border:1px solid #68552c;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,#272114,#090a0b 68%)}.avatar span{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid #9a7c3c;color:#e4c771;font:900 11px Orbitron}.avatar b{font:800 7px Orbitron;margin-top:5px}.avatar small{font:700 6px Orbitron;color:#63dc91;margin-top:4px}.appLobby nav{max-width:720px;margin:0 auto 12px;display:flex;overflow:auto;border:0;padding:10px 0;gap:5px}.appLobby nav button{flex:0 0 auto;background:#0a0c0e;border:1px solid #25282b;border-radius:7px;color:#666c70;padding:9px 12px;font:800 7px Orbitron}.appLobby nav button.active{color:#e2c46e;border-color:#735c2e}.lobbyGrid{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.lobbyGrid button{min-height:145px;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:14px;text-align:left;border:1px solid #22262a;border-radius:9px;background:linear-gradient(145deg,#111315,#090a0b);color:#eee;overflow:hidden}.lobbyGrid button:before{content:"";position:absolute;inset:-50% 25% 40% -30%;background:radial-gradient(circle,rgba(224,191,101,.1),transparent 68%)}.lobbyGrid button i{font:900 38px Orbitron;color:#dfc16b;font-style:normal;line-height:1;margin-bottom:auto;position:relative}.lobbyGrid button b,.lobbyGrid button small,.lobbyGrid button em{position:relative}.lobbyGrid button b{font:900 10px Orbitron}.lobbyGrid button small{margin-top:5px;color:#666c70;font:700 6px Orbitron}.lobbyGrid button em{margin-top:10px;color:#dfc16b;font:800 7px Orbitron;font-style:normal}.lobbyTools{max-width:720px;margin:9px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:8px}.lobbyTools button{min-height:85px;padding:12px;text-align:left;background:#0b0d0f;border:1px solid #25292c;border-radius:8px;color:#eee}.lobbyTools small,.lobbyTools span{display:block;color:#656b6e;font:700 6px Orbitron}.lobbyTools b{display:block;margin:7px 0;font:800 9px Orbitron}.socialOverlay{position:fixed;inset:0;z-index:12000;background:#000b;display:grid;place-items:center;padding:15px}.socialPanel{width:min(500px,100%);background:#11110e;border:1px solid #6b5730;border-radius:10px;padding:18px}.socialPanel h2{font:900 19px Orbitron;color:#e0c36d}.socialPanel label{display:block;color:#666c70;font:700 7px Orbitron;margin:12px 0 5px}.socialPanel input{width:100%;min-height:44px;background:#080a0c;border:1px solid #303439;border-radius:6px;color:#eee;padding:9px}.socialActions{display:flex;gap:7px;margin-top:12px}.socialActions button{flex:1;min-height:44px;border:1px solid #4d4026;border-radius:7px;background:#15130d;color:#dfc16b;font:800 8px Orbitron}.socialActions .primary{background:linear-gradient(#e4c879,#ae8635);color:#090806;border:0}.roomCode{margin:14px 0;padding:16px;border:1px dashed #6d5830;border-radius:8px;text-align:center}.roomCode strong{display:block;color:#e7cd79;font:900 22px Orbitron;letter-spacing:4px}.roomCode small{color:#666d70;font:700 6px Orbitron}
 @media(max-width:600px){header,.ticker,body>main,body>footer{display:none!important}.lobbyGrid{gap:7px}.lobbyGrid button{min-height:136px}.lobbyTools{grid-template-columns:1fr 1fr}.tabletop{padding-bottom:max(12px,env(safe-area-inset-bottom))}.game button,.choices button{min-height:44px;touch-action:manipulation}}
 
 /* APP SHELL HARDENING v4.7.17 */
 html,body{min-height:100%;background:#030405!important;}
 #boot{display:none!important;}
-.appSplash{z-index:2147483000!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;opacity:1;}
+.appSplash{z-index:2147483000!important;filter:none!important;opacity:1;}
 .appSplash.hide{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 .appSplash>*:not(.splashGlow){filter:none!important;-webkit-filter:none!important;}
 .appSplash .splashGlow{pointer-events:none;filter:blur(10px)!important;-webkit-filter:blur(10px)!important;}
@@ -379,108 +376,1822 @@ html,body{min-height:100%;background:#030405!important;}
 .lobbyGrid button b{letter-spacing:.7px}
 @media(max-width:600px){.lobbyGrid button .gameEmoji{width:54px;height:54px;font-size:31px}.lobbyGrid button{padding:13px;min-height:142px}}
 
-/* ===== SLOT SYMBOL REDESIGN v2: premium casino-style vector symbols ===== */
-.slot-machine .slot-cell{
-  position:relative; overflow:visible; isolation:isolate;
+/* 4.7.35 POLISHED BLACK GOLD — crisp gameplay */
+#modal,#modalContent,.tabletop,.tabletop *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+
+/* 4.7.36 — GAME MODAL ABOVE LOBBY */
+#modal{
+  z-index:11000!important;
+  position:fixed!important;
+  inset:0!important;
+}
+#modal .tabletop{
+  position:relative;
+  z-index:11001!important;
 }
 
-/* CHERRY — polished twin cherries with stems/highlights */
-.slot-machine .slot-cell.cherry{
-  font-size:0!important;color:transparent!important;letter-spacing:0!important;text-shadow:none!important;
-}
-.slot-machine .slot-cell.cherry:before,
-.slot-machine .slot-cell.cherry:after{
-  content:"";position:absolute;width:23px;height:23px;border-radius:50%;top:15px;
-  background:radial-gradient(circle at 31% 25%,#ffd4d6 0 5%,#ff6a72 13%,#d92e3d 38%,#991824 72%,#530912 100%);
-  border:1px solid #6f0e17;
-  box-shadow:inset -4px -5px 5px rgba(54,0,7,.5),inset 2px 2px 3px rgba(255,255,255,.3),0 4px 7px rgba(0,0,0,.42);
-  z-index:1;
-}
-.slot-machine .slot-cell.cherry:before{left:calc(50% - 25px);transform:rotate(-5deg)}
-.slot-machine .slot-cell.cherry:after{left:calc(50% + 2px);transform:rotate(5deg)}
-.slot-machine .slot-cell.cherry i:before,
-.slot-machine .slot-cell.cherry i:after{
-  content:"";position:absolute;width:21px;height:18px;top:6px;border-top:3px solid #5b7a2b;
-  border-radius:85% 15% 0 0;z-index:3;filter:drop-shadow(0 1px 1px #0008);
-}
-.slot-machine .slot-cell.cherry i:before{left:calc(50% - 18px);transform:rotate(34deg)}
-.slot-machine .slot-cell.cherry i:after{left:calc(50% - 2px);transform:rotate(-34deg)}
-.slot-machine .slot-cell.cherry b{display:none}
+/* 4.7.37 PERSISTENT DIAGNOSTICS */
+#debugEmergency{position:fixed;right:10px;bottom:10px;z-index:2147483647;background:#111;color:#e0c269;border:1px solid #66562f;border-radius:6px;padding:8px 11px;font:800 8px Orbitron}
+#debugEmergencyPanel{position:fixed;left:8px;right:8px;top:8px;bottom:8px;z-index:2147483648;background:#050607;color:#ddd;border:1px solid #6d5a2d;border-radius:8px;padding:10px;box-shadow:0 20px 80px #000}
+#debugEmergencyPanel.hidden{display:none}
+#debugEmergencyPanel .de-head{display:flex;justify-content:space-between;align-items:center;color:#e0c269;font:800 10px Orbitron}
+#debugEmergencyBody{position:absolute;left:10px;right:10px;top:45px;bottom:75px;overflow:auto;white-space:pre-wrap;font:9px ui-monospace,monospace;line-height:1.45;background:#090a0b;padding:8px}
+#debugEmergencyPanel button{margin-top:calc(100vh - 92px);background:#17191a;color:#e0c269;border:1px solid #66562f;padding:8px 12px;border-radius:4px}
 
-/* LEMON — faceted gold fruit, not an emoji */
-.slot-machine .slot-cell.lemon{
-  font-size:0!important;color:transparent!important;letter-spacing:0!important;text-shadow:none!important;
-}
-.slot-machine .slot-cell.lemon:before{
-  content:"";position:absolute;width:54px;height:31px;left:50%;top:9px;transform:translateX(-50%) rotate(-18deg);
-  border-radius:62% 38% 58% 42%;
-  background:linear-gradient(145deg,#fff7a6 0%,#ffe96b 18%,#e5bb27 48%,#b07c0d 82%,#714a06 100%);
-  border:1px solid #9b6d0c;
-  box-shadow:inset 4px 3px 4px rgba(255,255,255,.7),inset -5px -5px 7px rgba(83,48,0,.38),0 4px 7px rgba(0,0,0,.4);
-  z-index:1;
-}
-.slot-machine .slot-cell.lemon:after{
-  content:"";position:absolute;width:15px;height:8px;left:calc(50% + 10px);top:5px;transform:rotate(-21deg);
-  border-radius:100% 0 100% 0;background:linear-gradient(135deg,#9eb35b,#46621f 65%,#263713);
-  box-shadow:0 1px 2px #0009;z-index:2;
-}
-.slot-machine .slot-cell.lemon i{display:none}.slot-machine .slot-cell.lemon b{display:none}
+/* 4.7.38 — cached CSS-proof gameplay layer */
+#modal{display:flex!important;z-index:2147483000!important;position:fixed!important;inset:0!important;visibility:visible!important;opacity:1!important}
+#modal.hidden{display:none!important}
+#appLobby.hidden{display:none!important}
+#modal .tabletop{z-index:2147483001!important;position:relative!important}
 
-/* REPLAY — premium gold medallion */
-.slot-machine .slot-cell.replay{
-  font-size:0!important;color:#1c1609!important;letter-spacing:0!important;text-shadow:none!important;
-  flex-direction:column;gap:2px;
+/* 4.7.39 — iPhone fixed game viewport */
+html,body{width:100%;max-width:100%;overflow-x:hidden;}
+body{overscroll-behavior-x:none;}
+#modal{width:100vw!important;height:100svh!important;max-height:none!important;padding:8px!important;box-sizing:border-box!important;overflow:hidden!important;align-items:flex-start!important;}
+#modal .tabletop{width:min(100%,720px)!important;max-width:720px!important;height:calc(100svh - 16px)!important;max-height:calc(100svh - 16px)!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;margin:auto!important;padding:12px 10px max(12px,env(safe-area-inset-bottom))!important;}
+#modal .game{width:100%!important;max-width:700px!important;margin:0 auto!important;box-sizing:border-box!important;}
+#modal .game h2{font-size:clamp(17px,5vw,25px)!important;margin:7px 0 10px!important;}
+#modal .game .jackpot{font-size:clamp(7px,2.1vw,10px)!important;}
+#modal .choices{gap:6px!important;}
+#modal .choices button,#modal .game button{max-width:100%;touch-action:manipulation;}
+@media (max-width:600px){
+  #modal{padding:6px!important;}
+  #modal .tabletop{height:calc(100svh - 12px)!important;max-height:calc(100svh - 12px)!important;padding:9px 8px max(10px,env(safe-area-inset-bottom))!important;}
+  #modal .bet-control{margin:7px auto!important;}
+  #modal .result{font-size:clamp(20px,7vw,35px)!important;margin:10px 0!important;}
+  #modal .real-wheel-wrap{height:min(58vw,270px)!important;min-height:205px!important;}
+  #modal .real-wheel{width:min(70vw,276px)!important;height:min(70vw,276px)!important;border-width:8px!important;}
+  #modal .real-pocket{width:23px!important;height:min(30vw,116px)!important;margin-left:-11.5px!important;margin-top:min(-30vw,-116px)!important;transform-origin:11.5px min(30vw,116px)!important;padding-top:6px!important;}
+  #modal .real-pocket span{font-size:clamp(6px,2vw,8px)!important;}
+  #modal .real-ball{transform-origin:0 min(30vw,98px)!important;}
+  #modal .real-hub{width:52px!important;height:52px!important;border-width:4px!important;font-size:10px!important;}
+  #modal .real-pointer{top:1px!important;border-left-width:9px!important;border-right-width:9px!important;border-top-width:19px!important;}
 }
-.slot-machine .slot-cell.replay i{
-  display:flex;align-items:center;justify-content:center;width:39px;height:39px;border-radius:50%;
-  border:2px solid #f0d477;
-  background:radial-gradient(circle at 35% 28%,#fff0a5 0%,#e1bd58 34%,#a8751c 70%,#5e3d09 100%);
-  color:#2b210b;font:900 27px/1 Arial,sans-serif;font-style:normal;
-  box-shadow:inset 0 2px 3px rgba(255,255,255,.75),inset 0 -4px 5px rgba(60,32,0,.45),0 4px 8px rgba(0,0,0,.42),0 0 10px rgba(224,190,91,.18);
+@media (max-height:700px) and (max-width:600px){
+  #modal .real-wheel-wrap{height:225px!important;min-height:205px!important;}
+  #modal .real-wheel{width:210px!important;height:210px!important;}
+  #modal .real-pocket{height:88px!important;margin-top:-88px!important;transform-origin:11.5px 88px!important;}
+  #modal .real-ball{transform-origin:0 78px!important;}
 }
-.slot-machine .slot-cell.replay b{
-  display:block;color:#7b5b17;font:900 6px/1 Orbitron,sans-serif;letter-spacing:1.5px;
+@media (min-width:601px){
+  #modal .tabletop{height:calc(100svh - 16px)!important;max-height:calc(100svh - 16px)!important;}
 }
 
-/* BAR — black enamel plaque with gold trim */
-.slot-machine .slot-cell.bar{
-  font-size:0!important;color:transparent!important;letter-spacing:0!important;text-shadow:none!important;
+/* roulette: one exact 37-pocket wheel, with green zero aligned to the pointer */
+.real-wheel{
+  background:
+    radial-gradient(circle at center,#c29c48 0 10%,#17191a 10.3% 17%,transparent 17.4%),
+    conic-gradient(from -4.864865deg,#0b7048 0 9.72973deg,transparent 9.72973deg),
+    repeating-conic-gradient(from 4.864865deg,#a72e36 0 9.72973deg,#17191a 9.72973deg 19.45946deg);
 }
-.slot-machine .slot-cell.bar:before{
-  content:"BAR";display:flex;align-items:center;justify-content:center;
-  width:68px;height:29px;border-radius:4px;
-  border:2px solid #e2c66e;
-  background:linear-gradient(180deg,#303234 0%,#101112 42%,#050607 55%,#242526 100%);
-  color:#f4d980;font:1000 18px/1 Arial,sans-serif;letter-spacing:3px;
-  text-shadow:0 1px 0 #000,0 0 8px rgba(229,195,94,.35);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 -2px 0 rgba(0,0,0,.65),0 4px 7px rgba(0,0,0,.45),0 0 0 1px rgba(91,67,20,.7);
+.real-pocket{height:118px;margin-top:-118px;transform-origin:14px 118px;clip-path:polygon(13% 0,87% 0,100% 100%,0 100%);}
+.real-pocket.green{background:#0b7048!important;}
+.real-pocket.red{background:#a72e36!important;}
+.real-pocket.black{background:#17191a!important;}
+.real-pocket span{display:block;line-height:1;text-shadow:0 1px 2px #000;}
+.real-wheel:before{content:"";position:absolute;inset:18%;border:2px solid #d8bb65;border-radius:50%;box-shadow:inset 0 0 0 5px #4a3510;pointer-events:none;z-index:3;}
+.real-wheel:after{content:"";position:absolute;inset:7%;border:1px solid #d2b35b;border-radius:50%;pointer-events:none;z-index:3;}
+
+/* 4.7.40 — SINGLE DEBUG CONTROL */
+#debugEmergency{display:none!important}
+#debugToggle{right:12px!important;bottom:12px!important;z-index:2147483647!important}
+.debug-panel{right:12px!important;bottom:64px!important;z-index:2147483646!important}
+
+/* 4.7.40 — iPhone stable game viewport */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.modal{padding:0!important;align-items:stretch!important;justify-content:center!important;max-height:100svh!important;height:100svh!important;overflow:hidden!important}
+.modal .tabletop{width:100%!important;max-width:430px!important;height:100svh!important;max-height:100svh!important;min-height:100svh!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;padding:24px 10px max(12px,env(safe-area-inset-bottom))!important;margin:0 auto!important}
+.modal .game{width:100%!important;min-height:100%!important;box-sizing:border-box!important}
+.modal .game #gameBody{width:100%!important;box-sizing:border-box!important}
+@media(max-width:600px){
+ .modal .tabletop{padding-top:max(18px,env(safe-area-inset-top))!important}
+ .modal .game h2{font-size:23px!important;margin:6px 0 8px!important}
+ .modal .result{font-size:29px!important;margin:14px 0!important}
+ .modal .choices{gap:6px!important}
+ .modal .choices button{min-height:46px!important}
 }
 
-/* Existing symbols: keep but sharpen the premium treatment */
-.slot-machine .slot-cell.seven{
-  font-family:Orbitron,Arial,sans-serif!important;font-weight:1000!important;
-  color:#d8b75a!important;text-shadow:0 2px 0 #70500e,0 0 10px rgba(240,210,117,.55)!important;
-}
-.slot-machine .slot-cell.bell{
-  font-family:Orbitron,Arial,sans-serif!important;font-size:11px!important;letter-spacing:1.5px!important;
-  color:#9d7a26!important;text-shadow:0 1px 0 #fff8,0 2px 3px #0008!important;
+/* roulette: cleaner, thinner rings and compact mobile scaling */
+.real-wheel{width:286px!important;height:286px!important;border-width:10px!important;box-shadow:0 10px 30px #000,inset 0 0 0 4px #211c11!important}
+.real-pocket{width:26px!important;height:132px!important;margin-left:-13px!important;margin-top:-132px!important;transform-origin:13px 132px!important}
+.real-pocket span{font-size:8px!important;padding-top:6px!important}
+.real-wheel:before{inset:20%!important;border:1px solid #8f7539!important;box-shadow:none!important}
+.real-wheel:after{inset:6%!important;border:1px solid #8f7539!important}
+.real-hub{width:68px!important;height:68px!important;border-width:4px!important}
+.real-pointer{top:-1px!important;border-left-width:10px!important;border-right-width:10px!important;border-top-width:23px!important}
+.real-ball{transform-origin:0 116px!important}
+@media(max-width:600px){
+ .real-wheel{width:min(74vw,286px)!important;height:min(74vw,286px)!important}
+ .real-wheel-wrap{height:min(82vw,320px)!important}
+ .real-pocket{height:calc(min(74vw,286px)*.46)!important;margin-top:calc(-1 * min(74vw,286px)*.46)!important;transform-origin:13px calc(min(74vw,286px)*.46)!important}
+ .real-ball{transform-origin:0 calc(min(74vw,286px)*.405)!important}
 }
 
-/* Subtle shine while reels are idle */
-.slot-machine .reel-window:after{
-  content:"";position:absolute;inset:2px;pointer-events:none;z-index:3;border-radius:3px;
-  background:linear-gradient(115deg,rgba(255,255,255,.12),transparent 23%,transparent 76%,rgba(0,0,0,.1));
+/* slot: cleaner symbols, subtle paylines, visible payout table */
+.slot-machine{max-width:390px!important}
+.slot-machine .reel-window{height:132px!important}
+.slot-machine .slot-cell.bell{font-size:38px!important;color:#b69243!important}
+.slot-machine .slot-cell.lemon{font-size:38px!important;color:#d1ad40!important}
+.slot-machine .payline{opacity:.12!important;height:2px!important;box-shadow:none!important}
+.slot-machine .payline.hit{opacity:1!important;height:3px!important;box-shadow:0 0 8px #d9b85e!important}
+.slot-machine .payline.diagonal{opacity:.05!important}
+.slot-machine .payline.diagonal.hit{opacity:.85!important}
+.slot-paytable{margin:12px auto 0;max-width:390px;padding:10px 10px 4px;border:1px solid #4f4328;border-radius:8px;background:linear-gradient(145deg,#131415,#0a0b0c)}
+.slot-paytitle{text-align:center;color:#d9bb62;font:900 9px Orbitron;letter-spacing:2px;margin-bottom:8px}
+.slot-paygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.slot-paygrid div{display:flex;justify-content:space-between;align-items:center;padding:7px 8px;border:1px solid #28271f;border-radius:5px;background:#0e0f10}
+.slot-paygrid b{font:900 12px Orbitron;color:#f0d67a}
+.slot-paygrid span{font:900 10px Orbitron;color:#8f9698}
+@media(max-width:600px){
+ .slot-machine{max-width:350px!important}
+ .slot-machine .slot-body{gap:8px!important}
+ .slot-machine .reels{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
+ .slot-machine .reel-window{height:114px!important}
+ .slot-machine .slot-cell{height:38px!important}
+ .slot-machine .slot-cell.seven{font-size:43px!important}
+ .slot-machine .slot-cell.bar{font-size:18px!important}
+ .slot-machine .slot-cell.cherry{font-size:28px!important}
+ .slot-machine .slot-cell.diamond{font-size:32px!important}
+ .slot-machine .slot-cell.bell,.slot-machine .slot-cell.lemon{font-size:30px!important}
+ .slot-paytable{max-width:350px!important}
 }
+
+@media(max-width:520px){.welcome{grid-template-columns:minmax(0,1fr) 86px;gap:12px}.welcomeBalance{grid-column:1 / -1;grid-row:2;justify-self:start;min-width:118px;padding:8px 12px}.welcome .avatar{grid-column:2;grid-row:1;justify-self:end}.welcome h2{font-size:clamp(27px,8vw,40px)}.welcome p{margin-bottom:0}}
+
+/* 4.7.42 — clean roulette betting controls */
+.roulette-bets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:760px;margin:12px auto 8px;}
+.roulette-bet{min-height:68px!important;padding:10px 8px!important;border:1px solid #4b432e!important;border-radius:8px!important;background:linear-gradient(180deg,#141516,#0b0c0d)!important;color:#e9e9e7!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important;box-shadow:inset 0 1px 0 #ffffff08,0 6px 18px #0005!important;transition:transform .12s ease,border-color .12s ease,background .12s ease!important;}
+.roulette-bet b{font:900 13px Orbitron!important;letter-spacing:1.5px!important;}
+.roulette-bet span{font:700 8px Orbitron!important;color:#8e9297!important;letter-spacing:1px!important;}
+.roulette-bet-red{border-color:#63383b!important;}
+.roulette-bet-black{border-color:#3c4043!important;}
+.roulette-bet-zero{border-color:#345545!important;}
+.roulette-bet-red b{color:#d98a90!important;}
+.roulette-bet-black b{color:#e0e1e1!important;}
+.roulette-bet-zero b{color:#79d7a0!important;}
+.roulette-bet:active{transform:translateY(1px) scale(.99)!important;}
+.roulette-bet:disabled{opacity:.45!important;transform:none!important;}
+@media(max-width:600px){.roulette-bets{gap:7px;margin-top:10px}.roulette-bet{min-height:60px!important;padding:8px 4px!important}.roulette-bet b{font-size:11px!important}.roulette-bet span{font-size:7px!important}}
+
+/* 4.7.43 — roulette pocket spacing / number legibility */
+.real-wheel{
+  width:300px!important;
+  height:300px!important;
+}
+.real-pocket{
+  width:20px!important;
+  height:138px!important;
+  margin-left:-10px!important;
+  margin-top:-138px!important;
+  transform-origin:10px 138px!important;
+  padding-top:7px!important;
+}
+.real-pocket span{
+  display:block!important;
+  width:20px!important;
+  text-align:center!important;
+  font-size:7px!important;
+  letter-spacing:-.35px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+.real-wheel:before{inset:19%!important}
+.real-wheel:after{inset:5.5%!important}
+.real-ball{transform-origin:0 121px!important}
+@media(max-width:600px){
+  .real-wheel{width:min(78vw,300px)!important;height:min(78vw,300px)!important}
+  .real-wheel-wrap{height:min(86vw,322px)!important}
+  .real-pocket{
+    width:19px!important;
+    height:calc(min(78vw,300px)*.46)!important;
+    margin-left:-9.5px!important;
+    margin-top:calc(-1 * min(78vw,300px)*.46)!important;
+    transform-origin:9.5px calc(min(78vw,300px)*.46)!important;
+  }
+  .real-pocket span{width:19px!important;font-size:clamp(6px,1.8vw,7px)!important;letter-spacing:-.3px!important}
+  .real-ball{transform-origin:0 calc(min(78vw,300px)*.405)!important}
+}
+
+
+/* 4.7.44 — FINAL ROULETTE GEOMETRY
+   One authoritative geometry layer. The previous versions had multiple
+   conflicting .real-pocket/.real-ball overrides, which caused 0/26 and
+   other neighboring labels to crowd and the ball to use the wrong orbit. */
+.real-wheel{
+  width:300px!important;
+  height:300px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.real-pocket{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:16px!important;
+  height:132px!important;
+  margin-left:-8px!important;
+  margin-top:-132px!important;
+  transform-origin:8px 132px!important;
+  padding-top:5px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:flex-start!important;
+  clip-path:polygon(20% 0,80% 0,100% 100%,0 100%)!important;
+  z-index:2!important;
+}
+.real-pocket span{
+  width:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:7px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.15px!important;
+  white-space:nowrap!important;
+  transform:rotate(calc(var(--i)*-9.72972973deg))!important;
+}
+.real-ball{
+  left:50%!important;
+  top:50%!important;
+  margin:-6px!important;
+  width:12px!important;
+  height:12px!important;
+  transform-origin:center center!important;
+  z-index:10!important;
+  will-change:transform!important;
+}
+@media(max-width:600px){
+  .real-wheel{
+    width:min(78vw,300px)!important;
+    height:min(78vw,300px)!important;
+  }
+  .real-wheel-wrap{
+    height:min(86vw,322px)!important;
+  }
+  .real-pocket{
+    width:15px!important;
+    height:calc(min(78vw,300px)*.44)!important;
+    margin-left:-7.5px!important;
+    margin-top:calc(-1 * min(78vw,300px)*.44)!important;
+    transform-origin:7.5px calc(min(78vw,300px)*.44)!important;
+    padding-top:5px!important;
+  }
+  .real-pocket span{
+    width:15px!important;
+    min-width:15px!important;
+    max-width:15px!important;
+    font-size:clamp(6px,1.65vw,7px)!important;
+    letter-spacing:-.2px!important;
+  }
+}
+
+/* 4.7.45 — PHYSICAL ROULETTE SPIN / FINAL POCKET GEOMETRY
+   The ball is a sibling of the wheel so the wheel can rotate independently.
+   Wheel = clockwise, ball = counter-clockwise orbit. */
+.real-wheel-wrap{
+  --wheel-size:300px;
+  --ball-radius:118px;
+  position:relative!important;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:visible!important;
+}
+.real-wheel{
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  flex:none!important;
+  transform-origin:50% 50%!important;
+  overflow:hidden!important;
+  will-change:transform!important;
+}
+.real-pocket{
+  left:50%!important;
+  top:50%!important;
+  width:20px!important;
+  height:120px!important;
+  margin-left:-10px!important;
+  margin-top:-120px!important;
+  transform-origin:10px 120px!important;
+  padding-top:5px!important;
+  box-sizing:border-box!important;
+  clip-path:polygon(14% 0,86% 0,100% 100%,0 100%)!important;
+}
+.real-pocket span{
+  display:block!important;
+  width:20px!important;
+  min-width:20px!important;
+  max-width:20px!important;
+  padding:0!important;
+  margin:0!important;
+  text-align:center!important;
+  font:900 7px/1 Orbitron,sans-serif!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  transform:rotate(calc(var(--i)*-9.72972973deg))!important;
+}
+.real-ball{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:12px!important;
+  height:12px!important;
+  margin:-6px!important;
+  border-radius:50%!important;
+  background:#fff!important;
+  box-shadow:0 0 12px #fff,0 0 22px #fff8!important;
+  transform-origin:50% 50%!important;
+  z-index:50!important;
+  will-change:transform!important;
+  pointer-events:none!important;
+}
+.real-pointer{z-index:60!important}
+.real-hub{z-index:40!important}
+@media(max-width:600px){
+  .real-wheel-wrap{
+    --wheel-size:min(78vw,300px);
+    --ball-radius:calc(min(78vw,300px)*.393);
+    width:var(--wheel-size)!important;
+    height:var(--wheel-size)!important;
+  }
+  .real-wheel{width:var(--wheel-size)!important;height:var(--wheel-size)!important}
+  .real-pocket{
+    width:19px!important;
+    height:calc(var(--wheel-size)*.40)!important;
+    margin-left:-9.5px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.40)!important;
+    transform-origin:9.5px calc(var(--wheel-size)*.40)!important;
+  }
+  .real-pocket span{width:19px!important;min-width:19px!important;max-width:19px!important;font-size:clamp(6px,1.8vw,7px)!important}
+}
+
+/* 4.7.46 — ROULETTE CLEAN WHEEL / NO OVERLAPPING FRAME
+   Use exactly 37 equal pockets. Decorative rings sit behind the pockets,
+   so they never cut through the numbers. */
+.real-wheel{
+  background:
+    repeating-conic-gradient(
+      from -4.864864865deg,
+      #a72e36 0deg 4.864864865deg,
+      #17191a 4.864864865deg 9.72972973deg
+    )!important;
+  border:10px solid #c9aa58!important;
+  box-shadow:0 12px 40px #000,inset 0 0 0 4px #211c11!important;
+}
+.real-wheel:before{
+  inset:18%!important;
+  border:1px solid #7f6936!important;
+  box-shadow:none!important;
+  z-index:1!important;
+}
+.real-wheel:after{
+  inset:6%!important;
+  border:1px solid #7f6936!important;
+  z-index:1!important;
+}
+.real-pocket{
+  z-index:5!important;
+}
+.real-pocket span{
+  position:relative!important;
+  z-index:6!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.real-hub{z-index:12!important}
+.real-pointer{z-index:20!important}
+
+/* 4.7.47 — ROULETTE GEOMETRY HARD RESET
+   No decorative rings over the pockets. The pocket elements themselves are
+   the only visible sector frames, so numbers can never be crossed by a ring. */
+.real-wheel{
+  background:#17191a!important;
+  overflow:hidden!important;
+}
+.real-wheel::before,
+.real-wheel::after{
+  display:none!important;
+  content:none!important;
+}
+.real-pocket{
+  width:17px!important;
+  height:124px!important;
+  margin-left:-8.5px!important;
+  margin-top:-124px!important;
+  transform-origin:8.5px 124px!important;
+  padding-top:5px!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)!important;
+  z-index:5!important;
+}
+.real-pocket span{
+  width:17px!important;
+  min-width:17px!important;
+  max-width:17px!important;
+  font-size:6.5px!important;
+  line-height:1!important;
+  letter-spacing:-.35px!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.real-pocket.red{background:#a72e36!important}
+.real-pocket.black{background:#17191a!important}
+.real-pocket.green{background:#087b43!important}
+.real-hub{z-index:20!important}
+.real-ball{z-index:50!important}
+.real-pointer{z-index:60!important}
+@media(max-width:600px){
+  .real-pocket{
+    width:15px!important;
+    height:calc(var(--wheel-size)*.415)!important;
+    margin-left:-7.5px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.415)!important;
+    transform-origin:7.5px calc(var(--wheel-size)*.415)!important;
+    padding-top:4px!important;
+  }
+  .real-pocket span{
+    width:15px!important;
+    min-width:15px!important;
+    max-width:15px!important;
+    font-size:clamp(5.5px,1.65vw,6.5px)!important;
+    letter-spacing:-.3px!important;
+  }
+}
+
+
+/* 4.7.48 — ROULETTE VISUAL HARD RESET
+   Final override. No decorative circular frame is allowed inside the
+   numbered pockets. The only frame is the outer gold rim and the center hub. */
+#modal .real-wheel{
+  position:relative!important;
+  background:#17191a!important;
+  border:10px solid #c9aa58!important;
+  box-shadow:0 10px 30px #000,inset 0 0 0 3px #211c11!important;
+  overflow:hidden!important;
+}
+#modal .real-wheel::before,
+#modal .real-wheel::after{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:none!important;
+}
+#modal .real-pocket{
+  width:14px!important;
+  height:calc(var(--wheel-size)*.405)!important;
+  margin-left:-7px!important;
+  margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+  transform-origin:7px calc(var(--wheel-size)*.405)!important;
+  padding-top:5px!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  clip-path:polygon(12% 0,88% 0,100% 100%,0 100%)!important;
+  z-index:5!important;
+}
+#modal .real-pocket span{
+  width:14px!important;
+  min-width:14px!important;
+  max-width:14px!important;
+  font:900 clamp(6px,1.55vw,7px)/1 Orbitron,sans-serif!important;
+  letter-spacing:-.45px!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px #000!important;
+}
+#modal .real-pocket.red{background:#a72e36!important}
+#modal .real-pocket.black{background:#17191a!important}
+#modal .real-pocket.green{background:#087b43!important}
+#modal .real-hub{z-index:20!important}
+#modal .real-ball{z-index:50!important}
+#modal .real-pointer{z-index:60!important}
+@media(max-width:600px){
+  #modal .real-pocket{
+    width:13px!important;
+    height:calc(var(--wheel-size)*.405)!important;
+    margin-left:-6.5px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+    transform-origin:6.5px calc(var(--wheel-size)*.405)!important;
+    padding-top:4px!important;
+  }
+  #modal .real-pocket span{
+    width:13px!important;
+    min-width:13px!important;
+    max-width:13px!important;
+    font-size:clamp(5.5px,1.5vw,6.5px)!important;
+    letter-spacing:-.5px!important;
+  }
+}
+
+/* 4.7.49 — ROULETTE ROOT GEOMETRY REBUILD
+   One coordinate system only: 37 equal sectors, labels on the same radius,
+   no sector-shaped DOM backgrounds. */
+#modal .real-wheel{
+  --wheel-size:min(78vw,300px);
+  --sector:9.7297297297deg;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  position:relative!important;
+  border:10px solid #c9aa58!important;
+  border-radius:50%!important;
+  overflow:hidden!important;
+  background:
+    conic-gradient(
+      from -4.86486486485deg,
+      #087b43 0deg 9.7297297297deg,
+      #a72e36 9.7297297297deg 19.4594594594deg,
+      #17191a 19.4594594594deg 29.1891891891deg,
+      #a72e36 29.1891891891deg 38.9189189188deg,
+      #17191a 38.9189189188deg 48.6486486485deg,
+      #a72e36 48.6486486485deg 58.3783783782deg,
+      #17191a 58.3783783782deg 68.1081081079deg,
+      #a72e36 68.1081081079deg 77.8378378376deg,
+      #17191a 77.8378378376deg 87.5675675673deg,
+      #a72e36 87.5675675673deg 97.2972972970deg,
+      #17191a 97.2972972970deg 107.0270270267deg,
+      #a72e36 107.0270270267deg 116.7567567564deg,
+      #17191a 116.7567567564deg 126.4864864861deg,
+      #a72e36 126.4864864861deg 136.2162162158deg,
+      #17191a 136.2162162158deg 145.9459459455deg,
+      #a72e36 145.9459459455deg 155.6756756752deg,
+      #17191a 155.6756756752deg 165.4054054049deg,
+      #a72e36 165.4054054049deg 175.1351351346deg,
+      #17191a 175.1351351346deg 184.8648648643deg,
+      #a72e36 184.8648648643deg 194.5945945940deg,
+      #17191a 194.5945945940deg 204.3243243237deg,
+      #a72e36 204.3243243237deg 214.0540540534deg,
+      #17191a 214.0540540534deg 223.7837837831deg,
+      #a72e36 223.7837837831deg 233.5135135128deg,
+      #17191a 233.5135135128deg 243.2432432425deg,
+      #a72e36 243.2432432425deg 252.9729729722deg,
+      #17191a 252.9729729722deg 262.7027027019deg,
+      #a72e36 262.7027027019deg 272.4324324316deg,
+      #17191a 272.4324324316deg 282.1621621613deg,
+      #a72e36 282.1621621613deg 291.8918918910deg,
+      #17191a 291.8918918910deg 301.6216216207deg,
+      #a72e36 301.6216216207deg 311.3513513504deg,
+      #17191a 311.3513513504deg 321.0810810801deg,
+      #a72e36 321.0810810801deg 330.8108108098deg,
+      #17191a 330.8108108098deg 340.5405405395deg,
+      #a72e36 340.5405405395deg 350.2702702692deg,
+      #17191a 350.2702702692deg 360deg
+    )!important;
+  box-shadow:0 12px 40px #000,inset 0 0 0 4px #211c11!important;
+}
+#modal .real-wheel::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:17%!important;
+  border-radius:50%!important;
+  background:#17191a!important;
+  border:4px solid #c9aa58!important;
+  box-shadow:inset 0 0 0 2px #3a2c16!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+#modal .real-wheel::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:5%!important;
+  border-radius:50%!important;
+  border:1px solid rgba(201,170,88,.55)!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+#modal .real-pocket{
+  left:50%!important;
+  top:50%!important;
+  width:22px!important;
+  height:42%!important;
+  margin:calc(-1 * 42%) 0 0 -11px!important;
+  transform-origin:11px 100%!important;
+  background:transparent!important;
+  clip-path:none!important;
+  border:0!important;
+  padding:0!important;
+  display:block!important;
+  z-index:6!important;
+}
+#modal .real-pocket.red,
+#modal .real-pocket.black,
+#modal .real-pocket.green{background:transparent!important}
+#modal .real-pocket span{
+  display:block!important;
+  width:22px!important;
+  min-width:22px!important;
+  max-width:22px!important;
+  height:18px!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  color:#f7e9bc!important;
+  font:900 clamp(7px,1.75vw,8px)/18px Orbitron,sans-serif!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  transform:rotate(calc(var(--i) * -9.7297297297deg))!important;
+  text-shadow:0 1px 2px #000!important;
+}
+#modal .real-pocket.green span{color:#72f0a0!important}
+#modal .real-hub{
+  left:50%!important;top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  z-index:20!important;
+}
+#modal .real-ball{z-index:50!important}
+#modal .real-pointer{z-index:60!important}
+@media(max-width:600px){
+  #modal .real-wheel{width:min(78vw,300px)!important;height:min(78vw,300px)!important}
+  #modal .real-pocket{width:20px!important;margin-left:-10px!important}
+  #modal .real-pocket span{width:20px!important;min-width:20px!important;max-width:20px!important;font-size:clamp(6.5px,1.75vw,8px)!important}
+}
+
+
+/* 4.7.50 — ROULETTE ORBIT + IPHONE CENTERING
+   Keep the wheel and ball on the same physical coordinate system. */
+#modal .real-wheel-wrap{
+  --wheel-size:268px!important;
+  --ball-radius:106px!important;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  min-height:0!important;
+  margin:8px auto 2px!important;
+  display:grid!important;
+  place-items:center!important;
+  position:relative!important;
+  overflow:visible!important;
+}
+#modal .real-wheel{
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  margin:0!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:50% 50%!important;
+}
+#modal .real-pocket{
+  height:calc(var(--wheel-size)*.405)!important;
+  margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+  transform-origin:10px calc(var(--wheel-size)*.405)!important;
+}
+#modal .real-ball{
+  left:50%!important;
+  top:50%!important;
+  margin:-6px!important;
+  width:12px!important;
+  height:12px!important;
+  transform-origin:50% 50%!important;
+  transform:rotate(0deg) translateY(calc(-1 * var(--ball-radius)))!important;
+}
+#modal .real-pointer{
+  top:-9px!important;
+}
+@media(max-width:600px){
+  #modal .real-wheel-wrap{
+    --wheel-size:min(70vw,268px)!important;
+    --ball-radius:calc(var(--wheel-size)*.395)!important;
+    width:var(--wheel-size)!important;
+    height:var(--wheel-size)!important;
+    margin:8px auto 2px!important;
+  }
+  #modal .real-wheel{
+    width:var(--wheel-size)!important;
+    height:var(--wheel-size)!important;
+  }
+  #modal .real-pocket{
+    width:14px!important;
+    height:calc(var(--wheel-size)*.405)!important;
+    margin-left:-7px!important;
+    margin-top:calc(-1 * var(--wheel-size)*.405)!important;
+    transform-origin:7px calc(var(--wheel-size)*.405)!important;
+  }
+}
+
+
+/* 4.7.52 — ROULETTE SIZE/CENTER/ORBIT HARD FIX
+   This is the single final geometry layer.  Do not use transform !important here:
+   rouletteSpin() owns the wheel/ball rotation at runtime. */
+#modal .real-wheel-wrap{
+  --wheel-size:230px;
+  --ball-radius:96px;
+  width:230px!important;
+  height:230px!important;
+  min-height:230px!important;
+  margin:10px auto 14px!important;
+  padding:0!important;
+  position:relative!important;
+  display:block!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#modal .real-wheel{
+  width:230px!important;
+  height:230px!important;
+  box-sizing:border-box!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  transform:translate(-50%,-50%);
+  transform-origin:50% 50%!important;
+}
+#modal .real-pocket{
+  width:18px!important;
+  height:93px!important;
+  margin-left:-9px!important;
+  margin-top:-93px!important;
+  transform-origin:9px 93px!important;
+  padding-top:5px!important;
+  box-sizing:border-box!important;
+}
+#modal .real-pocket span{
+  width:18px!important;
+  min-width:18px!important;
+  max-width:18px!important;
+  font-size:7px!important;
+  line-height:1!important;
+  letter-spacing:-.35px!important;
+}
+#modal .real-wheel::before,
+#modal .real-wheel::after{
+  pointer-events:none!important;
+}
+#modal .real-ball{
+  left:50%!important;
+  top:50%!important;
+  width:12px!important;
+  height:12px!important;
+  margin:-6px!important;
+  transform-origin:50% 50%!important;
+  /* transform is intentionally NOT important; JS controls the orbit */
+}
+#modal .real-pointer{
+  left:50%!important;
+  top:-12px!important;
+  transform:translateX(-50%)!important;
+  z-index:60!important;
+}
+@media(max-width:600px){
+  #modal .real-wheel-wrap{
+    --wheel-size:min(58vw,230px);
+    --ball-radius:calc(var(--wheel-size)*.4174);
+    width:min(58vw,230px)!important;
+    height:min(58vw,230px)!important;
+    min-height:min(58vw,230px)!important;
+    margin:10px auto 14px!important;
+  }
+  #modal .real-wheel{
+    width:min(58vw,230px)!important;
+    height:min(58vw,230px)!important;
+  }
+  #modal .real-pocket{
+    width:17px!important;
+    height:calc(min(58vw,230px)*.40435)!important;
+    margin-left:-8.5px!important;
+    margin-top:calc(-1 * min(58vw,230px)*.40435)!important;
+    transform-origin:8.5px calc(min(58vw,230px)*.40435)!important;
+  }
+  #modal .real-pocket span{
+    width:17px!important;
+    min-width:17px!important;
+    max-width:17px!important;
+    font-size:clamp(6px,1.7vw,7px)!important;
+  }
+}
+
+/* 4.7.52 — roulette final mobile size/orbit layer */
+#modal .real-wheel-wrap{--wheel-size:205px;--ball-radius:84px;width:205px!important;height:205px!important;min-height:205px!important;margin:8px auto 12px!important;position:relative!important;display:block!important;box-sizing:border-box!important}
+#modal .real-wheel{width:205px!important;height:205px!important;position:absolute!important;left:50%!important;top:50%!important;margin:0!important;transform:translate(-50%,-50%)}
+#modal .real-pocket{width:16px!important;height:82px!important;margin-left:-8px!important;margin-top:-82px!important;transform-origin:8px 82px!important}
+#modal .real-pocket span{width:16px!important;font-size:6.5px!important;letter-spacing:-.3px!important}
+#modal .real-ball{left:50%!important;top:50%!important;width:11px!important;height:11px!important;margin:-5.5px!important}
+#modal .real-pointer{left:50%!important;top:-11px!important;transform:translateX(-50%)!important}
+@media(max-width:600px){#modal .real-wheel-wrap{--wheel-size:min(52vw,205px);--ball-radius:calc(var(--wheel-size)*.410);width:min(52vw,205px)!important;height:min(52vw,205px)!important;min-height:min(52vw,205px)!important}#modal .real-wheel{width:min(52vw,205px)!important;height:min(52vw,205px)!important}}
+
+/* 4.7.53 — roulette final betting/geometry layer */
+#modal .real-wheel-wrap{
+  --wheel-size:min(52vw,205px);
+  --ball-radius:78px;
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  min-height:var(--wheel-size)!important;
+  margin:10px auto 12px!important;
+  padding:0!important;
+  position:relative!important;
+  display:block!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#modal .real-wheel{
+  width:var(--wheel-size)!important;
+  height:var(--wheel-size)!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  margin:0!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:50% 50%!important;
+  overflow:visible!important;
+}
+#modal .real-pointer{display:none!important}
+
+/* Replace radial distance quirks with a single polar coordinate for every label. */
+#modal .real-pocket{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:0!important;
+  height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  clip-path:none!important;
+  transform:none!important;
+  transform-origin:center!important;
+  overflow:visible!important;
+  z-index:6!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+}
+#modal .real-pocket span{
+  position:absolute!important;
+  left:-10px!important;
+  top:-6px!important;
+  width:20px!important;
+  min-width:20px!important;
+  max-width:17px!important;
+  height:12px!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#f6e8b7!important;
+  font:900 6.6px/1 Orbitron,sans-serif!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+  transform:
+    rotate(calc(var(--i) * 9.72972973deg))
+    translateY(calc(-1 * (var(--wheel-size) * .392)))
+    rotate(calc(var(--i) * -9.72972973deg))!important;
+  transform-origin:center!important;
+  pointer-events:none!important;
+}
+#modal .real-pocket.green span{color:#78f2a0!important}
+
+/* The buttons remain tappable over the labels, but the chip sits exactly on the number. */
+#modal .real-pocket.number-selected span{
+  color:#fff3af!important;
+  text-shadow:0 0 7px #e7c766!important;
+  z-index:20!important;
+}
+#modal .real-pocket .roulette-chip{
+  position:absolute!important;
+  left:-7px!important;
+  top:-6px!important;
+  width:14px!important;
+  height:14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 35% 30%,#fff,#d9b85d 45%,#735315 100%)!important;
+  border:1px solid #f5df93!important;
+  box-shadow:0 2px 8px #000,0 0 7px #e0c36b!important;
+  color:#171208!important;
+  font:900 7px/1 Arial,sans-serif!important;
+  transform:
+    rotate(calc(var(--i) * 9.72972973deg))
+    translateY(calc(-1 * (var(--wheel-size) * .392)))
+    rotate(calc(var(--i) * -9.72972973deg))!important;
+  pointer-events:none!important;
+}
+#modal .real-ball{
+  left:50%!important;
+  top:50%!important;
+  width:11px!important;
+  height:11px!important;
+  margin:-5.5px!important;
+  border-radius:50%!important;
+  z-index:30!important;
+  transform-origin:center!important;
+}
+#modal .roulette-result-hidden{display:none!important}
+#modal #res.roulette-result-hidden{display:none!important}
+
+#modal .roulette-number-spin{
+  width:min(320px,88%)!important;
+  min-height:44px!important;
+  margin:9px auto 0!important;
+  padding:10px 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+  border:1px solid #765f2b!important;
+  border-radius:7px!important;
+  background:linear-gradient(#1b1d1d,#0d0f10)!important;
+  color:#e4c96d!important;
+  font:900 9px Orbitron,sans-serif!important;
+  letter-spacing:1px!important;
+  touch-action:manipulation!important;
+}
+#modal .roulette-number-spin span{
+  color:#8d9496!important;
+  font-size:8px!important;
+}
+#modal .roulette-number-spin:disabled{opacity:.38!important}
+#modal .roulette-number-spin:not(:disabled){
+  border-color:#d1b45e!important;
+  box-shadow:0 0 14px #b58e3860!important;
+}
+#modal .roulette-bet{min-height:52px!important}
 
 @media(max-width:600px){
-  .slot-machine .slot-cell.cherry:before,.slot-machine .slot-cell.cherry:after{width:20px;height:20px;top:16px}
-  .slot-machine .slot-cell.cherry:before{left:calc(50% - 22px)}
-  .slot-machine .slot-cell.cherry:after{left:calc(50% + 1px)}
-  .slot-machine .slot-cell.lemon:before{width:47px;height:27px;top:10px}
-  .slot-machine .slot-cell.replay i{width:34px;height:34px;font-size:24px}
-  .slot-machine .slot-cell.replay b{font-size:5.5px}
-  .slot-machine .slot-cell.bar:before{width:59px;height:25px;font-size:16px;letter-spacing:2px}
+  #modal .real-wheel-wrap{
+    --wheel-size:52vw;
+    --ball-radius:calc(52vw * .38);
+    max-width:205px!important;
+    max-height:205px!important;
+  }
+  #modal .roulette-bets{margin-top:8px!important}
+  #modal .roulette-number-spin{width:88%!important}
 }
 
-/* HARD FIX: hidden overlays must not render or blur the casino page. */
-.hidden,.hidden.socialOverlay,.hidden.appLobby,.hidden.modal,.hidden.appSplash{display:none!important;visibility:hidden!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;}
+/* 4.7.54 — roulette interaction/number coordinate correction */
+#modal .roulette-bet-control .bet-max-label{display:none!important}
+#modal .real-pocket{
+  left:50%!important;
+  top:50%!important;
+  width:30px!important;
+  height:calc(var(--wheel-size) * .405)!important;
+  margin-left:-15px!important;
+  margin-top:calc(-1 * var(--wheel-size) * .405)!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  transform:rotate(calc(var(--i) * 9.72972973deg))!important;
+  transform-origin:15px calc(var(--wheel-size) * .405)!important;
+  cursor:pointer!important;
+  pointer-events:auto!important;
+  z-index:12!important;
+}
+#modal .real-pocket span{
+  left:5px!important;
+  top:4px!important;
+  width:20px!important;
+  min-width:20px!important;
+  max-width:20px!important;
+  height:12px!important;
+  transform:translateY(calc(-1 * (var(--wheel-size) * .365)))!important;
+  transform-origin:center!important;
+  pointer-events:none!important;
+}
+#modal .real-pocket .roulette-chip{
+  left:3px!important;
+  top:1px!important;
+  transform:translateY(calc(-1 * (var(--wheel-size) * .365)))!important;
+}
+#modal .real-pocket.number-selected{filter:drop-shadow(0 0 5px #f1d06b)!important}
+#modal .real-ball{z-index:30!important}
+
+/* 4.7.56 — roulette visual rebuild: reference-style European wheel + real betting table */
+#modal .roulette-redesign{max-width:720px!important;margin:0 auto!important;text-align:center!important}
+#modal .roulette-bet-control .bet-max-label{visibility:hidden!important}
+#modal .roulette-wheel-card{margin:8px auto 12px!important;padding:10px 8px 8px!important;border:1px solid #5b4821!important;border-radius:14px!important;background:linear-gradient(180deg,#151515,#0a0b0c)!important;box-shadow:inset 0 0 0 1px #1e1a10,0 10px 35px #000!important}
+#modal .roulette-wheel-title{
+  position:relative!important;
+  min-height:18px!important;
+  height:18px!important;
+  align-items:center!important;
+  padding:0 8px 5px!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-wheel-title b{color:#d8b95d!important;font-size:7px!important}
+#modal .real-wheel-wrap{width:min(76vw,300px)!important;height:min(76vw,300px)!important;min-height:0!important;margin:4px auto!important;position:relative!important;display:block!important;overflow:visible!important}
+#modal .real-wheel{--wheel-size:min(76vw,300px);--label-radius:calc(var(--wheel-size)*.385);--ball-radius:calc(var(--wheel-size)*.385);position:absolute!important;left:50%!important;top:50%!important;width:var(--wheel-size)!important;height:var(--wheel-size)!important;margin:0!important;border:9px solid #d5b65f!important;border-radius:50%!important;background:conic-gradient(from 0deg,#0b7048 0.000000deg 9.729730deg, #a92f3a 9.729730deg 19.459459deg, #17191b 19.459459deg 29.189189deg, #a92f3a 29.189189deg 38.918919deg, #17191b 38.918919deg 48.648649deg, #a92f3a 48.648649deg 58.378378deg, #17191b 58.378378deg 68.108108deg, #a92f3a 68.108108deg 77.837838deg, #17191b 77.837838deg 87.567568deg, #a92f3a 87.567568deg 97.297297deg, #17191b 97.297297deg 107.027027deg, #a92f3a 107.027027deg 116.756757deg, #17191b 116.756757deg 126.486486deg, #a92f3a 126.486486deg 136.216216deg, #17191b 136.216216deg 145.945946deg, #a92f3a 145.945946deg 155.675676deg, #17191b 155.675676deg 165.405405deg, #a92f3a 165.405405deg 175.135135deg, #17191b 175.135135deg 184.864865deg, #a92f3a 184.864865deg 194.594595deg, #17191b 194.594595deg 204.324324deg, #a92f3a 204.324324deg 214.054054deg, #17191b 214.054054deg 223.783784deg, #a92f3a 223.783784deg 233.513514deg, #17191b 233.513514deg 243.243243deg, #a92f3a 243.243243deg 252.972973deg, #17191b 252.972973deg 262.702703deg, #a92f3a 262.702703deg 272.432432deg, #17191b 272.432432deg 282.162162deg, #a92f3a 282.162162deg 291.891892deg, #17191b 291.891892deg 301.621622deg, #a92f3a 301.621622deg 311.351351deg, #17191b 311.351351deg 321.081081deg, #a92f3a 321.081081deg 330.810811deg, #17191b 330.810811deg 340.540541deg, #a92f3a 340.540541deg 350.270270deg, #17191b 350.270270deg 360.000000deg)!important;box-shadow:0 0 0 3px #3b2d12,0 12px 30px #000,inset 0 0 0 5px #090a0b!important;overflow:visible!important;transform:translate(-50%,-50%)!important;transform-origin:center!important;will-change:transform!important}
+#modal .real-wheel::before{content:""!important;position:absolute!important;inset:17%!important;border-radius:50%!important;border:2px solid #8b6d2e!important;box-shadow:inset 0 0 0 5px #0d0e0f,0 0 0 2px #2b2211!important;pointer-events:none!important;z-index:2!important}
+#modal .real-wheel::after{content:""!important;position:absolute!important;inset:5.5%!important;border-radius:50%!important;border:1px solid #6c5424!important;pointer-events:none!important;z-index:2!important}
+#modal .real-pocket{position:absolute!important;left:50%!important;top:50%!important;width:34px!important;height:34px!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;background:transparent!important;transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(-1 * var(--label-radius)))!important;transform-origin:center!important;z-index:7!important;display:flex!important;align-items:center!important;justify-content:center!important;appearance:none!important;-webkit-appearance:none!important;touch-action:manipulation!important}
+#modal .real-pocket span{display:flex!important;align-items:center!important;justify-content:center!important;width:30px!important;height:30px!important;color:#f7edc7!important;font:900 8px/1 Orbitron,sans-serif!important;text-shadow:0 1px 2px #000!important;transform:rotate(calc(-1 * var(--a)))!important;pointer-events:none!important}
+#modal .real-pocket.green span{color:#baffce!important}
+#modal .real-pocket.bet-selected span{color:#fff1a5!important;text-shadow:0 0 7px #e3c46b,0 1px 2px #000!important}
+#modal .roulette-chip{position:absolute!important;left:50%!important;top:50%!important;width:13px!important;height:13px!important;margin:-6.5px!important;border-radius:50%!important;background:radial-gradient(circle at 35% 30%,#fff,#dfc268 43%,#745317 100%)!important;border:1px solid #fff0a2!important;box-shadow:0 1px 5px #000,0 0 7px #d8b65b!important;color:#1b160b!important;font:900 6px/13px Arial!important;text-align:center!important;transform:rotate(calc(-1 * var(--a)))!important;pointer-events:none!important;z-index:12!important}
+#modal .real-pocket.red,#modal .real-pocket.black,#modal .real-pocket.green{background:transparent!important}
+#modal .real-hub{position:absolute!important;left:50%!important;top:50%!important;width:76px!important;height:76px!important;margin:-38px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:radial-gradient(circle at 35% 28%,#f4d77c,#c69c42 45%,#80601d 100%)!important;border:5px solid #e5c66e!important;box-shadow:0 5px 14px #000,inset 0 0 0 3px #9a7628!important;color:#15110a!important;font:900 11px Orbitron,sans-serif!important;z-index:15!important}
+#modal .real-ball{position:absolute!important;left:50%!important;top:50%!important;width:12px!important;height:12px!important;margin:-6px!important;border-radius:50%!important;background:radial-gradient(circle at 30% 25%,#fff,#e6e8e8 45%,#9da1a2 100%)!important;box-shadow:0 1px 4px #000,0 0 5px #fff8!important;z-index:25!important;pointer-events:none!important;transform-origin:center!important}
+#modal .roulette-readout{display:flex!important;justify-content:center!important;align-items:baseline!important;gap:8px!important;min-height:28px!important;margin-top:2px!important}
+#modal .roulette-readout span{font:900 22px Orbitron,sans-serif!important;color:#f4e4ad!important}
+#modal .roulette-readout small{font:700 7px Orbitron,sans-serif!important;color:#8d9293!important;letter-spacing:1px!important}
+#modal .roulette-table-card{margin:12px 0 8px!important;padding:10px!important;border:1px solid #4d4024!important;border-radius:12px!important;background:#0b0d0e!important;box-shadow:inset 0 0 0 1px #171614!important}
+#modal .roulette-table-head{display:flex!important;justify-content:space-between!important;padding:0 3px 8px!important;color:#d6b65e!important;font:800 8px Orbitron,sans-serif!important;letter-spacing:1px!important}
+#modal .roulette-table-head span{color:#777c7e!important;font-size:6px!important}
+#modal .roulette-zero-row{display:flex!important;margin-bottom:3px!important}
+#modal .roulette-zero-cell{width:100%!important;min-height:38px!important;border:1px solid #277a52!important;border-radius:5px!important;background:linear-gradient(#0b6d43,#06482d)!important;color:#caffd9!important;font:900 14px Orbitron,sans-serif!important}
+#modal .roulette-zero-cell small{display:block!important;margin-top:2px!important;color:#8fe6aa!important;font:700 6px Orbitron,sans-serif!important}
+#modal .roulette-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:2px!important}
+#modal .roulette-cell{min-height:32px!important;padding:0!important;border:1px solid #3d3d3b!important;border-radius:3px!important;background:#151718!important;color:#eee!important;font:900 8px Orbitron,sans-serif!important;touch-action:manipulation!important}
+#modal .roulette-cell.red{background:linear-gradient(#9f2b35,#701c24)!important;border-color:#a8444c!important}
+#modal .roulette-cell.black{background:linear-gradient(#202223,#0c0d0e)!important}
+#modal .roulette-cell.bet-selected,#modal .roulette-zero-cell.bet-selected{box-shadow:inset 0 0 0 2px #e2c36b,0 0 10px #caa84e66!important;color:#ffe9a0!important}
+#modal .roulette-outside{display:grid!important;grid-template-columns:repeat(6,1fr)!important;gap:2px!important;margin-top:4px!important}
+#modal .roulette-outside button,#modal .roulette-dozens button{min-height:38px!important;padding:4px 2px!important;border:1px solid #4b4028!important;border-radius:3px!important;background:#121415!important;color:#dedede!important;touch-action:manipulation!important}
+#modal .roulette-outside b,#modal .roulette-dozens b{display:block!important;font:800 6px Orbitron,sans-serif!important}
+#modal .roulette-outside span,#modal .roulette-dozens span{display:block!important;margin-top:3px!important;color:#777d7f!important;font:700 5px Orbitron,sans-serif!important}
+#modal .roulette-outside button.red{background:linear-gradient(#76232c,#4d151b)!important;color:#ffd8dc!important}
+#modal .roulette-outside button.black{background:linear-gradient(#242526,#0c0d0e)!important;color:#fff!important}
+#modal .roulette-outside button.bet-selected,#modal .roulette-dozens button.bet-selected{box-shadow:inset 0 0 0 2px #d7b95f,0 0 9px #c7a34e55!important}
+#modal .roulette-dozens{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:2px!important;margin-top:4px!important}
+#modal .roulette-action{display:flex!important;align-items:center!important;gap:8px!important;margin:8px 0 12px!important;padding:8px!important;border:1px solid #4c4025!important;border-radius:8px!important;background:#0d0f10!important}
+#modal .roulette-action>div{flex:1!important;text-align:left!important;min-width:0!important}
+#modal #rouletteBetLabel{display:block!important;color:#e1c56a!important;font:900 8px Orbitron,sans-serif!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#modal .roulette-action small{display:block!important;margin-top:3px!important;color:#747a7c!important;font:700 6px Orbitron,sans-serif!important}
+#modal #rouletteNumberSpin{min-width:150px!important;min-height:45px!important;border:1px solid #78612c!important;border-radius:6px!important;background:linear-gradient(#1c1d1d,#0c0e0f)!important;color:#e5ca70!important;font:900 9px Orbitron,sans-serif!important;letter-spacing:1px!important;touch-action:manipulation!important}
+#modal #rouletteNumberSpin span{display:block!important;margin-top:3px!important;color:#858b8d!important;font-size:6px!important}
+#modal #rouletteNumberSpin:disabled{opacity:.35!important}
+#modal #rouletteNumberSpin:not(:disabled){border-color:#d6b85f!important;box-shadow:0 0 14px #b9933a55!important}
+@media(max-width:600px){
+ #modal .real-wheel-wrap{width:248px!important;height:248px!important}
+ #modal .real-wheel{--wheel-size:248px!important;--label-radius:95px!important;--ball-radius:95px!important}
+ #modal .real-hub{width:64px!important;height:64px!important;margin:-32px!important;font-size:9px!important}
+ #modal .real-pocket{width:30px!important;height:30px!important}
+ #modal .real-pocket span{width:27px!important;height:27px!important;font-size:6.5px!important}
+ #modal .roulette-chip{width:12px!important;height:12px!important;margin:-6px!important;font-size:5px!important;line-height:12px!important}
+ #modal .roulette-outside b,#modal .roulette-dozens b{font-size:5.5px!important}
+ #modal .roulette-action{position:sticky!important;bottom:4px!important;z-index:40!important}
+}
+
+
+/* 4.7.57 — roulette compact mobile layout / fixed hub center */
+#modal .roulette-redesign{
+  width:100%!important;
+  max-width:720px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-wheel-card{
+  margin:2px auto 6px!important;
+  padding:6px 6px 4px!important;
+}
+#modal .roulette-wheel-title{padding:0 6px 2px!important}
+#modal .real-wheel-wrap{
+  width:210px!important;
+  height:210px!important;
+  min-height:210px!important;
+  margin:2px auto!important;
+}
+#modal .real-wheel{
+  --wheel-size:210px!important;
+  --label-radius:79px!important;
+  --ball-radius:79px!important;
+  width:210px!important;
+  height:210px!important;
+  border-width:7px!important;
+}
+/* Critical: the hub is centered by transform, not double-offset by margin. */
+#modal .real-hub{
+  left:50%!important;
+  top:50%!important;
+  width:58px!important;
+  height:58px!important;
+  margin:0!important;
+  transform:translate(-50%,-50%)!important;
+  border-width:4px!important;
+  font-size:8px!important;
+}
+#modal .real-ball{width:10px!important;height:10px!important;margin:-5px!important}
+#modal .real-pocket{width:26px!important;height:26px!important}
+#modal .real-pocket span{width:24px!important;height:24px!important;font-size:6px!important}
+#modal .roulette-chip{width:11px!important;height:11px!important;margin:-5.5px!important;line-height:11px!important;font-size:5px!important}
+#modal .roulette-readout{min-height:18px!important;margin:0!important}
+#modal .roulette-readout span{font-size:14px!important}
+#modal .roulette-readout small{font-size:5px!important}
+#modal .roulette-table-card{
+  margin:5px 0 4px!important;
+  padding:6px!important;
+}
+#modal .roulette-table-head{padding:0 2px 4px!important;font-size:6px!important}
+#modal .roulette-zero-row{margin-bottom:2px!important}
+#modal .roulette-zero-cell{min-height:27px!important;font-size:10px!important}
+#modal .roulette-zero-cell small{font-size:5px!important;margin-top:1px!important}
+#modal .roulette-grid{gap:1px!important}
+#modal .roulette-cell{min-height:24px!important;height:24px!important;font-size:6px!important}
+#modal .roulette-outside{gap:1px!important;margin-top:2px!important}
+#modal .roulette-outside button,#modal .roulette-dozens button{min-height:27px!important;height:27px!important;padding:2px 1px!important}
+#modal .roulette-outside b,#modal .roulette-dozens b{font-size:5px!important}
+#modal .roulette-outside span,#modal .roulette-dozens span{font-size:4px!important;margin-top:1px!important}
+#modal .roulette-dozens{gap:1px!important;margin-top:2px!important}
+#modal .roulette-action{
+  margin:4px 0 5px!important;
+  padding:5px!important;
+  min-height:39px!important;
+}
+#modal #rouletteBetLabel{font-size:6px!important}
+#modal .roulette-action small{font-size:4.5px!important;margin-top:1px!important}
+#modal #rouletteNumberSpin{min-width:128px!important;min-height:35px!important;font-size:7px!important}
+#modal #rouletteNumberSpin span{font-size:5px!important;margin-top:1px!important}
+@media(max-height:760px){
+  #modal .roulette-wheel-card{padding-top:4px!important}
+  #modal .real-wheel-wrap{width:190px!important;height:190px!important;min-height:190px!important}
+  #modal .real-wheel{--wheel-size:190px!important;--label-radius:70px!important;--ball-radius:70px!important;width:190px!important;height:190px!important}
+  #modal .real-hub{width:52px!important;height:52px!important}
+  #modal .real-pocket{width:23px!important;height:23px!important}
+  #modal .real-pocket span{width:21px!important;height:21px!important;font-size:5.5px!important}
+  #modal .roulette-cell{min-height:21px!important;height:21px!important}
+  #modal .roulette-zero-cell{min-height:24px!important}
+  #modal .roulette-outside button,#modal .roulette-dozens button{min-height:24px!important;height:24px!important}
+}
+
+/* 4.7.58 — roulette bet amount appears only after a bet is selected */
+#modal .roulette-bet-picker{position:fixed!important;inset:0!important;z-index:1200!important;display:grid!important;place-items:center!important;padding:18px!important;background:rgba(0,0,0,.62)!important;backdrop-filter:blur(3px)!important;-webkit-backdrop-filter:blur(3px)!important;box-sizing:border-box!important}
+#modal .roulette-bet-picker.hidden{display:none!important}
+#modal .roulette-bet-picker-card{width:min(360px,calc(100vw - 34px))!important;padding:16px!important;border:1px solid #725b2a!important;border-radius:14px!important;background:linear-gradient(180deg,#181817,#090a0b)!important;box-shadow:0 22px 70px #000,0 0 0 1px #241d10 inset!important}
+#modal .roulette-picker-title{text-align:center!important;color:#e2c56c!important;font:900 13px Orbitron,sans-serif!important;letter-spacing:2px!important;margin-bottom:8px!important}
+#modal .roulette-bet-picker .bet-control{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:10px!important;box-sizing:border-box!important}
+#modal .roulette-picker-confirm{display:block!important;width:100%!important;min-height:44px!important;margin-top:10px!important;border:1px solid #80652e!important;border-radius:7px!important;background:linear-gradient(#25231d,#101111)!important;color:#e6ca70!important;font:900 9px Orbitron,sans-serif!important;letter-spacing:1px!important;touch-action:manipulation!important}
+#modal .roulette-picker-confirm:active{transform:scale(.985)!important}
+@media(max-width:600px){#modal .roulette-bet-picker{padding:14px!important}#modal .roulette-bet-picker-card{width:min(340px,calc(100vw - 28px))!important;padding:13px!important}}
+
+
+/* 4.7.59 — roulette exact pocket/ball lock + profile-only diagnostics */
+#debugToggle,#debugEmergency{display:none!important}
+#lobbyDebugBtn.profile-system-btn{
+  display:block!important;
+  width:100%!important;
+  min-height:34px!important;
+  margin-top:10px!important;
+  padding:7px 10px!important;
+  border:1px solid #5b4b2b!important;
+  border-radius:6px!important;
+  background:linear-gradient(180deg,#17150f,#0b0c0d)!important;
+  color:#d9bc67!important;
+  font:800 7px Orbitron,sans-serif!important;
+  letter-spacing:1px!important;
+  text-align:center!important;
+}
+#lobbyDebugBtn.profile-system-btn:active{transform:scale(.985)!important}
+#modal .roulette-action{
+  display:block!important;
+  margin:5px 0 8px!important;
+  padding:5px!important;
+  border:0!important;
+  background:transparent!important;
+}
+#modal .roulette-action>div{display:none!important}
+#modal #rouletteNumberSpin{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:46px!important;
+  border:1px solid #80672f!important;
+  border-radius:7px!important;
+  background:linear-gradient(180deg,#242119,#0f1010)!important;
+  color:#e7ca70!important;
+  font:900 10px Orbitron,sans-serif!important;
+  letter-spacing:1.5px!important;
+}
+#modal #rouletteNumberSpin span{display:none!important}
+#modal .roulette-readout{min-height:24px!important}
+#modal .real-wheel{will-change:transform!important}
+#modal .real-ball{will-change:transform!important}
+
+/* 4.7.59 profile diagnostics placement */
+.lobbyTools .profile-tool{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important}
+.lobbyTools .profile-tool>#profileCard{width:100%!important;min-height:85px!important}
+#lobbyDebugBtn.profile-system-btn{margin-top:0!important;min-height:34px!important}
+
+/* 4.7.60 — diagnostics only from lobby SYSTEM */
+#debugToggle,#debugEmergency,#debugEmergencyPanel{display:none!important}
+.profile-system-btn{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+}
+.profile-system-btn .dbg-led{
+  width:8px!important;height:8px!important;border-radius:50%!important;
+  background:#58d89c!important;box-shadow:0 0 9px #58d89c!important;
+}
+.profile-system-btn b{font:900 9px Orbitron,sans-serif!important;color:#d9bd63!important}
+
+/* 4.7.62 — number glyph alignment: exact radial center of each pocket */
+.real-pocket{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  padding-top:10px!important;
+  box-sizing:border-box!important;
+}
+.real-pocket > span{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  line-height:1!important;
+  transform:rotate(calc((var(--i) + 0.5)*-9.7297297297deg))!important;
+  transform-origin:50% 50%!important;
+  position:relative!important;
+  left:0!important;
+  top:0!important;
+  margin:0!important;
+}
+
+/* 4.7.63 — label coordinate root fix
+   Labels are no longer children of the rotating pocket hitboxes.
+   Every label uses one polar coordinate system from the exact wheel center. */
+#modal .roulette-wheel-labels{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:8!important;
+  pointer-events:none!important;
+}
+#modal .roulette-wheel-label{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:22px!important;
+  height:12px!important;
+  margin:-6px 0 0 -11px!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:clamp(6px,1.7vw,8px)!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.15px!important;
+  color:#f7e9bc!important;
+  white-space:nowrap!important;
+  text-shadow:0 1px 2px #000!important;
+  transform:
+    rotate(var(--a))
+    translateY(-110px)
+    rotate(calc(-1 * var(--a)))!important;
+  transform-origin:50% 50%!important;
+}
+#modal .roulette-wheel-label.green{color:#72f0a0!important}
+#modal .real-pocket > span{display:none!important}
+#modal .real-pocket{
+  /* hitboxes remain on the exact same sector centers; no text geometry here */
+  font-size:0!important;
+}
+@media(max-width:600px){
+  #modal .roulette-wheel-label{
+    transform:
+      rotate(var(--a))
+      translateY(calc(-1 * min(38.7vw,110px)))
+      rotate(calc(-1 * var(--a)))!important;
+    font-size:clamp(5.8px,1.65vw,7.5px)!important;
+  }
+}
+
+/* 4.7.64 — clear bet-group visualization */
+#modal .roulette-cell.bet-selected{
+  position:relative!important;
+  box-shadow:
+    inset 0 0 0 2px #e6c66b,
+    inset 0 0 0 4px #6d5120,
+    0 0 8px #d2af4c66!important;
+  color:#fff0a3!important;
+  z-index:3!important;
+}
+#modal .roulette-outside button.bet-selected,
+#modal .roulette-dozens button.bet-selected,
+#modal .roulette-zero-cell.bet-selected{
+  box-shadow:
+    inset 0 0 0 2px #e6c66b,
+    0 0 12px #d2af4c88!important;
+  border-color:#e6c66b!important;
+  color:#fff0a3!important;
+}
+#modal .real-pocket.bet-group-selected{
+  box-shadow:inset 0 0 0 2px #e7c76e!important;
+  border-radius:50%!important;
+}
+#modal .roulette-wheel-label.bet-group-selected{
+  color:#fff2a7!important;
+  text-shadow:0 0 7px #e2c46b,0 1px 2px #000!important;
+  font-weight:1000!important;
+}
+#modal #rouletteNumberSpin:not(:disabled){
+  border-color:#e3c66d!important;
+  box-shadow:0 0 16px #d0aa4f66!important;
+}
+#modal #rouletteBetLabel{
+  text-shadow:0 0 6px #cda94f44!important;
+}
+
+/* Final roulette base correction — numbers inside the gold rim, away from ball */
+#modal .roulette-wheel-labels{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:9!important;
+  pointer-events:none!important;
+}
+#modal .roulette-wheel-label{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:20px!important;
+  height:12px!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:clamp(6px,1.55vw,8px)!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.2px!important;
+  color:#f7e9bc!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px #000!important;
+  transform:
+    translate(-50%,-50%)
+    rotate(var(--a))
+    translateY(calc(-1 * var(--wheel-size) * .435))
+    rotate(calc(-1 * var(--a)))!important;
+  transform-origin:50% 50%!important;
+}
+#modal .roulette-wheel-label.green{color:#72f0a0!important}
+
+/* The wheel itself stays clean: no bet highlight, no chip, no selected-outline. */
+#modal .real-pocket.bet-group-selected,
+#modal .roulette-wheel-label.bet-group-selected{
+  box-shadow:none!important;
+  outline:none!important;
+  color:inherit!important;
+  text-shadow:0 1px 2px #000!important;
+}
+#modal .roulette-chip{display:none!important}
+
+/* Outcome shows the actual gross return, exact multiplier and net separately. */
+#gbOutcome .gb-outcome-mult{
+  display:block!important;
+  margin-top:4px!important;
+  color:#e1c56a!important;
+  font:900 9px/1 Orbitron,sans-serif!important;
+  font-style:normal!important;
+  letter-spacing:1px!important;
+}
+#gbOutcome .gb-outcome-net{
+  display:block!important;
+  margin-top:5px!important;
+  color:#81898b!important;
+  font:800 7px/1 Orbitron,sans-serif!important;
+  font-style:normal!important;
+  letter-spacing:1px!important;
+}
+
+/* Roulette history: compact, readable result trail in the wheel header */
+#modal .roulette-wheel-title{
+  position:relative!important;
+  min-height:44px!important;
+  align-items:flex-start!important;
+}
+#modal .roulette-history-box{
+  position:absolute!important;
+  right:8px!important;
+  top:0!important;
+  z-index:40!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:4px!important;
+  width:92px!important;
+  max-width:92px!important;
+  min-width:92px!important;
+  margin:0!important;
+  padding:0!important;
+}
+#modal .roulette-history-box>b{
+  color:#e4c65e!important;
+  font:900 9px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.8px!important;
+}
+#modal #rouletteHistory{
+  display:flex!important;
+  flex-direction:column!important;
+  flex-wrap:nowrap!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  width:92px!important;
+  max-width:92px!important;
+  max-height:250px!important;
+  overflow:hidden!important;
+}
+#modal .roulette-history-number{
+  width:100%!important;
+  max-width:92px!important;
+  height:22px!important;
+  min-height:22px!important;
+  padding:0 8px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  border:1px solid rgba(218,190,101,.45)!important;
+  border-radius:5px!important;
+  color:#f7f0d5!important;
+  background:#121416!important;
+  font:900 8px/1 Orbitron,sans-serif!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-history-number.red{
+  background:#8f2633!important;
+  border-color:#c66b73!important;
+}
+#modal .roulette-history-number.black{
+  background:#101214!important;
+  border-color:#555a5c!important;
+}
+#modal .roulette-history-number.green{
+  background:#087c4b!important;
+  border-color:#56d19c!important;
+}
+#modal #rouletteHistory small{
+  color:#6d7375!important;
+  font:800 6px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.2px!important;
+}
+
+/* History rail: beside the centered wheel, never above/below it. */
+#modal .roulette-wheel-card{position:relative!important}
+@media (max-width:520px){
+  #modal .roulette-history-box{right:5px!important;width:76px!important;min-width:76px!important;max-width:76px!important}
+  #modal #rouletteHistory{width:76px!important;max-width:76px!important}
+  #modal .roulette-history-number{max-width:76px!important;height:18px!important;min-height:18px!important;padding:0 5px!important;font-size:7px!important}
+  #modal .roulette-history-box>b{font-size:8px!important}
+}
+
+/* 4.7.76 — FINAL HISTORY SIDE RAIL
+   History is an overlay rail beside the wheel. It MUST NOT affect wheel layout. */
+#modal .roulette-redesign{
+  position:relative!important;
+}
+#modal .roulette-wheel-card{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:238px!important;
+  min-height:238px!important;
+  max-height:238px!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;
+}
+#modal .roulette-wheel-title{
+  position:relative!important;
+  display:block!important;
+  height:20px!important;
+  min-height:20px!important;
+  max-height:20px!important;
+  margin:0!important;
+  padding:0 6px!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-wheel-title > span{
+  position:absolute!important;
+  left:6px!important;
+  top:2px!important;
+}
+#modal .roulette-history-box{
+  position:absolute!important;
+  right:6px!important;
+  top:0!important;
+  z-index:80!important;
+  width:78px!important;
+  min-width:78px!important;
+  max-width:78px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:4px!important;
+  pointer-events:none!important;
+}
+#modal .roulette-history-box>b{
+  display:block!important;
+  width:100%!important;
+  text-align:right!important;
+  color:#e4c65e!important;
+  font:900 8px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.4px!important;
+}
+#modal #rouletteHistory{
+  display:flex!important;
+  flex-direction:column!important;
+  flex-wrap:nowrap!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:3px!important;
+  width:78px!important;
+  max-width:78px!important;
+  height:auto!important;
+  max-height:190px!important;
+  overflow:hidden!important;
+}
+#modal .roulette-history-number{
+  width:78px!important;
+  max-width:78px!important;
+  height:17px!important;
+  min-height:17px!important;
+  padding:0 6px!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  box-sizing:border-box!important;
+  border-radius:4px!important;
+  font:900 6.5px/1 Orbitron,sans-serif!important;
+}
+#modal .roulette-history-number.red{
+  background:#8f2633!important;
+  border-color:#c66b73!important;
+}
+#modal .roulette-history-number.black{
+  background:#101214!important;
+  border-color:#555a5c!important;
+}
+#modal .roulette-history-number.green{
+  background:#087c4b!important;
+  border-color:#56d19c!important;
+}
+
+/* Wheel stays exactly in its own centered 210px area. */
+#modal .roulette-wheel-card .real-wheel-wrap{
+  position:relative!important;
+  display:block!important;
+  width:210px!important;
+  height:210px!important;
+  min-height:210px!important;
+  margin:2px auto 0!important;
+  padding:0!important;
+}
+#modal .roulette-wheel-card .real-wheel{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+}
+
+/* Mobile: slightly tighter history rail, wheel remains unchanged. */
+@media(max-width:520px){
+  #modal .roulette-wheel-card{
+    height:238px!important;
+    min-height:238px!important;
+    max-height:238px!important;
+  }
+  #modal .roulette-history-box{
+    right:4px!important;
+    width:72px!important;
+    min-width:72px!important;
+    max-width:72px!important;
+  }
+  #modal #rouletteHistory{
+    width:72px!important;
+    max-width:72px!important;
+  }
+  #modal .roulette-history-number{
+    width:72px!important;
+    max-width:72px!important;
+    height:16px!important;
+    min-height:16px!important;
+    font-size:6px!important;
+  }
+}
+
+/* 4.7.78 — RESULT DISPLAY WITHOUT LAYOUT INTERFERENCE
+   The result is an absolute overlay in the old EUROPEAN WHEEL label area.
+   It must never increase the title height or push the wheel downward. */
+#modal .roulette-wheel-title-label{display:none!important;}
+#modal .roulette-wheel-title{
+  position:relative!important;
+  display:block!important;
+  height:20px!important;
+  min-height:20px!important;
+  max-height:20px!important;
+  margin:0!important;
+  padding:0 6px!important;
+  box-sizing:border-box!important;
+}
+#modal .roulette-wheel-title > span:first-child{display:none!important;}
+#modal .roulette-wheel-title .roulette-readout,
+#modal .roulette-readout{
+  position:absolute!important;
+  left:10px!important;
+  top:22px!important;
+  z-index:70!important;
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  width:max-content!important;
+  height:24px!important;
+  min-height:24px!important;
+  margin:0!important;
+  padding:0!important;
+  pointer-events:none!important;
+}
+#modal .roulette-readout span{
+  font-size:20px!important;
+  line-height:1!important;
+  font-weight:900!important;
+}
+#modal .roulette-readout small{
+  font-size:9px!important;
+  line-height:1!important;
+  letter-spacing:1.4px!important;
+}
+#modal .roulette-history-box{top:0!important;}
+@media(max-width:520px){
+  #modal .roulette-wheel-title{
+    height:20px!important;
+    min-height:20px!important;
+    max-height:20px!important;
+  }
+  #modal .roulette-wheel-title .roulette-readout,
+  #modal .roulette-readout{
+    left:8px!important;
+    top:22px!important;
+  }
+  #modal .roulette-readout span{font-size:18px!important;}
+  #modal .roulette-readout small{font-size:8px!important;}
+}
+
+/* Blackjack enhancement — black/gold premium table treatment */
+#modal .bj-felt{
+  position:relative!important;
+  overflow:hidden!important;
+  padding:24px 14px 18px!important;
+  border:1px solid #6e5a2c!important;
+  border-radius:12px!important;
+  background:
+    radial-gradient(circle at 50% 10%,rgba(205,169,76,.11),transparent 36%),
+    radial-gradient(circle at 50% 90%,rgba(7,55,36,.28),transparent 42%),
+    linear-gradient(180deg,#063b27 0%,#032f20 100%)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(234,210,137,.10),
+    inset 0 -28px 70px rgba(0,0,0,.24),
+    0 12px 34px rgba(0,0,0,.45)!important;
+}
+#modal .bj-felt:before{
+  content:"BLACKJACK • TABLE 01";
+  position:absolute!important;
+  left:12px!important;
+  top:10px!important;
+  color:#b7a16a!important;
+  font:800 6px/1 Orbitron,sans-serif!important;
+  letter-spacing:1.6px!important;
+}
+#modal .bj-felt:after{
+  content:"♠  ♥  ♦  ♣";
+  position:absolute!important;
+  right:12px!important;
+  top:8px!important;
+  color:#d6bb6c!important;
+  font:700 8px/1 serif!important;
+  letter-spacing:3px!important;
+  opacity:.6!important;
+}
+#modal .bj-felt .street{
+  margin-top:8px!important;
+  margin-bottom:10px!important;
+  color:#ded3b1!important;
+  font-size:8px!important;
+  letter-spacing:3.5px!important;
+}
+#modal .bj-zone{
+  position:relative!important;
+  margin:10px 0 18px!important;
+  padding:10px 8px 14px!important;
+  border:1px solid rgba(216,193,117,.18)!important;
+  border-radius:9px!important;
+  background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.03))!important;
+}
+#modal .bj-zone:before{
+  content:"";
+  position:absolute!important;
+  left:16px!important;
+  right:16px!important;
+  top:0!important;
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,#d7ba66,transparent)!important;
+  opacity:.55!important;
+}
+#modal .bj-label{
+  margin:0 0 10px!important;
+  font-size:8px!important;
+  letter-spacing:2.8px!important;
+  color:#aeb5b2!important;
+}
+#modal .bj-label span{
+  color:#e0c36a!important;
+  margin-left:8px!important;
+  font-size:18px!important;
+  text-shadow:0 0 10px rgba(224,195,106,.12)!important;
+}
+#modal .bj-felt .pot{
+  position:relative!important;
+  display:inline-block!important;
+  margin:2px 0 8px!important;
+  padding:5px 12px!important;
+  border:1px solid rgba(221,192,105,.35)!important;
+  border-radius:999px!important;
+  background:rgba(5,9,8,.38)!important;
+  color:#b9c1be!important;
+  font-size:9px!important;
+  letter-spacing:2px!important;
+}
+#modal .bj-felt .pot span{
+  color:#e6c96f!important;
+  font-size:15px!important;
+}
+#modal .bj-felt .holdem-row{
+  min-height:92px!important;
+  align-items:center!important;
+}
+#modal .bj-felt .card{
+  width:62px!important;
+  height:88px!important;
+  border:1px solid #ded9c8!important;
+  border-radius:7px!important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.42),
+    inset 0 0 0 1px rgba(0,0,0,.05)!important;
+  font-size:24px!important;
+}
+#modal .bj-felt .bj-actions{
+  position:relative!important;
+  margin-top:12px!important;
+  padding-top:12px!important;
+  gap:8px!important;
+}
+#modal .bj-felt .bj-actions:before{
+  content:"TABLE ACTIONS";
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:0!important;
+  transform:translateY(-1px)!important;
+  color:#7f887f!important;
+  text-align:center!important;
+  font:700 5px/1 Orbitron,sans-serif!important;
+  letter-spacing:2px!important;
+}
+#modal .bj-felt .bj-actions button{
+  min-width:92px!important;
+  min-height:46px!important;
+  border-color:#6d5930!important;
+  border-radius:6px!important;
+  background:linear-gradient(180deg,#23231f 0%,#0d0e0e 100%)!important;
+  color:#e1c56e!important;
+  box-shadow:
+    0 5px 14px rgba(0,0,0,.34),
+    inset 0 1px rgba(255,255,255,.05)!important;
+}
+#modal .bj-felt .bj-actions button:hover:not(:disabled){
+  border-color:#d6b965!important;
+  color:#f4dc8d!important;
+  box-shadow:
+    0 0 18px rgba(214,185,101,.14),
+    inset 0 1px rgba(255,255,255,.07)!important;
+}
+#modal .bj-felt .bj-actions button:disabled{
+  color:#68716d!important;
+  border-color:#3c443f!important;
+  background:linear-gradient(180deg,#101614 0%,#0a0d0c 100%)!important;
+}
+#modal .bj-felt .bj-actions button:first-child{
+  border-color:#b28a3c!important;
+  box-shadow:0 0 16px rgba(224,190,90,.12),inset 0 1px rgba(255,255,255,.06)!important;
+}
+#modal .gb-outcome.draw .gb-outcome-inner{
+  border-color:#6f7d74!important;
+  box-shadow:0 0 55px rgba(187,205,193,.18)!important;
+}
+#modal .gb-outcome.draw strong{
+  color:#d6d8d3!important;
+}
