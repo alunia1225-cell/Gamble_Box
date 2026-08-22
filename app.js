@@ -83,7 +83,7 @@ window.addEventListener("unhandledrejection",e=>debugLog("ERROR","UNHANDLED PROM
 window.addEventListener("DOMContentLoaded",()=>{
   const t=document.getElementById("debugToggle");
   if(t)t.addEventListener("click",toggleDebug);
-  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.64"});
+  debugLog("BOOT","DEBUG RUNTIME ONLINE",{version:"4.7.72"});
 });
 
 const KEY="gb3_save";
@@ -202,19 +202,29 @@ function sfx(name){if(!S.sound)return; const fileMap={click:"click.wav",chip:"ch
  (sets[name]||sets.click).forEach((x,i)=>tone(x[0],x[1],x[2]||"sine",.035,i*.06));
 }
 function wager(v){v=Number(v);if(!Number.isFinite(v)||v<1||v>S.coins)return 0;lastBet=v;S.coins-=v;S.wagered+=v;lastBet=v;sfx("chip");return v}
-function showOutcome(kind,game,net){
+function showOutcome(kind,game,amount,multiplier,net){
  const root=document.getElementById("modalContent");if(!root)return;
  const old=document.getElementById("gbOutcome");if(old)old.remove();
  const el=document.createElement("div");el.id="gbOutcome";el.className=`gb-outcome ${kind==="BIG WIN"?"big":kind.toLowerCase().replace(/\s+/g,"-")}`;
- el.innerHTML=`<div class="gb-outcome-inner"><small>${game}</small><strong>${kind}</strong><b>${net>0?"+":""}${fmt(net)} COIN</b></div>`;
+ const gross=Number(amount)||0, m=Number(multiplier)||0, n=Number(net)||0;
+ const grossText=gross>0?`+${fmt(gross)} COIN RETURN`:`${fmt(Math.abs(gross))} COIN`;
+ const multText=m>0?`×${m.toFixed(2).replace(/\.00$/,"")} PAYOUT`:"";
+ const netText=n!==0?`NET ${n>0?"+":""}${fmt(n)}`:"NET ±0";
+ el.innerHTML=`<div class="gb-outcome-inner"><small>${game}</small><strong>${kind}</strong><b>${grossText}</b><i class="gb-outcome-mult">${multText}</i><em class="gb-outcome-net">${netText}</em></div>`;
  root.appendChild(el);
  requestAnimationFrame(()=>el.classList.add("show"));
  setTimeout(()=>{el.classList.remove("show");setTimeout(()=>el.remove(),300)},1250);
 }
 function settle(b,p,g){
  let net=p-b;S.coins+=p;S.profit+=net;
- if(p>b){S.wins++;S.maxwin=Math.max(S.maxwin,net);showOutcome(p>=b*5?"BIG WIN":"WIN",g,net)}
- else if(p===0){showOutcome("LOSE",g,-b)}
+ if(p>b){
+   S.wins++;
+   S.maxwin=Math.max(S.maxwin,net);
+   const mult=b>0?p/b:0;
+   showOutcome(p>=b*5?"BIG WIN":"WIN",g,p,mult,net);
+ } else if(p===0){
+   showOutcome("LOSE",g,0,0,-b);
+ }
  S.history.unshift({g,net,t:new Date().toLocaleTimeString()});S.history=S.history.slice(0,20);save();return net;
 }
 function render(){$("coins").textContent=fmt(S.coins);$("coins2").textContent=fmt(S.coins);if($("welcomeCoins"))$("welcomeCoins").textContent=fmt(S.coins);$("profit").textContent=(S.profit>=0?"+":"")+fmt(S.profit);$("wagered").textContent=fmt(S.wagered);$("level").textContent=Math.floor(S.wagered/10000)+1;$("history").innerHTML=S.history.length?S.history.map(x=>`<div class="history-row"><span>${x.g}</span><b class="${x.net>=0?"win":"lose"}">${x.net>=0?"+":""}${fmt(x.net)}</b><small>${x.t}</small></div>`).join(""):"<div class='history-row'>NO DATA</div>";let names=["YOU","777_MASTER","BLACK_KING","LUCKY_ACE","HOUSE"];$("ranking").innerHTML=names.map((n,i)=>`<div class="rank-row"><span>#${i+1}　${n}</span><b>${fmt(i?250000-i*28000:S.maxwin)} COIN</b><small>${i?"ONLINE":"YOU"}</small></div>`).join("")}
@@ -298,7 +308,7 @@ slot(){
   <div id="res" class="result">PLACE YOUR BET</div>
  </div>`;
 },
-dice(){$("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×1.8</button><button onclick="dice('low')">LOW ×1.8</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
+dice(){$("gameBody").innerHTML=betbox()+`<div class="choices"><button onclick="dice('high')">HIGH ×2</button><button onclick="dice('low')">LOW ×2</button><button onclick="dice('exact')">EXACT ×5</button></div><div id="res" class="result">🎲</div>`},
 blackjack(){
   document.getElementById("gameBody").innerHTML=betbox(100)+`
   <div class="felt bj-felt">
@@ -499,13 +509,13 @@ function hl(choice){
      HL_BUSY=false;chart.classList.remove("hl-wild");chart.classList.add(finalHigh?"hl-high":"hl-low");
      const win=(choice==="high")===finalHigh;vEl.textContent=finalHigh?"9.80":"0.45";
      res.textContent=`${finalHigh?"HIGH":"LOW"} • ${win?"WIN":"LOSE"}`;
-     settle(b,win?Math.floor(b*1.9):0,"HIGH & LOW");sfx(win?"win":"lose");return;
+     settle(b,win?Math.floor(b*2):0,"HIGH & LOW");sfx(win?"win":"lose");return;
    }
    requestAnimationFrame(tick);
  };
  requestAnimationFrame(tick);
 }
-function dice(c){let b=wager($("bet").value);if(!b)return;sfx("dice");let d=1+Math.floor(Math.random()*6),ok=c==="exact"?d===6:c==="high"?d>=4:d<=3;$("res").textContent=`🎲 ${d} / ${ok?"WIN":"LOSE"}`;settle(b,ok?Math.floor(b*(c==="exact"?5:1.8)):0,"HIGH DICE");sfx(ok?"win":"lose");window.GB_ACTION_BUSY=false}
+function dice(c){let b=wager($("bet").value);if(!b)return;sfx("dice");let d=1+Math.floor(Math.random()*6),ok=c==="exact"?d===6:c==="high"?d>=4:d<=3;$("res").textContent=`🎲 ${d} / ${ok?"WIN":"LOSE"}`;settle(b,ok?Math.floor(b*(c==="exact"?5:2)):0,"HIGH DICE");sfx(ok?"win":"lose");window.GB_ACTION_BUSY=false}
 function deck(){let suits=["♠","♥","♦","♣"],ranks=["2","3","4","5","6","7","8","9","10","J","Q","K","A"],d=[];for(let s of suits)for(let r of ranks)d.push({s,r});return d.sort(()=>Math.random()-.5)}
 function val(cards){let total=0,aces=0;cards.forEach(c=>{if(["J","Q","K"].includes(c.r))total+=10;else if(c.r==="A"){total+=11;aces++}else total+=+c.r});while(total>21&&aces--)total-=10;return total}
 let BJ={hands:[],active:0,deck:[],d:[],bet:0,reveal:false,over:false,totalBet:0,split:false,splitHands:[]};
@@ -870,13 +880,7 @@ function rouletteSelectBet(bet){
    if(Number.isFinite(n)&&matchesNumber(n))el.classList.add('bet-selected');
  });
 
- // Highlight the corresponding pockets/labels on the wheel too.
- document.querySelectorAll('.real-pocket[data-number],.roulette-wheel-label[data-number]').forEach(el=>{
-   const n=Number(el.dataset.number);
-   if(Number.isFinite(n)&&matchesNumber(n))el.classList.add('bet-group-selected');
- });
-
- // Highlight the category button itself.
+ // Bet selection is visualized ONLY on the betting-table buttons/cells.
  const outsideSelector=`[onclick="rouletteTableBet('${bet.type}')"]`;
  if(bet.type==='number'){
    document.querySelectorAll(`[aria-label="Bet ${bet.value}"]`).forEach(e=>e.classList.add('bet-selected'));
@@ -885,21 +889,9 @@ function rouletteSelectBet(bet){
    if(bet.type==='green')document.querySelectorAll('.roulette-zero-cell').forEach(e=>e.classList.add('bet-selected'));
  }
 
- // Keep one chip indicator for straight-up bets only.
- document.querySelectorAll('.roulette-chip').forEach(e=>e.remove());
- if(bet.type==='number'){
-   const target=document.querySelector(`.real-pocket[aria-label="Bet ${bet.value}"]`);
-   if(target){
-     const chip=document.createElement('span');
-     chip.className='roulette-chip';
-     chip.textContent='●';
-     target.appendChild(chip);
-   }
- }
-
  const label=$('rouletteBetLabel'),pay=$('rouletteSpinPayout'),nr=$('rouletteNumber'),cr=$('rouletteColor'),spin=$('rouletteNumberSpin');
  if(label)label.textContent=bet.type==='number'?`NUMBER ${bet.value}`:bet.label;
- if(pay)pay.textContent=`${bet.payout}× RETURN`;
+ if(pay)pay.textContent=`${Number(bet.payout).toFixed(2).replace(/\.00$/,'')}× RETURN`;
  if(nr)nr.textContent=bet.type==='number'?String(bet.value):'—';
  if(cr)cr.textContent=bet.type==='number'?'STRAIGHT UP':bet.label;
  const amount=$('rouletteBetAmount');if(amount)amount.textContent=fmt(lastBet||100);

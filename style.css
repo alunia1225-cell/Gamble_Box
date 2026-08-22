@@ -1690,3 +1690,69 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 #modal #rouletteBetLabel{
   text-shadow:0 0 6px #cda94f44!important;
 }
+
+/* Final roulette base correction — numbers inside the gold rim, away from ball */
+#modal .roulette-wheel-labels{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:9!important;
+  pointer-events:none!important;
+}
+#modal .roulette-wheel-label{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:20px!important;
+  height:12px!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:Orbitron,sans-serif!important;
+  font-size:clamp(6px,1.55vw,8px)!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.2px!important;
+  color:#f7e9bc!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px #000!important;
+  transform:
+    translate(-50%,-50%)
+    rotate(var(--a))
+    translateY(calc(-1 * var(--wheel-size) * .215))
+    rotate(calc(-1 * var(--a)))!important;
+  transform-origin:50% 50%!important;
+}
+#modal .roulette-wheel-label.green{color:#72f0a0!important}
+
+/* The wheel itself stays clean: no bet highlight, no chip, no selected-outline. */
+#modal .real-pocket.bet-group-selected,
+#modal .roulette-wheel-label.bet-group-selected{
+  box-shadow:none!important;
+  outline:none!important;
+  color:inherit!important;
+  text-shadow:0 1px 2px #000!important;
+}
+#modal .roulette-chip{display:none!important}
+
+/* Outcome shows the actual gross return, exact multiplier and net separately. */
+#gbOutcome .gb-outcome-mult{
+  display:block!important;
+  margin-top:4px!important;
+  color:#e1c56a!important;
+  font:900 9px/1 Orbitron,sans-serif!important;
+  font-style:normal!important;
+  letter-spacing:1px!important;
+}
+#gbOutcome .gb-outcome-net{
+  display:block!important;
+  margin-top:5px!important;
+  color:#81898b!important;
+  font:800 7px/1 Orbitron,sans-serif!important;
+  font-style:normal!important;
+  letter-spacing:1px!important;
+}
