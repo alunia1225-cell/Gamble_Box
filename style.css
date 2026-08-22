@@ -1232,7 +1232,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   top:-6px!important;
   width:20px!important;
   min-width:20px!important;
-  max-width:20px!important;
+  max-width:17px!important;
   height:12px!important;
   margin:0!important;
   padding:0!important;
@@ -1723,7 +1723,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   transform:
     translate(-50%,-50%)
     rotate(var(--a))
-    translateY(calc(-1 * var(--wheel-size) * .215))
+    translateY(calc(-1 * var(--wheel-size) * .435))
     rotate(calc(-1 * var(--a)))!important;
   transform-origin:50% 50%!important;
 }
