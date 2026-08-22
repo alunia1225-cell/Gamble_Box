@@ -275,28 +275,6 @@ function buy(name,cost){
   cost=Number(cost)||0;if(S.coins<cost){const r=$("res");if(r)r.textContent="NOT ENOUGH COINS";return false}
   S.coins-=cost;S.items=S.items||[];S.items.push(name);S.history.unshift({g:"SHOP",net:-cost,t:new Date().toLocaleTimeString()});S.history=S.history.slice(0,20);save();const r=$("res");if(r)r.textContent=`PURCHASED ${name}`;sfx("chip");return true;
 }
-
-function getRouletteHistory(){
- try{
-  const x=JSON.parse(localStorage.getItem("GB_ROULETTE_HISTORY")||"[]");
-  return Array.isArray(x)?x:[];
- }catch(e){return []}
-}
-function saveRouletteResult(number,color){
- const arr=getRouletteHistory();
- arr.unshift({number,color,time:new Date().toLocaleTimeString()});
- localStorage.setItem("GB_ROULETTE_HISTORY",JSON.stringify(arr.slice(0,10)));
-}
-function renderRouletteHistory(){
- const el=$("rouletteHistory");
- if(!el)return;
- const arr=getRouletteHistory();
- el.innerHTML=arr.length?arr.map(x=>{
-   const cls=x.color==="RED"?"red":x.color==="BLACK"?"black":"green";
-   return `<span class="roulette-history-item ${cls}"><b>${x.number}</b><small>${x.color}</small></span>`;
- }).join(""):`<span class="roulette-history-empty">NO HISTORY</span>`;
-}
-
 const games={
 slot(){
  $("gameBody").innerHTML=betbox()+`<div class="anim-game slot-game">
@@ -349,10 +327,7 @@ roulette(){
  const wheelLabels=nums.map((n,i)=>`<span class="roulette-wheel-label ${cols[i]}" data-number="${n}" style="--i:${i};--a:${(i+0.5)*360/37}deg">${n}</span>`).join('');
  $("gameBody").innerHTML=`<div class="real-roulette roulette-redesign">
   <section class="roulette-wheel-card">
-   <div class="roulette-wheel-title">
-    <span>EUROPEAN WHEEL</span>
-    <div class="roulette-history-head"><b>HISTORY</b><div id="rouletteHistory" class="roulette-history"></div></div>
-   </div>
+   <div class="roulette-wheel-title"><span>EUROPEAN WHEEL</span><b>ONE ZERO</b></div>
    <div class="real-wheel-wrap"><div id="rouletteWheel" class="real-wheel">${wheel}<div class="roulette-wheel-labels">${wheelLabels}</div><div class="real-hub">GB</div><div id="rouletteBall" class="real-ball"></div></div></div>
    <div class="roulette-readout"><span id="rouletteNumber">—</span><small id="rouletteColor">SELECT BET</small></div>
   </section>
@@ -377,7 +352,6 @@ roulette(){
   <div class="roulette-action"><div><span id="rouletteBetLabel">NO BET</span><small>BET AMOUNT <span id="rouletteBetAmount">100</span></small></div><button id="rouletteNumberSpin" onclick="rouletteSpin(window.ROULETTE_BET)" disabled>SPIN <span id="rouletteSpinPayout">SELECT BET</span></button></div>
   <div id="rouletteBetPicker" class="roulette-bet-picker hidden"><div class="roulette-bet-picker-card"><div class="roulette-picker-title">SET YOUR BET</div>${betbox(100,true)}<button type="button" class="roulette-picker-confirm" onclick="rouletteConfirmBet()">BET SET</button></div></div>
  </div>`;
-  renderRouletteHistory();
 },highlow(){
  $("gameBody").innerHTML=betbox()+`<div class="hl-game">
    <div class="hl-head"><span>HIGH</span><b id="hlValue">—</b><span>LOW</span></div>
@@ -1023,8 +997,6 @@ function rouletteSpin(choice){
 
    if(numEl)numEl.textContent=String(n);
    if(colEl)colEl.textContent=color.toUpperCase();
-   saveRouletteResult(n,color.toUpperCase());
-   renderRouletteHistory();
    let win=false,payout=bet.payout;
    if(bet.type==='number')win=n===bet.value;
    else if(bet.type==='red'||bet.type==='black'||bet.type==='green')win=color===bet.type;
