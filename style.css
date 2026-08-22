@@ -1778,23 +1778,30 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 }
 #modal #rouletteHistory{
   display:flex!important;
-  flex-wrap:wrap!important;
-  justify-content:flex-end!important;
-  gap:3px!important;
+  flex-direction:column!important;
+  flex-wrap:nowrap!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  width:100%!important;
   max-width:185px!important;
-  min-height:16px!important;
+  max-height:250px!important;
+  overflow:hidden!important;
 }
 #modal .roulette-history-number{
-  width:19px!important;
-  height:19px!important;
-  display:inline-flex!important;
+  width:100%!important;
+  max-width:92px!important;
+  height:22px!important;
+  min-height:22px!important;
+  padding:0 8px!important;
+  display:flex!important;
   align-items:center!important;
-  justify-content:center!important;
+  justify-content:flex-end!important;
   border:1px solid rgba(218,190,101,.45)!important;
-  border-radius:50%!important;
+  border-radius:5px!important;
   color:#f7f0d5!important;
   background:#121416!important;
-  font:900 7px/1 Orbitron,sans-serif!important;
+  font:900 8px/1 Orbitron,sans-serif!important;
   box-sizing:border-box!important;
 }
 #modal .roulette-history-number.red{
